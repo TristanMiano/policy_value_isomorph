@@ -3,6 +3,7 @@
 from .tictactoe import TicTacToeState, check_winner
 from .policy import heuristic_policy_action
 from .rollout_value import estimate_v_pi, recovered_action_from_v
+from .sampling import StateActionSample, generate_off_policy_dataset, generate_on_policy_dataset
 
 __all__ = [
     "TicTacToeState",
@@ -10,4 +11,7 @@ __all__ = [
     "heuristic_policy_action",
     "estimate_v_pi",
     "recovered_action_from_v",
+    "StateActionSample",
+    "generate_on_policy_dataset",
+    "generate_off_policy_dataset",
 ]
