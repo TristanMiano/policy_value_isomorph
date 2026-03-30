@@ -11,6 +11,7 @@ from .rollout_value import (
     recovered_action_from_v,
 )
 from .sampling import StateActionSample, generate_off_policy_dataset, generate_on_policy_dataset
+from .value_mlp import TinyMLPValue, TrainedValue, train_value_mlp, value_mlp_predict
 
 __all__ = [
     "TicTacToeState",
@@ -28,4 +29,8 @@ __all__ = [
     "StateActionSample",
     "generate_on_policy_dataset",
     "generate_off_policy_dataset",
+    "TinyMLPValue",
+    "TrainedValue",
+    "train_value_mlp",
+    "value_mlp_predict",
 ]
