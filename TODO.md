@@ -1,7 +1,7 @@
 # TODO (Next steps after Task 1)
 
 - [x] 1. Add state-space sampling utilities to generate on-policy and off-policy tic-tac-toe datasets.
-- [ ] 2. Implement a small MLP policy network and training loop for tic-tac-toe.
+- [x] 2. Implement a small MLP policy network and training loop for tic-tac-toe.
 - [ ] 3. Freeze the trained policy network and generate Monte Carlo value targets with configurable rollout budgets.
 - [ ] 4. Implement and train a value network `V_phi(s)` on rollout labels.
 - [ ] 5. Add evaluation metrics: action agreement, top-k agreement, win/draw rate, and value calibration plots.
