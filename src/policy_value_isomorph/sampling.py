@@ -4,8 +4,10 @@ from dataclasses import dataclass
 import random
 from typing import List
 
-from .rollout_value import PolicyFn
+from typing import Callable
 from .tictactoe import Move, TicTacToeState
+
+PolicyFn = Callable[[TicTacToeState], Move]
 
 
 @dataclass(frozen=True)
