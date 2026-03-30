@@ -413,3 +413,25 @@ If Codex is asked to continue from this README, it should begin with the smalles
 7. evaluate agreement and visualize mistakes
 
 Prefer a simple, correct version over a flashy one. The first target is a reproducible tic-tac-toe demo, not a giant training stack.
+
+---
+
+## Task 1 status (implemented)
+
+The repository now contains a runnable minimal vertical slice for tic-tac-toe:
+
+- canonical tic-tac-toe state (`board` + `to_move`)
+- legal move generation, transition, terminal and winner detection
+- deterministic baseline policy (win/block/center/corners)
+- rollout-based `V^pi(s)` estimation from a fixed root-player perspective
+- recovered policy via successor-state value comparison (max for root turn, min for opponent turn)
+- pytest coverage for game logic, value sign behavior, and recovered action behavior
+- runnable demo script printing sample states, values, and chosen actions
+
+### Quickstart
+
+```bash
+pip install -e .[dev]
+pytest -q
+python scripts/demo_tictactoe.py
+```
