@@ -3,6 +3,15 @@
 from .tictactoe import TicTacToeState, check_winner
 from .policy import heuristic_policy_action
 from .policy_mlp import TinyMLPPolicy, TrainedPolicy, policy_mlp_action, train_policy_mlp
+from .evaluation import (
+    CalibrationBin,
+    CalibrationCurve,
+    WinDrawLossRate,
+    action_agreement_rate,
+    top_k_agreement_rate,
+    value_calibration_curve,
+    win_draw_loss_rate,
+)
 from .rollout_value import (
     StateValueTarget,
     estimate_v_pi,
@@ -21,6 +30,13 @@ __all__ = [
     "TrainedPolicy",
     "train_policy_mlp",
     "policy_mlp_action",
+    "action_agreement_rate",
+    "top_k_agreement_rate",
+    "win_draw_loss_rate",
+    "WinDrawLossRate",
+    "value_calibration_curve",
+    "CalibrationBin",
+    "CalibrationCurve",
     "estimate_v_pi",
     "StateValueTarget",
     "frozen_policy_from_mlp",
