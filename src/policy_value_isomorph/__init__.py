@@ -20,6 +20,8 @@ from .rollout_value import (
     recovered_action_from_v,
 )
 from .sampling import StateActionSample, generate_off_policy_dataset, generate_on_policy_dataset
+from .sampling import augment_dataset_with_symmetries, reduce_dataset_by_canonical_symmetry
+from .symmetry import SYMMETRIES, canonicalize_state, canonicalize_state_action, symmetric_states
 from .value_mlp import TinyMLPValue, TrainedValue, train_value_mlp, value_mlp_predict
 from .q_mlp import (
     StateActionValueTarget,
@@ -55,6 +57,12 @@ __all__ = [
     "StateActionSample",
     "generate_on_policy_dataset",
     "generate_off_policy_dataset",
+    "augment_dataset_with_symmetries",
+    "reduce_dataset_by_canonical_symmetry",
+    "SYMMETRIES",
+    "symmetric_states",
+    "canonicalize_state",
+    "canonicalize_state_action",
     "TinyMLPValue",
     "TrainedValue",
     "train_value_mlp",
