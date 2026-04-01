@@ -21,6 +21,16 @@ from .rollout_value import (
 )
 from .sampling import StateActionSample, generate_off_policy_dataset, generate_on_policy_dataset
 from .value_mlp import TinyMLPValue, TrainedValue, train_value_mlp, value_mlp_predict
+from .q_mlp import (
+    StateActionValueTarget,
+    TinyMLPQ,
+    TrainedQ,
+    estimate_q_pi,
+    generate_q_targets,
+    q_mlp_predict,
+    recovered_action_from_q,
+    train_q_mlp,
+)
 
 __all__ = [
     "TicTacToeState",
@@ -49,4 +59,12 @@ __all__ = [
     "TrainedValue",
     "train_value_mlp",
     "value_mlp_predict",
+    "StateActionValueTarget",
+    "TinyMLPQ",
+    "TrainedQ",
+    "estimate_q_pi",
+    "generate_q_targets",
+    "train_q_mlp",
+    "q_mlp_predict",
+    "recovered_action_from_q",
 ]
