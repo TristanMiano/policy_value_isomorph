@@ -14,10 +14,26 @@ from policy_value_isomorph.evaluation import (
 )
 from policy_value_isomorph.policy import heuristic_policy_action
 from policy_value_isomorph.policy_mlp import policy_mlp_action, train_policy_mlp
+from policy_value_isomorph.q_mlp import generate_q_targets, recovered_action_from_q, train_q_mlp
 from policy_value_isomorph.rollout_value import estimate_v_pi, generate_value_targets, recovered_action_from_v
 from policy_value_isomorph.sampling import generate_on_policy_dataset
-from policy_value_isomorph.tictactoe import TicTacToeState, state_from_rows
+from policy_value_isomorph.tictactoe import Move, TicTacToeState, state_from_rows
 from policy_value_isomorph.value_mlp import train_value_mlp, value_mlp_predict
+
+
+def _recovered_action_from_value_network(state: TicTacToeState, root_player: int, predict_value) -> Move:
+    legal = state.legal_moves()
+    if not legal:
+        raise ValueError("value-network recovery called on terminal state")
+
+    scored = []
+    for mv in legal:
+        nxt = state.apply_move(mv)
+        scored.append((mv, predict_value(nxt)))
+
+    if state.to_move == root_player:
+        return max(scored, key=lambda t: (t[1], -t[0]))[0]
+    return min(scored, key=lambda t: (t[1], t[0]))[0]
 
 
 def main() -> None:
@@ -71,10 +87,30 @@ def main() -> None:
         n_bins=6,
     )
 
+    q_targets = generate_q_targets(states, heuristic_policy_action, root_player=1, rollout_budgets=[1])
+    trained_q = train_q_mlp(q_targets, hidden_dim=24, learning_rate=0.03, epochs=60, seed=11)
+
+    v_recovered_agree = action_agreement_rate(
+        states,
+        policy_a=heuristic_policy_action,
+        policy_b=lambda s: _recovered_action_from_value_network(
+            s,
+            root_player=1,
+            predict_value=lambda st: value_mlp_predict(st, trained_value.model),
+        ),
+    )
+    q_recovered_agree = action_agreement_rate(
+        states,
+        policy_a=heuristic_policy_action,
+        policy_b=lambda s: recovered_action_from_q(s, trained_q.model, root_player=1),
+    )
+
     print("\n=== Evaluation metrics ===")
     print(f"Action agreement (policy argmax vs heuristic): {agree:.3f}")
     print(f"Top-3 agreement: {top3:.3f}")
     print(f"Win/draw/loss vs heuristic: {wdl.win_rate:.3f}/{wdl.draw_rate:.3f}/{wdl.loss_rate:.3f}")
+    print(f"Recovered action agreement via successor V_phi: {v_recovered_agree:.3f}")
+    print(f"Recovered action agreement via direct Q_phi: {q_recovered_agree:.3f}")
 
     print("\n=== Value calibration bins (for plotting) ===")
     print("bin_range,count,mean_pred,mean_true")
