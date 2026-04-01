@@ -5,6 +5,7 @@ import random
 from typing import List
 
 from typing import Callable
+from .symmetry import SYMMETRIES, apply_symmetry_to_move, apply_symmetry_to_state, canonicalize_state_action
 from .tictactoe import Move, TicTacToeState
 
 PolicyFn = Callable[[TicTacToeState], Move]
@@ -62,3 +63,36 @@ def generate_off_policy_dataset(n_episodes: int, seed: int | None = None) -> Lis
     for _ in range(n_episodes):
         dataset.extend(_collect_episode_samples(random_policy))
     return dataset
+
+
+def augment_dataset_with_symmetries(dataset: List[StateActionSample]) -> List[StateActionSample]:
+    """Return 8x expanded dataset by applying all board symmetries.
+
+    Each input sample contributes one transformed sample for each symmetry.
+    """
+    augmented: List[StateActionSample] = []
+    for sample in dataset:
+        for symmetry in SYMMETRIES:
+            augmented.append(
+                StateActionSample(
+                    state=apply_symmetry_to_state(sample.state, symmetry),
+                    action=apply_symmetry_to_move(sample.action, symmetry),
+                )
+            )
+    return augmented
+
+
+def reduce_dataset_by_canonical_symmetry(dataset: List[StateActionSample]) -> List[StateActionSample]:
+    """Map samples to canonical symmetry class and remove duplicates."""
+    reduced: List[StateActionSample] = []
+    seen: set[tuple[tuple[int, ...], int, int]] = set()
+
+    for sample in dataset:
+        canonical_state, canonical_action = canonicalize_state_action(sample.state, sample.action)
+        key = (canonical_state.board, canonical_state.to_move, canonical_action)
+        if key in seen:
+            continue
+        seen.add(key)
+        reduced.append(StateActionSample(state=canonical_state, action=canonical_action))
+
+    return reduced

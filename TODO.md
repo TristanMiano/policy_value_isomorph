@@ -6,7 +6,7 @@
 - [x] 4. Implement and train a value network `V_phi(s)` on rollout labels.
 - [x] 5. Add evaluation metrics: action agreement, top-k agreement, win/draw rate, and value calibration plots.
 - [x] 6. Add optional `Q_phi(s,a)` training and compare direct Q-recovery vs successor-state V-recovery.
-- [ ] 7. Add symmetry augmentation/reduction for tic-tac-toe to improve sample efficiency.
+- [x] 7. Add symmetry augmentation/reduction for tic-tac-toe to improve sample efficiency.
 - [ ] 8. Add CLI entrypoints for data generation, training, and evaluation.
 - [ ] 9. Port the environment/pipeline structure to Connect Four.
 - [ ] 10. Document experiment configurations and reproducibility settings (seeds, splits, versions).
