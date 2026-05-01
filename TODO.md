@@ -13,7 +13,7 @@
 
 ## Monitoring, checkpoints, and resumability (next jobs)
 
-- [ ] 11. Define and standardize training telemetry schema across policy, value `V(s)`, and action-value `Q(s,a)` runs.
+- [x] 11. Define and standardize training telemetry schema across policy, value `V(s)`, and action-value `Q(s,a)` runs.
   - Track loss vs iteration/epoch.
   - Track loss vs wall-clock time.
   - Track run metadata (seed, game, model type, hyperparameters, checkpoint step).

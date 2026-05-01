@@ -3,9 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 import random
+import time
 from typing import List, Sequence
 
 from .sampling import StateActionSample
+from .telemetry import TelemetryRecord, TrainingTelemetry
 from .tictactoe import Move, TicTacToeState
 
 
@@ -34,6 +36,7 @@ class TinyMLPPolicy:
 @dataclass
 class PolicyTrainingLog:
     losses: List[float]
+    telemetry: TrainingTelemetry
 
 
 @dataclass
@@ -120,8 +123,10 @@ def train_policy_mlp(
     losses: List[float] = []
 
     order = list(range(len(dataset)))
+    records: list[TelemetryRecord] = []
+    start_time = time.perf_counter()
 
-    for _ in range(epochs):
+    for epoch in range(epochs):
         rng.shuffle(order)
         total_loss = 0.0
 
@@ -157,9 +162,19 @@ def train_policy_mlp(
                     model.w1[i][j] -= learning_rate * grad_w1
                 model.b1[j] -= learning_rate * dpre
 
-        losses.append(total_loss / len(dataset))
+        epoch_loss = total_loss / len(dataset)
+        losses.append(epoch_loss)
+        records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
 
-    return TrainedPolicy(model=model, training_log=PolicyTrainingLog(losses=losses))
+    telemetry = TrainingTelemetry(
+        run_type="policy",
+        game="tic_tac_toe",
+        seed=seed,
+        checkpoint_step=epochs,
+        hyperparameters={"hidden_dim": hidden_dim, "learning_rate": learning_rate, "epochs": epochs},
+        records=tuple(records),
+    )
+    return TrainedPolicy(model=model, training_log=PolicyTrainingLog(losses=losses, telemetry=telemetry))
 
 
 def policy_mlp_action(state: TicTacToeState, model: TinyMLPPolicy) -> Move:
