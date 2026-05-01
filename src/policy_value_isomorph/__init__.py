@@ -1,6 +1,7 @@
 """Policy-to-value reconstruction demo package (Task 1 tic-tac-toe vertical slice)."""
 
 from .tictactoe import TicTacToeState, check_winner
+from .connect_four import ConnectFourState, check_winner as connect_four_check_winner
 from .policy import heuristic_policy_action
 from .policy_mlp import TinyMLPPolicy, TrainedPolicy, policy_mlp_action, train_policy_mlp
 from .evaluation import (
@@ -23,6 +24,16 @@ from .sampling import StateActionSample, generate_off_policy_dataset, generate_o
 from .sampling import augment_dataset_with_symmetries, reduce_dataset_by_canonical_symmetry
 from .symmetry import SYMMETRIES, canonicalize_state, canonicalize_state_action, symmetric_states
 from .value_mlp import TinyMLPValue, TrainedValue, train_value_mlp, value_mlp_predict
+from .connect_four_pipeline import (
+    ConnectFourStateActionSample,
+    ConnectFourStateValueTarget,
+    estimate_v_pi as estimate_v_pi_connect_four,
+    generate_off_policy_dataset as generate_off_policy_dataset_connect_four,
+    generate_on_policy_dataset as generate_on_policy_dataset_connect_four,
+    generate_value_targets as generate_value_targets_connect_four,
+    random_policy_action as connect_four_random_policy_action,
+    recovered_action_from_v as recovered_action_from_v_connect_four,
+)
 from .q_mlp import (
     StateActionValueTarget,
     TinyMLPQ,
@@ -37,6 +48,8 @@ from .q_mlp import (
 __all__ = [
     "TicTacToeState",
     "check_winner",
+    "ConnectFourState",
+    "connect_four_check_winner",
     "heuristic_policy_action",
     "TinyMLPPolicy",
     "TrainedPolicy",
@@ -54,6 +67,14 @@ __all__ = [
     "frozen_policy_from_mlp",
     "generate_value_targets",
     "recovered_action_from_v",
+    "ConnectFourStateActionSample",
+    "ConnectFourStateValueTarget",
+    "connect_four_random_policy_action",
+    "generate_on_policy_dataset_connect_four",
+    "generate_off_policy_dataset_connect_four",
+    "estimate_v_pi_connect_four",
+    "generate_value_targets_connect_four",
+    "recovered_action_from_v_connect_four",
     "StateActionSample",
     "generate_on_policy_dataset",
     "generate_off_policy_dataset",
