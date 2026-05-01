@@ -416,6 +416,11 @@ Prefer a simple, correct version over a flashy one. The first target is a reprod
 
 ---
 
+
+## Reproducibility
+
+For experiment settings (seeds, split protocol, baseline CLI commands, and reporting checklist), see `REPRODUCIBILITY.md`.
+
 ## Task 1 status (implemented)
 
 The repository now contains a runnable minimal vertical slice for tic-tac-toe:
