@@ -3,10 +3,12 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 import random
+import time
 from typing import List, Sequence
 
 from .policy_mlp import encode_state
 from .rollout_value import PolicyFn, rollout_return
+from .telemetry import TelemetryRecord, TrainingTelemetry
 from .tictactoe import Move, TicTacToeState
 
 
@@ -49,6 +51,7 @@ class TinyMLPQ:
 @dataclass
 class QTrainingLog:
     losses: List[float]
+    telemetry: TrainingTelemetry
 
 
 @dataclass
@@ -172,8 +175,10 @@ def train_q_mlp(
     model = _init_model(input_dim=19, hidden_dim=hidden_dim, rng=rng)
     losses: List[float] = []
     order = list(range(len(dataset)))
+    records: list[TelemetryRecord] = []
+    start_time = time.perf_counter()
 
-    for _ in range(epochs):
+    for epoch in range(epochs):
         rng.shuffle(order)
         total_loss = 0.0
 
@@ -201,9 +206,19 @@ def train_q_mlp(
                     model.w1[i][j] -= learning_rate * grad_w1
                 model.b1[j] -= learning_rate * dpre
 
-        losses.append(total_loss / len(dataset))
+        epoch_loss = total_loss / len(dataset)
+        losses.append(epoch_loss)
+        records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
 
-    return TrainedQ(model=model, training_log=QTrainingLog(losses=losses))
+    telemetry = TrainingTelemetry(
+        run_type="q",
+        game="tic_tac_toe",
+        seed=seed,
+        checkpoint_step=epochs,
+        hyperparameters={"hidden_dim": hidden_dim, "learning_rate": learning_rate, "epochs": epochs},
+        records=tuple(records),
+    )
+    return TrainedQ(model=model, training_log=QTrainingLog(losses=losses, telemetry=telemetry))
 
 
 def q_mlp_predict(state: TicTacToeState, action: Move, model: TinyMLPQ) -> float:
