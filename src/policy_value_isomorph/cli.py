@@ -3,10 +3,13 @@ from __future__ import annotations
 import argparse
 
 from .evaluation import action_agreement_rate, win_draw_loss_rate
+from .gameplay_plots import write_gameplay_eval_report_from_jsonl, write_gameplay_score_plot_from_jsonl
 from .policy import heuristic_policy_action
 from .policy_mlp import policy_mlp_action, train_policy_mlp
 from .rollout_value import generate_value_targets
 from .sampling import generate_off_policy_dataset, generate_on_policy_dataset
+from .telemetry_io import append_gameplay_eval_jsonl, append_telemetry_csv, append_telemetry_jsonl, telemetry_run_dir
+from .training_plots import write_loss_plots_from_csv
 from .value_mlp import train_value_mlp, value_mlp_predict
 
 
@@ -29,6 +32,14 @@ def _cmd_train(args: argparse.Namespace) -> None:
         learning_rate=args.learning_rate,
         epochs=args.policy_epochs,
         seed=args.seed,
+        eval_interval=args.eval_interval,
+        eval_n_games=args.eval_games,
+        gameplay_samples_path=args.gameplay_samples_path,
+        gameplay_samples_per_checkpoint=args.gameplay_samples_per_checkpoint,
+        checkpoint_interval=args.policy_checkpoint_interval,
+        checkpoint_dir=args.policy_checkpoint_dir,
+        resume_checkpoint_path=args.policy_resume_checkpoint,
+        resume_latest=args.policy_resume_latest,
     )
 
     states = [sample.state for sample in dataset]
@@ -39,7 +50,23 @@ def _cmd_train(args: argparse.Namespace) -> None:
         learning_rate=args.learning_rate,
         epochs=args.value_epochs,
         seed=args.seed,
+        checkpoint_interval=args.value_checkpoint_interval,
+        checkpoint_dir=args.value_checkpoint_dir,
+        resume_checkpoint_path=args.value_resume_checkpoint,
+        resume_latest=args.value_resume_latest,
     )
+
+    if args.telemetry_root_dir:
+        policy_run_dir = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="policy", seed=args.seed)
+        value_run_dir = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="value", seed=args.seed)
+
+        append_telemetry_csv(policy_run_dir / "training_telemetry.csv", trained_policy.training_log.telemetry)
+        append_telemetry_jsonl(policy_run_dir / "training_telemetry.jsonl", trained_policy.training_log.telemetry)
+        if trained_policy.training_log.gameplay_evals:
+            append_gameplay_eval_jsonl(policy_run_dir / "gameplay_eval.jsonl", trained_policy.training_log.gameplay_evals)
+
+        append_telemetry_csv(value_run_dir / "training_telemetry.csv", trained_value.training_log.telemetry)
+        append_telemetry_jsonl(value_run_dir / "training_telemetry.jsonl", trained_value.training_log.telemetry)
 
     print(f"policy_loss_initial={trained_policy.training_log.losses[0]:.6f}")
     print(f"policy_loss_final={trained_policy.training_log.losses[-1]:.6f}")
@@ -72,6 +99,18 @@ def _cmd_eval(args: argparse.Namespace) -> None:
     print(f"first_state_value_pred={first_pred:+.6f}")
 
 
+def _cmd_plots(args: argparse.Namespace) -> None:
+    step_svg, time_svg = write_loss_plots_from_csv(args.telemetry_csv, args.output_dir)
+    print(f"loss_step_plot={step_svg}")
+    print(f"loss_time_plot={time_svg}")
+
+    if args.gameplay_jsonl:
+        gameplay_svg = write_gameplay_score_plot_from_jsonl(args.gameplay_jsonl, args.output_dir)
+        report_txt = write_gameplay_eval_report_from_jsonl(args.gameplay_jsonl, args.output_dir)
+        print(f"gameplay_plot={gameplay_svg}")
+        print(f"gameplay_report={report_txt}")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="CLI entrypoints for tic-tac-toe data, training, and evaluation.")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -91,6 +130,19 @@ def build_parser() -> argparse.ArgumentParser:
     p_train.add_argument("--learning-rate", type=float, default=0.03)
     p_train.add_argument("--rollouts", type=int, default=1)
     p_train.add_argument("--seed", type=int, default=0)
+    p_train.add_argument("--eval-interval", type=int, default=0)
+    p_train.add_argument("--eval-games", type=int, default=20)
+    p_train.add_argument("--gameplay-samples-path", type=str, default=None)
+    p_train.add_argument("--gameplay-samples-per-checkpoint", type=int, default=2)
+    p_train.add_argument("--policy-checkpoint-interval", type=int, default=0)
+    p_train.add_argument("--policy-checkpoint-dir", type=str, default=None)
+    p_train.add_argument("--policy-resume-checkpoint", type=str, default=None)
+    p_train.add_argument("--policy-resume-latest", action="store_true")
+    p_train.add_argument("--value-checkpoint-interval", type=int, default=0)
+    p_train.add_argument("--value-checkpoint-dir", type=str, default=None)
+    p_train.add_argument("--value-resume-checkpoint", type=str, default=None)
+    p_train.add_argument("--value-resume-latest", action="store_true")
+    p_train.add_argument("--telemetry-root-dir", type=str, default=None)
     p_train.set_defaults(func=_cmd_train)
 
     p_eval = sub.add_parser("eval", help="Train a quick policy and report evaluation metrics.")
@@ -102,6 +154,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_eval.add_argument("--rollouts", type=int, default=1)
     p_eval.add_argument("--seed", type=int, default=0)
     p_eval.set_defaults(func=_cmd_eval)
+
+    p_plots = sub.add_parser("plots", help="Regenerate training/gameplay plots from saved logs.")
+    p_plots.add_argument("--telemetry-csv", required=True)
+    p_plots.add_argument("--gameplay-jsonl", default=None)
+    p_plots.add_argument("--output-dir", required=True)
+    p_plots.set_defaults(func=_cmd_plots)
 
     return parser
 
