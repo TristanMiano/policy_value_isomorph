@@ -41,7 +41,7 @@
   - Include full move sequence and rendered board states after each move.
   - Provide game-format-appropriate rendering for tic-tac-toe and Connect Four.
 
-- [ ] 17. Add periodic checkpoint saving for policy, `V(s)`, and `Q(s,a)` training.
+- [x] 17. Add periodic checkpoint saving for policy, `V(s)`, and `Q(s,a)` training.
   - Save model weights and optimizer/training-state metadata.
   - Record enough state to resume deterministically where feasible.
 

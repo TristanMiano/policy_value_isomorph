@@ -6,6 +6,7 @@ import random
 import time
 from typing import List, Sequence
 
+from .checkpointing import save_checkpoint
 from .gameplay_eval import GameplayEvalRecord
 from .gameplay_samples import GameplaySample, append_gameplay_samples_text
 from .sampling import StateActionSample
@@ -114,6 +115,8 @@ def train_policy_mlp(
     eval_n_games: int = 20,
     gameplay_samples_path: str | None = None,
     gameplay_samples_per_checkpoint: int = 2,
+    checkpoint_interval: int = 0,
+    checkpoint_dir: str | None = None,
 ) -> TrainedPolicy:
     """Train a tiny MLP policy by supervised imitation on state-action pairs."""
     if not dataset:
@@ -130,6 +133,8 @@ def train_policy_mlp(
         raise ValueError("eval_n_games must be >= 1 when eval_interval is enabled")
     if gameplay_samples_per_checkpoint <= 0:
         raise ValueError("gameplay_samples_per_checkpoint must be >= 1")
+    if checkpoint_interval < 0:
+        raise ValueError("checkpoint_interval must be >= 0")
 
     rng = random.Random(seed)
     model = _init_model(input_dim=10, hidden_dim=hidden_dim, output_dim=9, rng=rng)
@@ -179,6 +184,14 @@ def train_policy_mlp(
         epoch_loss = total_loss / len(dataset)
         losses.append(epoch_loss)
         records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
+        if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
+            save_checkpoint(
+                checkpoint_dir,
+                run_type="policy",
+                step=epoch + 1,
+                model=model,
+                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+            )
 
         if eval_interval > 0 and (epoch + 1) % eval_interval == 0:
             wins = 0
@@ -232,6 +245,15 @@ def train_policy_mlp(
             )
             if gameplay_samples_path is not None:
                 append_gameplay_samples_text(gameplay_samples_path, checkpoint_samples)
+
+    if checkpoint_dir is not None and (checkpoint_interval == 0 or epochs % checkpoint_interval != 0):
+        save_checkpoint(
+            checkpoint_dir,
+            run_type="policy",
+            step=epochs,
+            model=model,
+            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+        )
 
     telemetry = TrainingTelemetry(
         run_type="policy",
