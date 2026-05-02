@@ -21,6 +21,7 @@ def test_generate_gameplay_score_plot_and_report(tmp_path) -> None:
     points = read_gameplay_curve_from_jsonl(jsonl_path)
     assert [p.step for p in points] == [10, 20, 30]
     assert [round(p.score, 2) for p in points] == [-0.10, 0.20, 0.15]
+    assert [round(p.win_rate, 2) for p in points] == [0.40, 0.55, 0.50]
 
     svg_path = write_gameplay_score_plot_from_jsonl(jsonl_path, run_dir)
     report_path = write_gameplay_eval_report_from_jsonl(jsonl_path, run_dir)
@@ -31,3 +32,4 @@ def test_generate_gameplay_score_plot_and_report(tmp_path) -> None:
     report = report_path.read_text(encoding="utf-8")
     assert "checkpoints: 3" in report
     assert "best_step: 20" in report
+    assert "last_rates: win=0.5000, draw=0.1500, loss=0.3500" in report
