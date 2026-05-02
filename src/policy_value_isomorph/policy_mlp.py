@@ -7,6 +7,7 @@ import time
 from typing import List, Sequence
 
 from .gameplay_eval import GameplayEvalRecord
+from .gameplay_samples import GameplaySample, append_gameplay_samples_text
 from .sampling import StateActionSample
 from .telemetry import TelemetryRecord, TrainingTelemetry
 from .tictactoe import Move, TicTacToeState
@@ -111,6 +112,8 @@ def train_policy_mlp(
     seed: int = 0,
     eval_interval: int = 0,
     eval_n_games: int = 20,
+    gameplay_samples_path: str | None = None,
+    gameplay_samples_per_checkpoint: int = 2,
 ) -> TrainedPolicy:
     """Train a tiny MLP policy by supervised imitation on state-action pairs."""
     if not dataset:
@@ -125,6 +128,8 @@ def train_policy_mlp(
         raise ValueError("eval_interval must be >= 0")
     if eval_interval > 0 and eval_n_games <= 0:
         raise ValueError("eval_n_games must be >= 1 when eval_interval is enabled")
+    if gameplay_samples_per_checkpoint <= 0:
+        raise ValueError("gameplay_samples_per_checkpoint must be >= 1")
 
     rng = random.Random(seed)
     model = _init_model(input_dim=10, hidden_dim=hidden_dim, output_dim=9, rng=rng)
@@ -179,15 +184,20 @@ def train_policy_mlp(
             wins = 0
             draws = 0
             losses_eval = 0
+            checkpoint_samples: list[GameplaySample] = []
             for i in range(eval_n_games):
                 state = TicTacToeState.initial()
                 model_as_x = (i % 2 == 0)
+                states = [state]
+                moves: list[int] = []
                 while not state.is_terminal():
                     if model_as_x:
                         move = policy_mlp_action(state, model) if state.to_move == 1 else min(state.legal_moves())
                     else:
                         move = min(state.legal_moves()) if state.to_move == 1 else policy_mlp_action(state, model)
+                    moves.append(move)
                     state = state.apply_move(move)
+                    states.append(state)
                 result_for_x = state.terminal_return(root_player=1)
                 result_for_model = result_for_x if model_as_x else -result_for_x
                 if result_for_model > 0:
@@ -196,6 +206,15 @@ def train_policy_mlp(
                     losses_eval += 1
                 else:
                     draws += 1
+                if len(checkpoint_samples) < gameplay_samples_per_checkpoint:
+                    checkpoint_samples.append(
+                        GameplaySample(
+                            checkpoint_step=epoch + 1,
+                            game_index=i,
+                            moves=tuple(moves),
+                            states=tuple(states),
+                        )
+                    )
 
             denom = float(eval_n_games)
             win_rate = wins / denom
@@ -211,6 +230,8 @@ def train_policy_mlp(
                     score=win_rate - loss_rate,
                 )
             )
+            if gameplay_samples_path is not None:
+                append_gameplay_samples_text(gameplay_samples_path, checkpoint_samples)
 
     telemetry = TrainingTelemetry(
         run_type="policy",
@@ -223,6 +244,8 @@ def train_policy_mlp(
             "epochs": epochs,
             "eval_interval": eval_interval,
             "eval_n_games": eval_n_games,
+            "gameplay_samples_path": gameplay_samples_path or "",
+            "gameplay_samples_per_checkpoint": gameplay_samples_per_checkpoint,
         },
         records=tuple(records),
     )
