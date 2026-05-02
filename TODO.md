@@ -18,7 +18,7 @@
   - Track loss vs wall-clock time.
   - Track run metadata (seed, game, model type, hyperparameters, checkpoint step).
 
-- [ ] 12. Implement lightweight logging backends for telemetry (e.g., CSV/JSONL) with minimal dependencies.
+- [x] 12. Implement lightweight logging backends for telemetry (e.g., CSV/JSONL) with minimal dependencies.
   - Ensure logs are append-safe for resumed runs.
   - Keep output directory layout consistent across tic-tac-toe and Connect Four.
 
