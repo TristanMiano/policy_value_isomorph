@@ -32,7 +32,7 @@
   - Report aggregate score metrics over time (win/draw/loss or equivalent average score).
   - Store results in machine-readable form for later plotting.
 
-- [ ] 15. Add plotting/reporting for gameplay/score-over-time.
+- [x] 15. Add plotting/reporting for gameplay/score-over-time.
   - Visualize checkpointed evaluation score trends.
   - Keep format consistent between tic-tac-toe and Connect Four.
 
