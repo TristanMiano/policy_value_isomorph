@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import ast
 import math
 import random
 import time
 from typing import List, Sequence
 
-from .checkpointing import save_checkpoint
+from .checkpointing import latest_checkpoint_path, load_checkpoint, save_checkpoint
 from .gameplay_eval import GameplayEvalRecord
 from .gameplay_samples import GameplaySample, append_gameplay_samples_text
 from .sampling import StateActionSample
@@ -117,6 +118,8 @@ def train_policy_mlp(
     gameplay_samples_per_checkpoint: int = 2,
     checkpoint_interval: int = 0,
     checkpoint_dir: str | None = None,
+    resume_checkpoint_path: str | None = None,
+    resume_latest: bool = False,
 ) -> TrainedPolicy:
     """Train a tiny MLP policy by supervised imitation on state-action pairs."""
     if not dataset:
@@ -135,9 +138,23 @@ def train_policy_mlp(
         raise ValueError("gameplay_samples_per_checkpoint must be >= 1")
     if checkpoint_interval < 0:
         raise ValueError("checkpoint_interval must be >= 0")
+    if resume_checkpoint_path is not None and resume_latest:
+        raise ValueError("set only one of resume_checkpoint_path or resume_latest")
 
     rng = random.Random(seed)
     model = _init_model(input_dim=10, hidden_dim=hidden_dim, output_dim=9, rng=rng)
+    start_epoch = 0
+    if resume_latest or resume_checkpoint_path is not None:
+        if checkpoint_dir is None and resume_latest:
+            raise ValueError("checkpoint_dir is required when resume_latest is true")
+        checkpoint_to_load = resume_checkpoint_path or str(latest_checkpoint_path(checkpoint_dir, "policy"))
+        loaded = load_checkpoint(checkpoint_to_load, model_type=TinyMLPPolicy)
+        model = loaded["model"]
+        metadata = loaded.get("metadata", {})
+        start_epoch = int(loaded["step"])
+        rng_state_text = metadata.get("rng_state")
+        if isinstance(rng_state_text, str):
+            rng.setstate(ast.literal_eval(rng_state_text))
     losses: List[float] = []
 
     order = list(range(len(dataset)))
@@ -145,7 +162,7 @@ def train_policy_mlp(
     gameplay_evals: list[GameplayEvalRecord] = []
     start_time = time.perf_counter()
 
-    for epoch in range(epochs):
+    for epoch in range(start_epoch, epochs):
         rng.shuffle(order)
         total_loss = 0.0
 

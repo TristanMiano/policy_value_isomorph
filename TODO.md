@@ -45,7 +45,7 @@
   - Save model weights and optimizer/training-state metadata.
   - Record enough state to resume deterministically where feasible.
 
-- [ ] 18. Implement checkpoint loading and resume/partial-run continuation.
+- [x] 18. Implement checkpoint loading and resume/partial-run continuation.
   - Resume from latest or specified checkpoint.
   - Continue logging without corrupting prior metrics.
   - Verify resumed runs still emit plots/evaluations/samples at expected intervals.
