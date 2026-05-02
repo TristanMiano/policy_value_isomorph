@@ -6,6 +6,7 @@ import random
 import time
 from typing import List, Sequence
 
+from .gameplay_eval import GameplayEvalRecord
 from .sampling import StateActionSample
 from .telemetry import TelemetryRecord, TrainingTelemetry
 from .tictactoe import Move, TicTacToeState
@@ -37,6 +38,7 @@ class TinyMLPPolicy:
 class PolicyTrainingLog:
     losses: List[float]
     telemetry: TrainingTelemetry
+    gameplay_evals: List[GameplayEvalRecord]
 
 
 @dataclass
@@ -107,6 +109,8 @@ def train_policy_mlp(
     learning_rate: float = 0.05,
     epochs: int = 60,
     seed: int = 0,
+    eval_interval: int = 0,
+    eval_n_games: int = 20,
 ) -> TrainedPolicy:
     """Train a tiny MLP policy by supervised imitation on state-action pairs."""
     if not dataset:
@@ -117,6 +121,10 @@ def train_policy_mlp(
         raise ValueError("learning_rate must be > 0")
     if epochs <= 0:
         raise ValueError("epochs must be >= 1")
+    if eval_interval < 0:
+        raise ValueError("eval_interval must be >= 0")
+    if eval_interval > 0 and eval_n_games <= 0:
+        raise ValueError("eval_n_games must be >= 1 when eval_interval is enabled")
 
     rng = random.Random(seed)
     model = _init_model(input_dim=10, hidden_dim=hidden_dim, output_dim=9, rng=rng)
@@ -124,6 +132,7 @@ def train_policy_mlp(
 
     order = list(range(len(dataset)))
     records: list[TelemetryRecord] = []
+    gameplay_evals: list[GameplayEvalRecord] = []
     start_time = time.perf_counter()
 
     for epoch in range(epochs):
@@ -166,15 +175,58 @@ def train_policy_mlp(
         losses.append(epoch_loss)
         records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
 
+        if eval_interval > 0 and (epoch + 1) % eval_interval == 0:
+            wins = 0
+            draws = 0
+            losses_eval = 0
+            for i in range(eval_n_games):
+                state = TicTacToeState.initial()
+                model_as_x = (i % 2 == 0)
+                while not state.is_terminal():
+                    if model_as_x:
+                        move = policy_mlp_action(state, model) if state.to_move == 1 else min(state.legal_moves())
+                    else:
+                        move = min(state.legal_moves()) if state.to_move == 1 else policy_mlp_action(state, model)
+                    state = state.apply_move(move)
+                result_for_x = state.terminal_return(root_player=1)
+                result_for_model = result_for_x if model_as_x else -result_for_x
+                if result_for_model > 0:
+                    wins += 1
+                elif result_for_model < 0:
+                    losses_eval += 1
+                else:
+                    draws += 1
+
+            denom = float(eval_n_games)
+            win_rate = wins / denom
+            draw_rate = draws / denom
+            loss_rate = losses_eval / denom
+            gameplay_evals.append(
+                GameplayEvalRecord(
+                    step=epoch + 1,
+                    n_games=eval_n_games,
+                    win_rate=win_rate,
+                    draw_rate=draw_rate,
+                    loss_rate=loss_rate,
+                    score=win_rate - loss_rate,
+                )
+            )
+
     telemetry = TrainingTelemetry(
         run_type="policy",
         game="tic_tac_toe",
         seed=seed,
         checkpoint_step=epochs,
-        hyperparameters={"hidden_dim": hidden_dim, "learning_rate": learning_rate, "epochs": epochs},
+        hyperparameters={
+            "hidden_dim": hidden_dim,
+            "learning_rate": learning_rate,
+            "epochs": epochs,
+            "eval_interval": eval_interval,
+            "eval_n_games": eval_n_games,
+        },
         records=tuple(records),
     )
-    return TrainedPolicy(model=model, training_log=PolicyTrainingLog(losses=losses, telemetry=telemetry))
+    return TrainedPolicy(model=model, training_log=PolicyTrainingLog(losses=losses, telemetry=telemetry, gameplay_evals=gameplay_evals))
 
 
 def policy_mlp_action(state: TicTacToeState, model: TinyMLPPolicy) -> Move:

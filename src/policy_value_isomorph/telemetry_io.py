@@ -5,6 +5,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
+from .gameplay_eval import GameplayEvalRecord
 from .telemetry import TrainingTelemetry
 
 
@@ -77,3 +78,16 @@ def append_telemetry_csv(path: str | Path, telemetry: TrainingTelemetry) -> None
                     "hyperparameters_json": json.dumps(dict(telemetry.hyperparameters), sort_keys=True),
                 }
             )
+
+
+def append_gameplay_eval_jsonl(path: str | Path, records: list[GameplayEvalRecord]) -> None:
+    """Append gameplay evaluation records to JSONL.
+
+    This format is machine-readable and append-safe for periodic checkpoints.
+    """
+    out_path = Path(path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with out_path.open("a", encoding="utf-8") as f:
+        for record in records:
+            f.write(json.dumps(asdict(record), sort_keys=True) + "\n")

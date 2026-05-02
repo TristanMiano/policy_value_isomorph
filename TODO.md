@@ -27,7 +27,7 @@
   - Generate loss-by-wall-clock-time plots.
   - Support policy, `V(s)`, and `Q(s,a)` training runs.
 
-- [ ] 14. Add periodic gameplay evaluation during training.
+- [x] 14. Add periodic gameplay evaluation during training.
   - Every `N` epochs/steps, run a fixed evaluation bundle of games.
   - Report aggregate score metrics over time (win/draw/loss or equivalent average score).
   - Store results in machine-readable form for later plotting.
