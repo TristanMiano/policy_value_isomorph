@@ -6,6 +6,7 @@ import random
 import time
 from typing import List, Sequence
 
+from .checkpointing import save_checkpoint
 from .policy_mlp import encode_state
 from .rollout_value import PolicyFn, rollout_return
 from .telemetry import TelemetryRecord, TrainingTelemetry
@@ -160,6 +161,8 @@ def train_q_mlp(
     learning_rate: float = 0.05,
     epochs: int = 80,
     seed: int = 0,
+    checkpoint_interval: int = 0,
+    checkpoint_dir: str | None = None,
 ) -> TrainedQ:
     """Train a tiny MLP regressor for Q_phi(s,a)."""
     if not dataset:
@@ -170,6 +173,8 @@ def train_q_mlp(
         raise ValueError("learning_rate must be > 0")
     if epochs <= 0:
         raise ValueError("epochs must be >= 1")
+    if checkpoint_interval < 0:
+        raise ValueError("checkpoint_interval must be >= 0")
 
     rng = random.Random(seed)
     model = _init_model(input_dim=19, hidden_dim=hidden_dim, rng=rng)
@@ -209,6 +214,23 @@ def train_q_mlp(
         epoch_loss = total_loss / len(dataset)
         losses.append(epoch_loss)
         records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
+        if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
+            save_checkpoint(
+                checkpoint_dir,
+                run_type="q",
+                step=epoch + 1,
+                model=model,
+                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+            )
+
+    if checkpoint_dir is not None and (checkpoint_interval == 0 or epochs % checkpoint_interval != 0):
+        save_checkpoint(
+            checkpoint_dir,
+            run_type="q",
+            step=epochs,
+            model=model,
+            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+        )
 
     telemetry = TrainingTelemetry(
         run_type="q",
