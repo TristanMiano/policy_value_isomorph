@@ -22,7 +22,7 @@
   - Ensure logs are append-safe for resumed runs.
   - Keep output directory layout consistent across tic-tac-toe and Connect Four.
 
-- [ ] 13. Add plotting utilities for training curves.
+- [x] 13. Add plotting utilities for training curves.
   - Generate loss-by-iteration/epoch plots.
   - Generate loss-by-wall-clock-time plots.
   - Support policy, `V(s)`, and `Q(s,a)` training runs.
