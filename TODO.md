@@ -36,7 +36,7 @@
   - Visualize checkpointed evaluation score trends.
   - Keep format consistent between tic-tac-toe and Connect Four.
 
-- [ ] 16. Save human-readable gameplay samples at each checkpoint.
+- [x] 16. Save human-readable gameplay samples at each checkpoint.
   - Persist at least 1–2 sampled games per checkpoint.
   - Include full move sequence and rendered board states after each move.
   - Provide game-format-appropriate rendering for tic-tac-toe and Connect Four.
