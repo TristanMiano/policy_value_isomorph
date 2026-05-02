@@ -58,3 +58,42 @@
   - Unit tests for telemetry writers/readers and checkpoint I/O.
   - Integration smoke tests for resume behavior and periodic evaluation hooks.
   - Demo scripts that produce example plots and gameplay sample artifacts.
+
+
+## Neural-network training modernization (planned Codex jobs)
+
+- [ ] 21. Audit the current manual training/optimizer code paths and define migration boundaries.
+  - Identify all places where gradients, parameter updates, and optimizer state are implemented manually.
+  - List which components must stay stable (data formats, CLI flags, telemetry schema) during migration.
+
+- [ ] 22. Select and document a modern NN backend library for extensible experimentation.
+  - Compare at least PyTorch and JAX/Flax against project needs (simplicity, ecosystem, checkpointing, future architecture changes).
+  - Make a concrete recommendation and record rationale in repo docs.
+
+- [ ] 23. Introduce backend abstraction interfaces for models, optimizers, and training loops.
+  - Define minimal interfaces so model architecture can be swapped without rewriting pipeline code.
+  - Keep tic-tac-toe rollout/value-recovery flow unchanged at the API level.
+
+- [ ] 24. Port policy/value/Q MLP models to the selected library with parity tests.
+  - Re-implement existing MLPs with equivalent input/output conventions and initialization behavior where practical.
+  - Add parity checks on forward-pass shapes and basic training-step loss decrease behavior.
+
+- [ ] 25. Replace custom optimizer updates with configurable AdamW support.
+  - Expose optimizer hyperparameters through existing CLI/training entrypoints.
+  - Preserve reproducibility hooks (seed handling, deterministic settings where feasible).
+
+- [ ] 26. Add optional Muon optimizer support if compatible with selected backend.
+  - If native support is unavailable, evaluate maintained third-party implementation quality before adoption.
+  - Ensure optimizer choice is a runtime configuration, not a code fork.
+
+- [ ] 27. Migrate checkpointing and resume logic to include backend-native optimizer/model state.
+  - Ensure backward-compatible loading strategy or provide one-time conversion tooling.
+  - Verify resumed runs remain append-safe for telemetry and sample outputs.
+
+- [ ] 28. Expand test coverage and smoke demos for the new backend training stack.
+  - Add unit tests for optimizer configuration, step execution, and checkpoint round-trips.
+  - Add at least one short end-to-end smoke run with AdamW (and Muon if enabled).
+
+- [ ] 29. Update docs and examples for architecture iteration workflows.
+  - Document how to add/replace model architectures with minimal pipeline changes.
+  - Include guidance for scaling from tic-tac-toe to larger games without rewriting core training glue.
