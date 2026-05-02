@@ -50,7 +50,7 @@
   - Continue logging without corrupting prior metrics.
   - Verify resumed runs still emit plots/evaluations/samples at expected intervals.
 
-- [ ] 19. Add CLI support for monitoring/checkpoint workflows.
+- [x] 19. Add CLI support for monitoring/checkpoint workflows.
   - Flags for evaluation cadence, checkpoint cadence, output dirs, and resume behavior.
   - Subcommands/utilities to regenerate plots from saved logs.
 
