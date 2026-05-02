@@ -32,7 +32,10 @@ def format_gameplay_sample(sample: GameplaySample) -> str:
         f"moves={list(sample.moves)}",
     ]
     for i, state in enumerate(sample.states):
-        lines.append(f"state[{i}]:")
+        if i == 0:
+            lines.append("state[0] (initial):")
+        else:
+            lines.append(f"state[{i}] (after move {i}: action={sample.moves[i - 1]}):")
         lines.append(state.as_pretty_string())
     if sample.states and sample.states[-1].is_terminal():
         lines.append(_result_label(sample.states[-1]))

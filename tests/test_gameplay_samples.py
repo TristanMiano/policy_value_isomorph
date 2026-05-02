@@ -10,6 +10,7 @@ def test_format_gameplay_sample_renders_tictactoe_and_connect_four() -> None:
     t1 = t0.apply_move(0)
     rendered_ttt = format_gameplay_sample(GameplaySample(checkpoint_step=2, game_index=0, moves=(0,), states=(t0, t1)))
     assert "checkpoint_step=2" in rendered_ttt
+    assert "state[1] (after move 1: action=0):" in rendered_ttt
     assert "X . ." in rendered_ttt
 
     c0 = ConnectFourState.initial()
@@ -35,7 +36,7 @@ def test_train_policy_mlp_writes_checkpoint_gameplay_samples(tmp_path) -> None:
     text = out_path.read_text(encoding="utf-8")
     assert "checkpoint_step=2" in text
     assert "checkpoint_step=4" in text
-    assert "state[0]:" in text
+    assert "state[0] (initial):" in text
     assert "moves=" in text
 
 
