@@ -11,6 +11,7 @@ from .sampling import generate_off_policy_dataset, generate_on_policy_dataset
 from .telemetry_io import append_gameplay_eval_jsonl, append_telemetry_csv, append_telemetry_jsonl, telemetry_run_dir
 from .training_plots import write_loss_plots_from_csv
 from .value_mlp import train_value_mlp, value_mlp_predict
+from .crash_logging import CrashLoggerConfig, enable_crash_logging
 
 
 def _cmd_data(args: argparse.Namespace) -> None:
@@ -143,6 +144,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_train.add_argument("--value-resume-checkpoint", type=str, default=None)
     p_train.add_argument("--value-resume-latest", action="store_true")
     p_train.add_argument("--telemetry-root-dir", type=str, default=None)
+    p_train.add_argument("--crash-log-enabled", action="store_true")
+    p_train.add_argument("--crash-log-path", type=str, default=None)
     p_train.set_defaults(func=_cmd_train)
 
     p_eval = sub.add_parser("eval", help="Train a quick policy and report evaluation metrics.")
@@ -167,6 +170,14 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    enable_crash_logging(
+        CrashLoggerConfig(
+            enabled=bool(getattr(args, "crash_log_enabled", False)),
+            log_path=getattr(args, "crash_log_path", None),
+        )
+    )
+
     args.func(args)
 
 
