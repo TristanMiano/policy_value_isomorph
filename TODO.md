@@ -54,7 +54,7 @@
   - Flags for evaluation cadence, checkpoint cadence, output dirs, and resume behavior.
   - Subcommands/utilities to regenerate plots from saved logs.
 
-- [ ] 20. Add tests and smoke demos for monitoring and checkpointing.
+- [x] 20. Add tests and smoke demos for monitoring and checkpointing.
   - Unit tests for telemetry writers/readers and checkpoint I/O.
   - Integration smoke tests for resume behavior and periodic evaluation hooks.
   - Demo scripts that produce example plots and gameplay sample artifacts.
