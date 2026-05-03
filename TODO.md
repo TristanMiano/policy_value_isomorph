@@ -62,7 +62,7 @@
 
 ## Neural-network training modernization (PyTorch-first)
 
-- [ ] 21. Audit current manual training/optimizer code paths and define PyTorch migration boundaries.
+- [x] 21. Audit current manual training/optimizer code paths and define PyTorch migration boundaries.
   - Identify where gradients, parameter updates, and optimizer state are currently handled.
   - List components that must remain stable during migration (data formats, CLI flags, telemetry schema).
 
