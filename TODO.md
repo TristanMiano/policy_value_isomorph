@@ -66,7 +66,7 @@
   - Identify where gradients, parameter updates, and optimizer state are currently handled.
   - List components that must remain stable during migration (data formats, CLI flags, telemetry schema).
 
-- [ ] 22. Record the PyTorch-first decision and migration constraints in project docs.
+- [x] 22. Record the PyTorch-first decision and migration constraints in project docs.
   - Treat PyTorch as the canonical backend for this phase.
   - Keep tic-tac-toe rollout/value-recovery APIs and artifact conventions stable unless explicitly versioned.
 

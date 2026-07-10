@@ -166,6 +166,21 @@ This is intentionally narrower than "all policies and all utilities are equivale
 
 ---
 
+## PyTorch-first migration decision (Task 22)
+
+For the current modernization phase, this project treats **PyTorch as the canonical training backend** for policy, state-value `V(s)`, and action-value `Q(s,a)` models.
+
+Migration constraints:
+
+1. Keep tic-tac-toe rollout/value-recovery APIs and value-sign semantics stable.
+2. Keep existing CLI workflows and artifact conventions (checkpoints, telemetry, plots) stable unless explicitly versioned.
+3. Limit changes to model/training internals first (forward/backward/optimizer/checkpoint state), not environment/evaluation redesign.
+4. Preserve resume semantics and reproducibility hooks (seed plumbing and deterministic settings where feasible).
+
+Detailed migration boundaries and compatibility constraints are documented in `PYTORCH_MIGRATION_AUDIT.md`.
+
+---
+
 ## Why start with tic-tac-toe?
 
 Because it is small enough that we can make the experiment crisp instead of hand-wavy.
