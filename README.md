@@ -2,7 +2,7 @@
 
 A small research/demo project exploring the following idea:
 
-> If we start from an agent's **policy**—a mapping from states to moves or next states—can we reconstruct a useful **value representation** from that policy alone, and then use that recovered value representation to choose moves by argmax?
+> If we start from an agent's **policy**—a mapping from states or histories to actions—can we reconstruct a useful **value representation** from that policy, and then use the recovered value under a declared selection mechanism to choose actions?
 
 This repo is meant to be a concrete, economical implementation of a claim inspired by Thoth-Hermes's post "Condensed response to 'hidden complexity of wishes'", especially the suggestion that there is an approximate correspondence between a policy-like representation and a utility/value-like representation over states.
 
@@ -12,7 +12,7 @@ The immediate practical goal is **not** to settle the philosophical claim in ful
 2. Freeze that policy.
 3. Use rollouts of the policy to estimate a value function induced by that policy.
 4. Train a value network on those estimates.
-5. Recover move choice by taking an argmax over successor-state values.
+5. Select moves using the recovered value—initially by an argmax over rollout-estimated successor-state or action values.
 6. Measure how closely the recovered value-guided agent matches the original policy.
 
 ---
@@ -31,17 +31,51 @@ What we want to recover is a value-like object:
 - `V(s) -> real`, a scalar estimate of how good state `s` is, or
 - `Q(s, a) -> real`, a scalar estimate of how good it is to take action `a` in state `s`.
 
-Once we have a value function, we can choose a move by comparing the values of successor states:
+One possible selection mechanism is direct comparison:
 
 `a* = argmax_a V(T(s, a))`
 
-or, equivalently,
+or
 
 `a* = argmax_a Q(s, a)`
 
-when a `Q` function is available.
+when a `Q` function is available. This direct argmax is a broad and useful policy decoder, but the value representation and the selection mechanism are conceptually separate. An arbitrary score whose argmax reproduces a policy does not automatically have cardinal utility semantics over uncertain outcomes.
 
-The main experiment in this repo is to see how much of the original policy can be reconstructed this way.
+For a stronger utility-agent interpretation, and the interpretation most directly connected to von Neumann-Morgenstern expected utility, actions should instead be regarded as inducing lotteries over continuations or complete trajectories. The preferred selector is then
+
+`a* = argmax_a E[U(tau) | s, a, environment, continuation rule]`
+
+where `U(tau)` is a declared cardinal utility of a complete trajectory `tau`. Discounted return is one common special case:
+
+`U(tau) = sum_t gamma^t r(s_t, a_t)`.
+
+### Why the current argmax may already be an expected-trajectory argmax
+
+The current project usually trains `V` and `Q` on average returns from policy rollouts. In that case their intended meanings are already
+
+`V^P(s) = E[U(tau) | start at s, then follow P]`
+
+and
+
+`Q^P(s, a) = E[U(tau) | take a at s, then follow P]`.
+
+Therefore, `argmax_a Q^P(s,a)` is already an argmax over expected trajectory utility; another outer rollout average is not needed. In a deterministic environment with no intermediate reward, comparing successor-state values can be the same computation:
+
+`Q^P(s,a) = V^P(T(s,a))`,
+
+subject to the perspective and sign convention. With stochastic transitions or rewards, the expectation must be taken explicitly unless the supplied `Q` estimate has already folded it in.
+
+This also means that one should not normally sum rollout-trained continuation values again along a sampled trajectory. If `V^P` or `Q^P` already summarizes expected future return, doing so would usually count future consequences repeatedly. Either sum instantaneous rewards/utilities and then take an expectation, or use the root continuation value that already contains that expectation.
+
+There is one further distinction. A score can be constructed to reproduce `P` by argmax exactly, but a return value induced by `P` need not do so:
+
+`P(s) need not equal argmax_a Q^P(s,a)`.
+
+The right-hand side is a one-step greedy improvement of `P` under the declared rollout payoff and continuation policy. Agreement with `P` is therefore an empirical result and evidence that `P` acts approximately as if it maximizes its own induced expected trajectory value—not a tautology.
+
+See [`docs/selection_semantics.md`](docs/selection_semantics.md) for the fuller distinction among decoder scores, instantaneous or terminal utility, expected return, trajectory lotteries, policy reconstruction, and greedy improvement.
+
+The main experiment in this repo is to see how much of the original policy can be reconstructed by this rollout-value-guided selection process.
 
 ---
 
@@ -57,7 +91,7 @@ A **state-value** answers:
 
 In reinforcement-learning notation:
 
-`V^pi(s) = E[ return | s, then follow pi ]`
+`V^pi(s) = E[return | s, then follow pi]`
 
 This is a scalar attached to the state.
 
@@ -69,7 +103,7 @@ An **action-value** answers:
 
 In notation:
 
-`Q^pi(s, a) = E[ return | take action a in s, then follow pi ]`
+`Q^pi(s, a) = E[return | take action a in s, then follow pi]`
 
 This is a scalar attached to a state-action pair.
 
@@ -77,7 +111,7 @@ This is a scalar attached to a state-action pair.
 
 In a standard Markov setting:
 
-`V^pi(s) = E_{a ~ pi(.|s)} [ Q^pi(s, a) ]`
+`V^pi(s) = E_{a ~ pi(.|s)}[Q^pi(s, a)]`
 
 So the state-value is the policy-weighted average of the action-values.
 
@@ -118,13 +152,13 @@ Typical reasons:
 3. **Averaging over policy choices.** `V^pi(s)` averages across the actions selected by the policy, while `Q^pi(s, a)` conditions on one specific action.
 4. **History matters but is not fully encoded in the visible board.** In that case the true state is not just the board position.
 
-That last point matters a lot outside tiny toy games. Tic-tac-toe is effectively Markov if the board and side-to-move are included. Chess is more subtle because repetition status, castling rights, en passant rights, and move counters matter, so the true state is richer than "piece placement alone." AlphaZero-style systems therefore encode additional rule-state information rather than just the visible board.  
+That last point matters a lot outside tiny toy games. Tic-tac-toe is effectively Markov if the board and side-to-move are included. Chess is more subtle because repetition status, castling rights, en passant rights, and move counters matter, so the true state is richer than "piece placement alone." AlphaZero-style systems therefore encode additional rule-state information rather than just the visible board.
 
 ---
 
 ## A useful way to think about the "entire trajectory" question
 
-Yes: if `V(s)` and `Q(s, a)` do not cleanly line up on a coarse state representation, one remedy is to **lift the state space**.
+If `V(s)` and `Q(s, a)` do not cleanly line up on a coarse state representation, one remedy is to **lift the state space**.
 
 Instead of defining the state as only the current board, define it as something richer, such as:
 
@@ -135,11 +169,11 @@ Instead of defining the state as only the current board, define it as something 
 
 Then a state-value over this enlarged object is often perfectly well-defined:
 
-`V^pi(h_t) = E[ return | history h_t, then follow pi ]`
+`V^pi(h_t) = E[return | history h_t, then follow pi]`
 
 and the corresponding action-value is:
 
-`Q^pi(h_t, a) = E[ return | history h_t, take a, then follow pi ]`
+`Q^pi(h_t, a) = E[return | history h_t, take a, then follow pi]`
 
 In deterministic settings, these relate cleanly via the next history:
 
@@ -160,7 +194,9 @@ For tic-tac-toe, the simple board state is already rich enough. For larger games
 
 We will test the following concrete claim:
 
-> Given a frozen policy `pi`, a value function induced by that policy can be estimated from rollouts, trained into a value network, and used to recover much of the original move behavior by argmax over successor-state values.
+> Given a frozen policy `pi`, a return-value function induced by that policy can be estimated from rollouts, trained into a value network, and used to recover much of the original move behavior by greedily maximizing estimated expected trajectory value.
+
+In the current deterministic game setting, this is implemented by an argmax or argmin over rollout-trained successor-state values, or equivalently by an argmax over rollout-trained action values under the appropriate perspective convention.
 
 This is intentionally narrower than "all policies and all utilities are equivalent." It is a tractable, empirical version of the broader idea.
 
@@ -214,9 +250,11 @@ Before using neural nets, do the simplest possible version.
    - `V^pi(s)` from terminal outcomes, and optionally
    - `Q^pi(s, a)` for each legal action.
 5. Reconstruct action choice using:
-   - `argmax_a V(T(s,a))`, or
-   - `argmax_a Q(s,a)`.
-6. Compare reconstructed decisions to the original policy.
+   - `argmax_a V^pi(T(s,a))`, or
+   - `argmax_a Q^pi(s,a)`,
+   with the appropriate perspective/sign convention.
+6. Interpret this as greedy expected-trajectory selection because the rollout-trained values already approximate expected return.
+7. Compare reconstructed decisions to the original policy and distinguish reconstruction from one-step policy improvement.
 
 This phase tells us whether the basic idea works at all.
 
@@ -242,6 +280,8 @@ For many sampled states `s`, generate Monte Carlo rollouts under the frozen poli
 
 For deterministic two-player zero-sum tic-tac-toe, use terminal labels in `{-1, 0, +1}` from a fixed player perspective.
 
+These labels are Monte Carlo estimates of expected trajectory utility under the frozen continuation policy, not merely arbitrary pointwise scores.
+
 ### Phase 3: train value network
 
 Train a separate network:
@@ -258,15 +298,15 @@ for direct action-value prediction.
 
 ### Phase 4: recover policy from value
 
-Construct a recovered policy:
+Construct a recovered value-guided policy:
 
 `pi_V(s) = argmax_a V_phi(T(s, a))`
 
 or
 
-`pi_Q(s) = argmax_a Q_phi(s, a)`
+`pi_Q(s) = argmax_a Q_phi(s, a)`.
 
-Then evaluate how closely these match the original policy `pi`.
+Because `V_phi` and `Q_phi` are trained toward expected rollout returns, these pointwise comparisons are intended to approximate expected-trajectory maximization. Then evaluate how closely they match the original policy `pi`, while recognizing that greedy maximization of `Q^pi` can improve rather than exactly reproduce an arbitrary `pi`.
 
 ### Phase 5: expand to Connect Four
 
@@ -307,6 +347,9 @@ Recommended metrics:
 6. **Comparison to ground-truth minimax value**  
    Especially useful for tic-tac-toe.
 
+7. **Greedy-improvement gap**  
+   Separate disagreement caused by value-estimation error from disagreement because `pi` does not itself greedily maximize `Q^pi`.
+
 ---
 
 ## Key implementation cautions
@@ -340,6 +383,14 @@ If value labels are collected only from states visited by the original policy, t
 
 For tic-tac-toe and Connect Four, symmetry reduction or augmentation may improve sample efficiency a lot.
 
+### 6. Value semantics and double counting
+
+Record whether a learned value is a decoder score, instantaneous utility, terminal utility, or expected continuation return. Do not average or sum continuation values as though they were instantaneous rewards when the rollout expectation is already included.
+
+### 7. Reconstruction versus optimization
+
+Do not infer exact policy recovery merely because `Q^pi` is accurately estimated. Greedy expected-return selection can differ from the policy whose rollouts generated the labels.
+
 ---
 
 ## Minimal repo structure
@@ -352,6 +403,7 @@ Suggested initial files:
 - `generate_rollouts.py` — create value targets from frozen policy
 - `train_value.py` — train the value network
 - `evaluate.py` — compare original and recovered policies
+- `docs/selection_semantics.md` — value meanings and selection mechanisms
 - `notebooks/` or `plots/` — visualizations and diagnostics
 
 ---
@@ -364,7 +416,8 @@ A good first milestone is:
 - implement a decent policy
 - estimate `V^pi(s)` for every reachable state or a very large fraction of them
 - train a small value net
-- show that `argmax_a V(T(s,a))` matches the original policy on a large share of states
+- show how often greedy expected-return selection via `V^pi(T(s,a))` matches the original policy
+- separate value-estimation failures from genuine greedy-improvement differences
 
 If that works, the repo already demonstrates the core idea in a real, inspectable way.
 
@@ -376,7 +429,7 @@ If that works, the repo already demonstrates the core idea in a real, inspectabl
    This directly tests whether action-values are easier to recover than successor-state values.
 
 2. **Use intentionally imperfect policies.**  
-   This can show that the method works for arbitrary policies, not only optimal ones.
+   This can show when greedy use of recovered return value reproduces a policy and when it improves or departs from it.
 
 3. **Measure how reconstruction quality changes with rollout budget.**  
    This connects directly to the "sample many trajectories" idea.
@@ -385,7 +438,10 @@ If that works, the repo already demonstrates the core idea in a real, inspectabl
    Instead of valuing only raw board states, value a latent representation induced by the policy net.
 
 5. **Move beyond perfect-information games.**  
-   This would force the repo to confront the trajectory/history issue more directly.
+   This would force the repo to confront the trajectory/history and lottery issues more directly.
+
+6. **Test lottery preferences explicitly.**  
+   Compare choices among induced trajectory distributions with the expectations predicted by a recovered cardinal value artifact.
 
 ---
 
@@ -395,10 +451,11 @@ This project is successful if it shows something like the following:
 
 - a policy can be learned or imported for a small discrete game
 - a value function induced by that policy can be estimated from rollouts
-- a value network can learn that induced value function reasonably well
-- a policy recovered from the value network reproduces a substantial fraction of the original policy's choices
+- a value network can learn that expected-return function reasonably well
+- expected-trajectory selection through the learned value reproduces a substantial fraction of the original policy's choices
+- reconstruction error and genuine greedy-policy improvement can be distinguished
 
-That would not prove a universal philosophical isomorphism. But it would provide a concrete working demonstration of a nontrivial bridge from policy-like behavior to value-like representation.
+That would not prove a universal philosophical isomorphism or establish VNM rationality from behavior alone. But it would provide a concrete working demonstration of a nontrivial bridge from policy-like behavior to expected-value-guided action selection.
 
 ---
 
@@ -422,15 +479,14 @@ If Codex is asked to continue from this README, it should begin with the smalles
 1. implement tic-tac-toe
 2. define a clean state encoding and transition function
 3. choose a policy representation
-4. generate rollout-based value labels from a frozen policy
+4. generate rollout-based expected-return labels from a frozen policy
 5. train a value net
-6. reconstruct the policy by argmax over successor-state values
-7. evaluate agreement and visualize mistakes
+6. construct a value-guided policy by greedily maximizing the learned expected return
+7. evaluate agreement, greedy-improvement differences, calibration, and mistakes
 
 Prefer a simple, correct version over a flashy one. The first target is a reproducible tic-tac-toe demo, not a giant training stack.
 
 ---
-
 
 ## Reproducibility
 
@@ -444,7 +500,7 @@ The repository now contains a runnable minimal vertical slice for tic-tac-toe:
 - legal move generation, transition, terminal and winner detection
 - deterministic baseline policy (win/block/center/corners)
 - rollout-based `V^pi(s)` estimation from a fixed root-player perspective
-- recovered policy via successor-state value comparison (max for root turn, min for opponent turn)
+- recovered policy via successor-state expected-value comparison (max for root turn, min for opponent turn)
 - pytest coverage for game logic, value sign behavior, and recovered action behavior
 - runnable demo script printing sample states, values, and chosen actions
 
