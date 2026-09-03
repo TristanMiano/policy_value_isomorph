@@ -2,80 +2,49 @@
 
 A small research/demo project exploring the following idea:
 
-> If we start from an agent's **policy**—a mapping from states or histories to actions—can we reconstruct a useful **value representation** from that policy, and then use the recovered value under a declared selection mechanism to choose actions?
+> If we start from an agent's **policy**—a mapping from states or histories to actions—can we reconstruct a useful **value representation** together with a declared selection mechanism that reproduces the policy's behavior?
 
-This repo is meant to be a concrete, economical implementation of a claim inspired by Thoth-Hermes's post "Condensed response to 'hidden complexity of wishes'", especially the suggestion that there is an approximate correspondence between a policy-like representation and a utility/value-like representation over states.
+This repo is meant to be a concrete, economical implementation of a claim inspired by Thoth-Hermes's post "Condensed response to 'hidden complexity of wishes'", especially the suggestion that there is an approximate correspondence between a policy-like representation and a utility/value-like representation over states, actions, continuations, or trajectories.
 
-The immediate practical goal is **not** to settle the philosophical claim in full generality. The goal is narrower and empirical:
-
-1. Start with a known policy for a small discrete game.
-2. Freeze that policy.
-3. Use rollouts of the policy to estimate a value function induced by that policy.
-4. Train a value network on those estimates.
-5. Select moves using the recovered value—initially by an argmax over rollout-estimated successor-state or action values.
-6. Measure how closely the recovered value-guided agent matches the original policy.
+The immediate practical goal is **not** to settle the philosophical claim in full generality. The current implementation starts with small games where the policy, environment, rollouts, and recovered values can all be inspected directly.
 
 ---
 
-## Core idea
+## Core idea: two nested claims
 
-We begin with a policy-like object:
+The project now separates two questions that should not be conflated.
 
-- `P(s) -> a`, a deterministic move chooser, or
-- `P(s) -> pi(.|s)`, a distribution over legal actions.
+### 1. Behavioral reconstruction
 
-In a deterministic board game, the chosen action `a` induces a next state `T(s, a)`.
+For an arbitrary policy `P`, recover a value-like score or energy `S_P` and a matching decoder `D` such that
 
-What we want to recover is a value-like object:
+```text
+P approximately equals D(S_P).
+```
 
-- `V(s) -> real`, a scalar estimate of how good state `s` is, or
-- `Q(s, a) -> real`, a scalar estimate of how good it is to take action `a` in state `s`.
+For deterministic policies, direct action scores plus a fixed-tie-break `argmax` can represent the behavior exactly. For stochastic policies, log scores or energies plus normalized sampling can represent the full action distribution exactly. These are therefore the theoretically closest mechanisms when the sole objective is to reproduce arbitrary `P`.
 
-One possible selection mechanism is direct comparison:
+### 2. Expected-utility factorization
 
-`a* = argmax_a V(T(s, a))`
+Ask whether a behaviorally faithful score also admits the stronger form
 
-or
+```text
+S_P(h,a) approximately equals E[U(tau) | h, a, environment, continuation rule],
+```
 
-`a* = argmax_a Q(s, a)`
+followed by an `argmax` over actions. This treats each action as inducing a lottery over trajectories and is the form most directly connected to VNM expected utility. It is potentially more explanatory, transferable, and interpretable, but it is not guaranteed to reproduce an arbitrary policy.
 
-when a `Q` function is available. This direct argmax is a broad and useful policy decoder, but the value representation and the selection mechanism are conceptually separate. An arbitrary score whose argmax reproduces a policy does not automatically have cardinal utility semantics over uncertain outcomes.
+A rollout-trained `V^P` or `Q^P` often already approximates the expectation over future trajectories. In that case, `argmax_a Q^P(h,a)` is already an expected-trajectory selector; another outer rollout average is unnecessary. However, greedily maximizing `Q^P` can be a one-step improvement over `P` rather than an exact reconstruction of it.
 
-For a stronger utility-agent interpretation, and the interpretation most directly connected to von Neumann-Morgenstern expected utility, actions should instead be regarded as inducing lotteries over continuations or complete trajectories. The preferred selector is then
+The resulting conceptual spine is
 
-`a* = argmax_a E[U(tau) | s, a, environment, continuation rule]`
+```text
+P  ->  behaviorally faithful score S_P  ->  possible trajectory utility U.
+```
 
-where `U(tau)` is a declared cardinal utility of a complete trajectory `tau`. Discounted return is one common special case:
+The first arrow is the broad policy-value representation claim. The second is a stronger utility-factorization hypothesis to test rather than assume.
 
-`U(tau) = sum_t gamma^t r(s_t, a_t)`.
-
-### Why the current argmax may already be an expected-trajectory argmax
-
-The current project usually trains `V` and `Q` on average returns from policy rollouts. In that case their intended meanings are already
-
-`V^P(s) = E[U(tau) | start at s, then follow P]`
-
-and
-
-`Q^P(s, a) = E[U(tau) | take a at s, then follow P]`.
-
-Therefore, `argmax_a Q^P(s,a)` is already an argmax over expected trajectory utility; another outer rollout average is not needed. In a deterministic environment with no intermediate reward, comparing successor-state values can be the same computation:
-
-`Q^P(s,a) = V^P(T(s,a))`,
-
-subject to the perspective and sign convention. With stochastic transitions or rewards, the expectation must be taken explicitly unless the supplied `Q` estimate has already folded it in.
-
-This also means that one should not normally sum rollout-trained continuation values again along a sampled trajectory. If `V^P` or `Q^P` already summarizes expected future return, doing so would usually count future consequences repeatedly. Either sum instantaneous rewards/utilities and then take an expectation, or use the root continuation value that already contains that expectation.
-
-There is one further distinction. A score can be constructed to reproduce `P` by argmax exactly, but a return value induced by `P` need not do so:
-
-`P(s) need not equal argmax_a Q^P(s,a)`.
-
-The right-hand side is a one-step greedy improvement of `P` under the declared rollout payoff and continuation policy. Agreement with `P` is therefore an empirical result and evidence that `P` acts approximately as if it maximizes its own induced expected trajectory value—not a tautology.
-
-See [`docs/selection_semantics.md`](docs/selection_semantics.md) for the fuller distinction among decoder scores, instantaneous or terminal utility, expected return, trajectory lotteries, policy reconstruction, and greedy improvement.
-
-The main experiment in this repo is to see how much of the original policy can be reconstructed by this rollout-value-guided selection process.
+See [`docs/policy_reconstruction_vs_utility_factorization.md`](docs/policy_reconstruction_vs_utility_factorization.md) for the full argument and [`docs/selection_semantics.md`](docs/selection_semantics.md) for the operational contract governing scores, rollout values, lotteries, and double counting.
 
 ---
 
@@ -192,13 +161,15 @@ For tic-tac-toe, the simple board state is already rich enough. For larger games
 
 ## Project thesis for this repo
 
-We will test the following concrete claim:
+The broad thesis is:
 
-> Given a frozen policy `pi`, a return-value function induced by that policy can be estimated from rollouts, trained into a value network, and used to recover much of the original move behavior by greedily maximizing estimated expected trajectory value.
+> Given a sufficiently well-defined policy `P`, a value-like action or continuation score plus an appropriate declared decoder can reproduce its behavior exactly or approximately.
 
-In the current deterministic game setting, this is implemented by an argmax or argmin over rollout-trained successor-state values, or equivalently by an argmax over rollout-trained action values under the appropriate perspective convention.
+The stronger empirical thesis is:
 
-This is intentionally narrower than "all policies and all utilities are equivalent." It is a tractable, empirical version of the broader idea.
+> Some behaviorally faithful scores can also be recovered or approximated as expected utility over trajectories under a compact, stable return contract.
+
+The current game pipeline primarily tests the stronger return-value route: estimate `V^pi` or `Q^pi` from policy rollouts, train a value model, greedily maximize the estimated expected trajectory value, and measure how closely that value-guided policy matches the source policy. The planned direct decoder-score baselines are needed to separate universal behavioral reconstructability from the stronger question of whether the policy is approximately greedy with respect to a recovered return value.
 
 ---
 
@@ -240,23 +211,23 @@ If the idea works there, we can move to Connect Four as the next step.
 
 Before using neural nets, do the simplest possible version.
 
-1. Implement tic-tac-toe environment.
+1. Implement the tic-tac-toe environment.
 2. Create a policy `pi`:
    - either minimax,
    - or a small trained policy,
    - or even a scripted suboptimal policy.
 3. Enumerate or sample many reachable states.
-4. For each state, run many rollouts under `pi` and estimate:
+4. Build a direct decoder-score baseline that reproduces deterministic actions by `argmax` and stochastic policies by normalized sampling.
+5. For each state, run many rollouts under `pi` and estimate:
    - `V^pi(s)` from terminal outcomes, and optionally
    - `Q^pi(s, a)` for each legal action.
-5. Reconstruct action choice using:
+6. Construct the return-greedy policy using:
    - `argmax_a V^pi(T(s,a))`, or
    - `argmax_a Q^pi(s,a)`,
    with the appropriate perspective/sign convention.
-6. Interpret this as greedy expected-trajectory selection because the rollout-trained values already approximate expected return.
-7. Compare reconstructed decisions to the original policy and distinguish reconstruction from one-step policy improvement.
+7. Compare both recovered policies with the source and distinguish decoder approximation, return-estimation error, and genuine one-step policy improvement.
 
-This phase tells us whether the basic idea works at all.
+This phase separates the broad representation claim from the stronger expected-return factorization claim.
 
 ### Phase 1: policy network
 
@@ -329,26 +300,32 @@ The repo should not just produce a cool picture; it should measure the reconstru
 
 Recommended metrics:
 
-1. **Action agreement**  
-   Percentage of states where the recovered value-guided policy chooses the same move as the original policy.
+1. **Direct decoder fidelity**  
+   Action agreement for deterministic policies and distributional fidelity for stochastic policies.
 
-2. **Top-k agreement**  
+2. **Action agreement**  
+   Percentage of states where the return-value-guided policy chooses the same move as the original policy.
+
+3. **Top-k agreement**  
    Whether the recovered move lies in the original policy's top-k actions.
 
-3. **KL divergence / cross-entropy**  
+4. **KL divergence / cross-entropy**  
    If the original policy is stochastic.
 
-4. **Win rate / draw rate**  
+5. **Win rate / draw rate**  
    Play the recovered policy against the original policy.
 
-5. **Calibration of value predictions**  
+6. **Calibration of value predictions**  
    Compare `V_phi(s)` against empirical rollout returns.
 
-6. **Comparison to ground-truth minimax value**  
+7. **Comparison to ground-truth minimax value**  
    Especially useful for tic-tac-toe.
 
-7. **Greedy-improvement gap**  
+8. **Greedy-improvement gap**  
    Separate disagreement caused by value-estimation error from disagreement because `pi` does not itself greedily maximize `Q^pi`.
+
+9. **Utility-factorization gap**  
+   Measure how much behavioral fidelity is lost when a direct policy score is constrained to arise from a declared expected-trajectory model.
 
 ---
 
@@ -391,6 +368,10 @@ Record whether a learned value is a decoder score, instantaneous utility, termin
 
 Do not infer exact policy recovery merely because `Q^pi` is accurately estimated. Greedy expected-return selection can differ from the policy whose rollouts generated the labels.
 
+### 8. Decoder matching
+
+Do not judge reconstruction of a stochastic policy only by the `argmax` action. The decoder must reproduce the policy distribution when distributional behavior is part of the target.
+
 ---
 
 ## Minimal repo structure
@@ -404,6 +385,7 @@ Suggested initial files:
 - `train_value.py` — train the value network
 - `evaluate.py` — compare original and recovered policies
 - `docs/selection_semantics.md` — value meanings and selection mechanisms
+- `docs/policy_reconstruction_vs_utility_factorization.md` — full theoretical distinction between imitation and consequential factorization
 - `notebooks/` or `plots/` — visualizations and diagnostics
 
 ---
@@ -414,19 +396,20 @@ A good first milestone is:
 
 - build tic-tac-toe state encoding
 - implement a decent policy
+- construct an exact direct decoder-score baseline
 - estimate `V^pi(s)` for every reachable state or a very large fraction of them
 - train a small value net
 - show how often greedy expected-return selection via `V^pi(T(s,a))` matches the original policy
-- separate value-estimation failures from genuine greedy-improvement differences
+- separate direct reconstruction error, value-estimation error, and genuine greedy-improvement differences
 
-If that works, the repo already demonstrates the core idea in a real, inspectable way.
+If that works, the repo demonstrates both the universal representation baseline and the stronger return-value question in a real, inspectable setting.
 
 ---
 
 ## Possible extensions
 
-1. **Compare `V` reconstruction to direct `Q` reconstruction.**  
-   This directly tests whether action-values are easier to recover than successor-state values.
+1. **Compare decoder-score, `V`, and direct `Q` reconstruction.**  
+   This separates behavioral imitation from successor-state and action-return recovery.
 
 2. **Use intentionally imperfect policies.**  
    This can show when greedy use of recovered return value reproduces a policy and when it improves or departs from it.
@@ -443,19 +426,27 @@ If that works, the repo already demonstrates the core idea in a real, inspectabl
 6. **Test lottery preferences explicitly.**  
    Compare choices among induced trajectory distributions with the expectations predicted by a recovered cardinal value artifact.
 
+7. **Measure utility-factorization complexity.**  
+   Ask how simple, stable, and transferable a trajectory utility can remain while preserving the direct decoder's behavioral fidelity.
+
 ---
 
 ## What success would look like
 
-This project is successful if it shows something like the following:
+This project is successful at the behavioral-representation level if it shows that:
 
-- a policy can be learned or imported for a small discrete game
-- a value function induced by that policy can be estimated from rollouts
-- a value network can learn that expected-return function reasonably well
-- expected-trajectory selection through the learned value reproduces a substantial fraction of the original policy's choices
-- reconstruction error and genuine greedy-policy improvement can be distinguished
+- deterministic and stochastic policies admit explicit value-plus-decoder representations;
+- learned decoder scores reproduce source behavior under the appropriate selection mechanism; and
+- repeated recoveries converge on stable behavioral or ordinal structure after accounting for value equivalences.
 
-That would not prove a universal philosophical isomorphism or establish VNM rationality from behavior alone. But it would provide a concrete working demonstration of a nontrivial bridge from policy-like behavior to expected-value-guided action selection.
+It is successful at the stronger utility-factorization level if it additionally shows that:
+
+- a value function induced by policy rollouts can be estimated accurately;
+- expected-trajectory selection through the learned value reproduces a substantial fraction of the original policy's choices;
+- reconstruction error and genuine greedy-policy improvement can be distinguished; and
+- the expected-trajectory representation is compact, stable, transferable, or interpretively useful relative to a direct decoder score.
+
+That would not prove a universal philosophical isomorphism or establish VNM rationality from behavior alone. It would provide a concrete bridge from arbitrary policy behavior to value-like representation, while identifying when that representation supports the stronger interpretation of expected utility over consequences.
 
 ---
 
@@ -479,10 +470,11 @@ If Codex is asked to continue from this README, it should begin with the smalles
 1. implement tic-tac-toe
 2. define a clean state encoding and transition function
 3. choose a policy representation
-4. generate rollout-based expected-return labels from a frozen policy
-5. train a value net
-6. construct a value-guided policy by greedily maximizing the learned expected return
-7. evaluate agreement, greedy-improvement differences, calibration, and mistakes
+4. implement a direct decoder-score baseline
+5. generate rollout-based expected-return labels from a frozen policy
+6. train a value net
+7. construct a value-guided policy by greedily maximizing the learned expected return
+8. evaluate decoder fidelity, agreement, greedy-improvement differences, calibration, and mistakes
 
 Prefer a simple, correct version over a flashy one. The first target is a reproducible tic-tac-toe demo, not a giant training stack.
 
