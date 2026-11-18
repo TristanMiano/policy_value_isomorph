@@ -1,0 +1,4 @@
+experiments/neural_tictactoe_control/*.csv text eol=lf
+experiments/neural_tictactoe_control/*.json text eol=lf
+experiments/neural_tictactoe_control/*.pt binary
+experiments/neural_tictactoe_control/*.gz binary

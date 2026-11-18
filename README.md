@@ -14,6 +14,8 @@ Two protocols apply throughout this project. Keep quantitative questions and ans
 
 ## Core idea: two nested claims
 
+The primary tic-tac-toe experiment first trains and freezes a neural player and checks its moves against every reachable decision board. It samples games, counts transitions from each board, and trains networks to predict the fraction of visits taking each move. For each fitted network it compares choosing the highest immediate score with choosing by the average learned utility of complete sampled games. [Architecture, training procedure and results](NEURAL_TICTACTOE_CONTROL.md)
+
 The project now separates two questions that should not be conflated.
 
 ### 1. Behavioral reconstruction
@@ -171,7 +173,7 @@ The stronger empirical thesis is:
 
 > Some behaviorally faithful scores can also be recovered or approximated as expected utility over trajectories under a compact, stable return contract.
 
-The game experiment estimates `V^pi` or `Q^pi` from policy rollouts, trains a value model, and measures how closely the selected moves match the source. A model trained directly on the source's moves supplies a comparison. For a source move with lower expected payoff, measure both how often it occurs and how many payoff points it gives up.
+The primary game experiment uses the frozen player's move frequencies to train a score network. It compares immediate score maximization with maximization of expected learned utility over simulated games. A separate experiment trains on final game payoffs. Both report how closely the resulting moves match the source and how each recovered player performs over whole games.
 
 ---
 
@@ -241,45 +243,19 @@ Candidate forms:
 - tiny CNN with board planes
 - small AlphaZero-style network with policy head
 
-The network should output legal-action logits or probabilities.
+The network outputs scores or probabilities for legal moves. For the optimal neural tic-tac-toe comparison, first train on perfect-play move choices, check the guaranteed outcome of the trained move at every reachable decision board, then freeze the weights before collecting reconstruction data.
 
-### Phase 2: rollout-generated value labels
+### Phase 2 — Count observed transitions
 
-Freeze the policy network.
+Sample games from the frozen network to completion. For each observed board, divide the count of each outgoing transition by the total visits to that board. Record the starting positions, counts, denominators and coverage. In a small game the resulting table can drive move selection directly.
 
-For many sampled states `s`, generate Monte Carlo rollouts under the frozen policy and estimate:
+### Phase 3 — Fit the visit scores
 
-`target_value(s) = average terminal return from s under pi`
+Use those observed fractions as training labels for a network scoring the current and resulting board, or the current board and candidate move. A network that sees only the resulting board provides a comparison when several moves share a successor. Report prediction error and distinguish fits on all positions from fits evaluated on omitted positions.
 
-For deterministic two-player zero-sum tic-tac-toe, use terminal labels in `{-1, 0, +1}` from a fixed player perspective.
+### Phase 4 — Compare immediate scores and whole-game utilities
 
-These labels are Monte Carlo estimates of expected trajectory utility under the frozen continuation policy, not merely arbitrary pointwise scores.
-
-### Phase 3: train value network
-
-Train a separate network:
-
-`V_phi(s) ~ target_value(s)`
-
-using mean squared error (MSE), the average squared difference between predicted and target values, or another stated loss.
-
-Optionally also train:
-
-`Q_phi(s, a)`
-
-for direct action-value prediction.
-
-### Phase 4: recover policy from value
-
-Construct a recovered value-guided policy:
-
-`pi_V(s) = argmax_a V_phi(T(s, a))`
-
-or
-
-`pi_Q(s) = argmax_a Q_phi(s, a)`.
-
-Because `V_phi` and `Q_phi` are trained toward expected rollout returns, these pointwise comparisons are intended to approximate expected-trajectory maximization. Then evaluate how closely they match the original policy `pi`, while recognizing that greedy maximization of `Q^pi` can improve rather than exactly reproduce an arbitrary `pi`.
+First take the move with the largest immediate score. Then, using the **same weights**, take each candidate move, sample complete continuations under a declared rule for both players, and select the move with greatest average learned utility. Define the utility of the complete play before comparison. Examples use the learned score at the final move or the sum of mover-signed scores, optionally reducing the weight of later moves. Measure move agreement and win, draw and loss rates for both selection rules. [Implemented study](NEURAL_TICTACTOE_CONTROL.md)
 
 ### Phase 5: expand to Connect Four
 

@@ -4,6 +4,8 @@ November 17, 2026. A **source policy** is an original player's rule for choosing
 
 ## The five source policies
 
+This initial experiment trained value networks on game payoffs. The primary visit-count experiment trains a network to play optimally, observes which transitions it takes, and fits value networks to the observed frequencies. It compares choosing the highest immediate score with choosing by the average learned utility of sampled complete games. It also evaluates the original saved payoff networks separately. [Neural training and visit-count comparisons](NEURAL_TICTACTOE_CONTROL.md)
+
 X moves first. Cells are numbered 0 through 8 from left to right across the rows. An **expected payoff**, also called a **return** here, is the average of the payoffs using the probabilities of the possible outcomes.
 
 | Player used as the source | How it chooses a move |

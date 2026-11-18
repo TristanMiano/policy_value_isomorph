@@ -10,6 +10,12 @@ These instructions apply to the entire repository.
 
 Both rules are mandatory for the whole project, including study designs, task descriptions, code-generated result tables and their field descriptions, research reports, progress updates, and all chat replies and summaries. Each standalone communication must be understandable without a previous chat message.
 
+For neural tic-tac-toe comparisons with minimax (the best outcome a player can guarantee against perfect replies), first train a neural source and check its moves on every reachable decision board. Report the number preserving that outcome, the payoff given up, and agreement with the specific rule for breaking ties. Use an optimal neural source for the optimal-play comparison. Describe weaker sources by their actual training target. Give the architecture, training data, optimization settings, and coverage for both source and reconstruction.
+
+Compare a board-scoring network (V) and a board-and-move-scoring network (Q) under both direct move selection and the von Neumann–Morgenstern (VNM) expected-utility formulation. For the latter, define the learned utility of a complete trajectory, the environment, continuation policy, perspective, and rule for ties. For each move take the expectation of that same utility over possible continuations. Report move fidelity and game outcomes side by side, and disclose access to the source during selection. A fixed win/draw/loss payoff provides an additional reference.
+
+In the primary visit-count experiment, train and freeze the source first. Sample complete games, retain transition counts and their denominators, and specify how games start. Fit the value networks to normalized observed transition counts. Compare direct selection with sampled expected-utility selection using the same fitted scores. Record the continuation rule for both players, rollout budget, whole-game utility and time decay. Show how many distinct boards were observed. Report results obtained from game-outcome training as a separate experiment.
+
 ## Project goals (Task 1)
 - Keep the implementation minimal, correct, and easy to inspect.
 - Focus only on tic-tac-toe and rollout-based value recovery from a fixed policy.
