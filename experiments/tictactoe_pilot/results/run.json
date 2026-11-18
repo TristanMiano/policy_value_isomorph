@@ -1,0 +1,58 @@
+{
+  "decision_boards": 4520,
+  "decision_orbits": 627,
+  "edges": 16167,
+  "protocol_sha256": "943777808eaea218fb0e8ed3a8f103f81de63f154892b614eece6a346ef2739a",
+  "sha256": {
+    "boards.csv.gz": "9f9beeda6632a269e4dc0418a1f2f02c96b660bf3ba30eb6c9481de3e64afa63",
+    "calibration.csv": "e1b3074d662fc05640bca3f1ec21fe01c5ccb44d1676a2a27cde88b66315c5ec",
+    "fidelity.csv": "18749e797c80b3a9738122c5ee7927d8ccf65e76c5279cb56683241fcdf05938",
+    "matchups.csv": "ca68ec8354349066da93a389f1c249b3963071b02cc6cd4ec05e248d66d59de2",
+    "recovery_weights.json": "ac94ef3bd230cf3c9a4c90ec7cd4c3c5d8e8d9a41b19225af68d186e00b0cd4f"
+  },
+  "split_decision_counts": {
+    "test": 780,
+    "train": 2980,
+    "validation": 760
+  },
+  "states": 5478,
+  "training": {
+    "heuristic": {
+      "policy_boards": 2980,
+      "policy_labels": 2980,
+      "q_inputs": 10864,
+      "rollouts_per_target": 1,
+      "v_inputs": 1215
+    },
+    "minimax": {
+      "policy_boards": 2980,
+      "policy_labels": 2980,
+      "q_inputs": 10864,
+      "rollouts_per_target": 1,
+      "v_inputs": 1215
+    },
+    "miss_win": {
+      "policy_boards": 2980,
+      "policy_labels": 2980,
+      "q_inputs": 10864,
+      "rollouts_per_target": 1,
+      "v_inputs": 1215
+    },
+    "stochastic_heuristic": {
+      "policy_boards": 2980,
+      "policy_labels": 23840,
+      "q_inputs": 10864,
+      "rollouts_per_target": 16,
+      "v_inputs": 1215
+    },
+    "trained_net": {
+      "policy_boards": 2980,
+      "policy_labels": 2980,
+      "q_inputs": 10864,
+      "rollouts_per_target": 1,
+      "v_inputs": 1215
+    }
+  },
+  "version": "tic-tac-toe-pilot-v1",
+  "weights_sha256": "8ea145b04cade4568706bbb715c7318cca48e57d14e4887949799c13a8367256"
+}
