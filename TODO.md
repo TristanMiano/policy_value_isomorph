@@ -4,7 +4,7 @@ Last updated 2026-11-17
 
 ## Resume here
 
-**Next task is 60. Freeze the tic-tac-toe source policies, opponents, and evaluation protocol for the first exact comparison.** Run Task 61 and the tic-tac-toe checkpoint next, using the current Python backend. Then resume at Task 23. Existing task numbers are retained so earlier references still resolve.
+**Next task is 61. Run the exact tic-tac-toe comparison with the frozen Task 60 manifest, then adjudicate the pilot before Task 23.**
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -195,11 +195,13 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
 
 # First milestone — Exact tic-tac-toe reconstruction on the current backend
 
-- [ ] **60. Freeze the source policies, opponents, and pilot protocol.**
+- [x] **60. Freeze the source policies, opponents, and pilot protocol.**
   - Include a fixed-tie minimax policy, a scripted policy with deliberate mistakes, a frozen trained policy network, and a stochastic source with known legal probabilities. Save the network checkpoint, policy versions, and decoding rules. Reserve independent policies or network seeds for confirmation.
   - Freeze opponents including uniform random legal moves, a panel of **untrained random neural networks** with saved architecture, initialization seeds, weights and legal-action decoder, the existing heuristic, and minimax. A frozen random-weight network may play deterministically. Record its behavior separately from uniform random play.
   - Before measuring results, fix the opening distribution, equal X/O weights, opponent-family weights, tie rules, and the fidelity threshold meant by “recover much of the policy.” Use action agreement for deterministic sources and total variation distance for stochastic ones. Report uniform-over-reachable-board and source-visitation-weighted fidelity. Assign distinct positions to train, validation, and test, keeping symmetry equivalents together while retaining each orientation's actual policy labels. Record distinct board counts as well as visits.
   - Deliver a reproducible pilot manifest that identifies every source, opponent, split, game payoff, and continuation policy. Record how to reproduce both the full-board exact reference and the held-out learned comparison.
+  - Completed 2026-11-17 before measuring pilot outcomes. The manifest fixes five sources, eight individual opponents in four equally weighted families, distinct confirmation seeds, and 2,980 training, 760 validation, and 780 test decision boards. The deterministic agreement threshold is 0.80 and the stochastic total variation limit is 0.20. This defines the test of the README claim. [Manifest](experiments/tictactoe_pilot/manifest.json) · [Frozen weights](experiments/tictactoe_pilot/weights.json)
+  - Rebuilt the checkpoints with `python scripts/freeze_tictactoe_pilot.py`. The protocol and network helpers are in `pilot_protocol.py` and `policy_mlp.py`, with coverage in `test_pilot_protocol.py`. The demo passed and all 50 tests passed on Windows after correcting the path separator assertion in `test_telemetry_io.py`.
 
 - [ ] **61. Measure exact reconstruction and playing strength across the tic-tac-toe graph.**
   - Enumerate every reachable nonterminal board and legal move. Compute exact continuation values for each frozen source, using both players' source policies in self-play and the existing payoff perspective. For stochastic play, integrate over legal moves with their probabilities. Verify successor `V` and direct `Q` agree under this deterministic transition and terminal-payoff convention.
@@ -243,7 +245,7 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
 
 - [ ] **28. Expand tests and smoke demos for the PyTorch stack.**
   - Add CPU end-to-end tests for policy training, rollout labeling, `V`, `Q`, evaluation, and resume.
-  - Verify telemetry paths on Windows and POSIX. The existing `test_telemetry_run_dir_is_consistent` assumes forward slashes in a native path string.
+  - Verify telemetry paths on Windows and POSIX when porting the checkpoint stack.
   - Mark any GPU-only checks separately.
   - **Done when:** `pytest -q` and a documented smoke command pass from a fresh editable install.
 

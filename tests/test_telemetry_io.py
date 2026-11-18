@@ -37,4 +37,4 @@ def test_telemetry_jsonl_and_csv_append_safe(tmp_path) -> None:
 
 def test_telemetry_run_dir_is_consistent() -> None:
     path = telemetry_run_dir("artifacts", game="connect_four", run_type="value", seed=3)
-    assert str(path).endswith("artifacts/connect_four/value/seed_3")
+    assert path.parts == ("artifacts", "connect_four", "value", "seed_3")

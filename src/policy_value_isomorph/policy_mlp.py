@@ -65,6 +65,13 @@ def _init_model(input_dim: int, hidden_dim: int, output_dim: int, rng: random.Ra
     return TinyMLPPolicy(w1=w1, b1=b1, w2=w2, b2=b2)
 
 
+def untrained_policy_mlp(hidden_dim: int, *, seed: int) -> TinyMLPPolicy:
+    """Initialize the same legal-move policy architecture used by the trainer."""
+    if hidden_dim <= 0:
+        raise ValueError("hidden_dim must be >= 1")
+    return _init_model(10, hidden_dim, 9, random.Random(seed))
+
+
 def _forward(model: TinyMLPPolicy, x: Sequence[float]) -> tuple[List[float], List[float]]:
     hidden_pre = [0.0 for _ in range(model.hidden_dim)]
     for j in range(model.hidden_dim):
@@ -289,6 +296,12 @@ def train_policy_mlp(
         records=tuple(records),
     )
     return TrainedPolicy(model=model, training_log=PolicyTrainingLog(losses=losses, telemetry=telemetry, gameplay_evals=gameplay_evals))
+
+
+def policy_mlp_probabilities(state: TicTacToeState, model: TinyMLPPolicy) -> list[float]:
+    """Return the temperature-one softmax over the nine cells, masking illegal moves."""
+    _, logits = _forward(model, encode_state(state))
+    return _masked_softmax(logits, state.legal_moves())
 
 
 def policy_mlp_action(state: TicTacToeState, model: TinyMLPPolicy) -> Move:
