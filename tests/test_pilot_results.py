@@ -2,8 +2,10 @@ import csv
 import gzip
 import hashlib
 import json
-from collections import Counter
+from collections import Counter, defaultdict
 from fractions import Fraction
+from itertools import product
+from math import fsum, isfinite
 from pathlib import Path
 
 import pytest
@@ -46,6 +48,68 @@ def test_stored_weights_reproduce_an_oriented_test_decision() -> None:
     assert [q_mlp_predict(state, a, q) for a in legal] == pytest.approx(json.loads(row["q_hat_x"]))
     action = policy_mlp_action(state, TinyMLPPolicy(**weights["policy"]))
     assert json.loads(row["imitation_probs"])[legal.index(action)] == 1
+
+
+def test_move_comparison_table_reports_defined_numeric_measures() -> None:
+    manifest = json.loads((PILOT / "manifest.json").read_text(encoding="utf-8"))
+    sources = manifest["sources"]
+    methods = manifest["recovery"]["decoders"]
+    assert set(manifest["source_definitions"]) == set(sources)
+    assert set(manifest["opponent_definitions"]) == set(manifest["opponent_families"])
+    assert set(manifest["method_definitions"]) == set(methods)
+
+    measures = manifest["measure_definitions"]
+    groups = [*manifest["split_decision_counts"], "all"]
+    expected = set(product(sources, methods, groups, ("uniform", "visitation")))
+    with (RESULTS / "fidelity.csv").open(newline="") as stream:
+        reader = csv.DictReader(stream)
+        assert set(reader.fieldnames) == manifest["population_definitions"].keys() | measures.keys()
+        for row in reader:
+            expected.remove((row["source"], row["method"], row["split"], row["weighting"]))
+            for measure in measures:
+                inapplicable = measure == "agreement" and row["source"] == "stochastic_heuristic"
+                if inapplicable or float(row["weight_sum"]) == 0:
+                    assert row[measure] == ""
+                else:
+                    assert isfinite(float(row[measure]))
+    assert not expected
+
+
+def test_payoff_gaps_reproduce_from_saved_moves_and_payoffs() -> None:
+    # Independently use the mover's exact payoffs and the stored move distributions.
+    boards = defaultdict(list)
+    with gzip.open(RESULTS / "boards.csv.gz", "rt") as stream:
+        for row in csv.DictReader(stream):
+            legal = json.loads(row["legal_moves"])
+            sign = 1 if row["to_move"] == "X" else -1
+            returns = [sign * Fraction(value) for value in json.loads(row["q_exact_x"])]
+            best = max(returns)
+            gaps = [float(best - value) for value in returns]
+            gap_by_move = dict(zip(legal, gaps))
+            player_gaps = {
+                method: gap_by_move[int(row[column])]
+                for method, column in (("return_exact", "return_move"), ("value_mlp", "v_move"), ("q_mlp", "q_move"))
+            }
+            for method, column in (("source", "source_probs"), ("behavior_exact", "behavior_exact_probs"),
+                                   ("policy_mlp", "imitation_probs")):
+                probs = json.loads(row[column])
+                player_gaps[method] = fsum(float(Fraction(p)) * gap for p, gap in zip(probs, gaps))
+            board = (float(Fraction(row["visitation"])), player_gaps)
+            for group in (row["split"], "all"):
+                boards[row["source"], group].append(board)
+
+    with (RESULTS / "fidelity.csv").open(newline="") as stream:
+        for row in csv.DictReader(stream):
+            population = boards[row["source"], row["split"]]
+            weighted = [(1.0 if row["weighting"] == "uniform" else visits, gaps) for visits, gaps in population]
+            denominator = fsum(weight for weight, _ in weighted)
+            assert float(row["weight_sum"]) == pytest.approx(denominator)
+            for field, player in (("source_mean_payoff_gap", "source"), ("method_mean_payoff_gap", row["method"])):
+                if denominator:
+                    estimate = fsum(weight * gaps[player] for weight, gaps in weighted) / denominator
+                    assert float(row[field]) == pytest.approx(estimate)
+                else:
+                    assert row[field] == ""
 
 
 def test_balanced_matchups_and_paired_panel_differences() -> None:

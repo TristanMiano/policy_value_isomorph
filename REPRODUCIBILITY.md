@@ -13,30 +13,15 @@ Source of truth for these constraints is `pyproject.toml`.
 
 ## Determinism and seeds
 
-The project uses explicit integer seeds in the stochastic pipeline pieces:
-
-- Off-policy dataset generation: `generate_off_policy_dataset(..., seed=...)`.
-- Policy MLP training: `train_policy_mlp(..., seed=...)`.
-- Value MLP training: `train_value_mlp(..., seed=...)`.
-- CLI commands expose `--seed` for data/train/eval.
-
-Recommended default seed for baseline reproduction: `0`.
+A **seed** is an integer used to repeat the same sequence of random choices. Use `seed` in `generate_off_policy_dataset` to reproduce positions from games in which both players draw uniformly among legal moves at every turn. For networks trained to copy moves or predict payoffs, use it in `train_policy_mlp` or `train_value_mlp`. The command-line programs accept `--seed` for data generation, training and evaluation. The baseline examples use `0`.
 
 ## Dataset splits
 
-Current implementation intentionally keeps splitting minimal and inspectable:
+The quick training and evaluation commands reuse positions from games played by the original player. Report their measurements as comparisons on training data and distinguish repeated visits from distinct boards.
 
-- For quick experiments in `policy-value-cli train` and `policy-value-cli eval`, a single on-policy dataset is generated and reused directly.
-- Tests validate behavior and shape/logic correctness, not benchmark-quality generalization.
+For experiments divided by visit order, record the split, for example the first 80% of visits for training and the remaining 20% for validation (checking the model during development). Use the same indices for every model and count how many distinct boards occur in both groups.
 
-Recommended reproducible split protocol for reporting numbers:
-
-1. Generate one on-policy dataset with a fixed seed and episode count.
-2. Create an index-based deterministic split, e.g. first 80% train, last 20% validation.
-3. Reuse the same split indices for policy/value comparisons.
-4. Report both split ratio and absolute sample counts.
-
-This keeps reproducibility explicit without adding extra framework dependencies.
+For comparisons on unseen positions, record how examples were assigned to groups, their counts and weights, and which inputs each method saw. The tic-tac-toe study assigned distinct boards to training, validation, and test (positions reserved for the final comparison). It kept rotations and reflections of a board together and used the same test decisions for every method. [Study settings](experiments/tictactoe_pilot/manifest.json)
 
 ## Canonical command recipes
 
@@ -86,16 +71,13 @@ policy-value-cli eval \
 
 ## Reporting template
 
-When logging an experiment, include at minimum:
+Use the two mandatory project protocols in experiments, reports, progress updates, and chat summaries. Define a new term before using it. Express each measurable question and answer numerically. [Project instructions](AGENTS.md#mandatory-research-protocols)
 
-- Commit hash.
-- Python version.
-- Exact command used.
-- Seed.
-- Episode count.
-- Model widths/epochs/lr/rollout budget.
-- Train/validation split rule (if used).
-- Key outputs (losses, agreement, W/D/L rates).
+- Identify the code revision, Python version, command, and random seeds (numbers used to reproduce random choices).
+- Describe each original player, each method used to copy it, and each opponent by its move rule, training history, use of randomness, and rule for tied scores.
+- Give the number of games, training examples, training passes, adjustable model parameters, and simulated game continuations used to estimate each value. Describe how positions were assigned to training and evaluation.
+- Define each measurement, its scale, and its direction before presenting it. For example, **move agreement** is the fraction of evaluated decisions at which the recovered player chooses the source player's move. Give the numerator and denominator or the population weights. For play, give separate win, draw, and loss rates by opponent and seat.
+- Report each value, its difference from the named comparison, variation across runs, and uncertainty from sampling when applicable. Keep undefined measurements distinguishable from measured zero. Keep cutoffs and binary research verdicts out of tables and prose.
 
 ## Notes
 

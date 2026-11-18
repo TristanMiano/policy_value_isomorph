@@ -38,6 +38,10 @@ def _recovered_action_from_value_network(state: TicTacToeState, root_player: int
 
 def main() -> None:
     root_player = 1  # X
+    print("The original player takes an immediate win, blocks one, takes the center, takes a corner, "
+          "or takes any legal cell, in that order. Ties go to the lowest cell number, 0 to 8 across the rows.")
+    print("X earns +1 for a win, 0 for a draw and -1 for a loss. For each candidate move, "
+          "finish the game with the original rule on both sides. X chooses the largest payoff and O the smallest.")
     sample_states = [
         TicTacToeState.initial(),
         state_from_rows(["XX.", "OO.", "..."], to_move=1),
@@ -54,8 +58,8 @@ def main() -> None:
             root_player=root_player,
             n_rollouts=1,
         )
-        print(f"Recovered V^pi(s) from root X perspective: {v:+.2f}")
-        print(f"Recovered-policy chosen move index: {chosen}")
+        print(f"X payoff when both sides follow the original rule from this board = {v:+.2f}")
+        print(f"Move chosen by comparing the payoffs of the resulting boards = {chosen}")
 
     dataset = generate_on_policy_dataset(heuristic_policy_action, n_episodes=90)
     states = [sample.state for sample in dataset[:180]]
@@ -105,17 +109,22 @@ def main() -> None:
         policy_b=lambda s: recovered_action_from_q(s, trained_q.model, root_player=1),
     )
 
-    print("\n=== Evaluation metrics ===")
-    print(f"Action agreement (policy argmax vs heuristic): {agree:.3f}")
-    print(f"Top-3 agreement: {top3:.3f}")
-    print(f"Win/draw/loss vs heuristic: {wdl.win_rate:.3f}/{wdl.draw_rate:.3f}/{wdl.loss_rate:.3f}")
-    print(f"Recovered action agreement via successor V_phi: {v_recovered_agree:.3f}")
-    print(f"Recovered action agreement via direct Q_phi: {q_recovered_agree:.3f}")
+    print(f"\nMove agreement is the fraction of {len(states)} training decisions, "
+          f"including repeated visits to {len(set(states))} distinct boards, that match the original move.")
+    print(f"A network trained to copy the original move agreed on {agree:.1%}.")
+    print(f"Rank its chosen move first, then all other legal cells by number. "
+          f"The original move appeared in the first three on {top3:.1%} of decisions.")
+    print(f"Over 30 games against the original player (15 as X and 15 as O), "
+          f"the copy won {wdl.win_rate:.1%}, drew {wdl.draw_rate:.1%} and lost {wdl.loss_rate:.1%}.")
+    print(f"A network trained to predict X's payoff from the board after each move agreed on {v_recovered_agree:.1%}.")
+    print(f"A network trained to predict X's payoff from the current board and move agreed on {q_recovered_agree:.1%}.")
 
-    print("\n=== Value calibration bins (for plotting) ===")
-    print("bin_range,count,mean_pred,mean_true")
+    print("\nGroup the training decisions by the board network's predicted X payoff. "
+          "Give the number of decisions and the two average payoffs in each group. Empty groups have no average.")
+    print("lower,upper,decisions,mean_predicted_X_payoff,mean_observed_X_payoff")
     for b in calibration.bins:
-        print(f"[{b.lower:+.2f},{b.upper:+.2f}],{b.count},{b.mean_pred:+.3f},{b.mean_true:+.3f}")
+        averages = f"{b.mean_pred:+.3f},{b.mean_true:+.3f}" if b.count else ","
+        print(f"{b.lower:+.2f},{b.upper:+.2f},{b.count},{averages}")
 
 
 if __name__ == "__main__":

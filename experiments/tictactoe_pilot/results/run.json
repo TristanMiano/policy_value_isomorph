@@ -2,11 +2,12 @@
   "decision_boards": 4520,
   "decision_orbits": 627,
   "edges": 16167,
-  "protocol_sha256": "943777808eaea218fb0e8ed3a8f103f81de63f154892b614eece6a346ef2739a",
+  "protocol_sha256": "6579067c47292868e695e8b230615f70aa5af82e5bc237d7707928fb2c1beef4",
+  "reporting_revision": 2,
   "sha256": {
     "boards.csv.gz": "9f9beeda6632a269e4dc0418a1f2f02c96b660bf3ba30eb6c9481de3e64afa63",
     "calibration.csv": "e1b3074d662fc05640bca3f1ec21fe01c5ccb44d1676a2a27cde88b66315c5ec",
-    "fidelity.csv": "18749e797c80b3a9738122c5ee7927d8ccf65e76c5279cb56683241fcdf05938",
+    "fidelity.csv": "0ca30925e4f8220ca6a77d200bee8459b3c31a1716b05424ad4b9e029925af15",
     "matchups.csv": "ca68ec8354349066da93a389f1c249b3963071b02cc6cd4ec05e248d66d59de2",
     "recovery_weights.json": "ac94ef3bd230cf3c9a4c90ec7cd4c3c5d8e8d9a41b19225af68d186e00b0cd4f"
   },

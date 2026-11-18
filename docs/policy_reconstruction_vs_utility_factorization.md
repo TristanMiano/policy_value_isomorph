@@ -2,7 +2,7 @@
 
 ## The question
 
-The broad project claim is:
+A **policy** `P` is the original rule for choosing an action or assigning probabilities to the available actions. A **score** is a number attached to an action or its consequences. A **decoder** turns scores into actions or action probabilities. The project asks how closely a score and decoder together can reproduce a policy's choices.
 
 > Given an arbitrary policy `P`, recover a value-like object together with a declared selection mechanism that approximately reproduces `P`.
 
@@ -10,9 +10,9 @@ This raises an important design question: which selection mechanism should be ex
 
 The answer depends on the target claim.
 
-- For **behavioral reconstruction**, the theoretically closest mechanism is a decoder matched directly to the type of policy: `argmax` for deterministic policies and normalized-score sampling for stochastic policies.
-- For a **VNM-style or consequential interpretation**, the stronger mechanism is maximization of expected utility over the trajectory lottery induced by each action.
-- These mechanisms can coincide, especially when `V` or `Q` already approximates expected rollout return, but they do not coincide for an arbitrary policy.
+- **Behavioral reconstruction** measures how closely the recovered choices match the original. For a policy that always makes one fixed choice, assign that choice the largest score and select it (`argmax`). For a policy that draws actions at random, recover the original move probabilities and sample from them.
+- **Von Neumann–Morgenstern (VNM) expected utility** assigns each possible complete outcome a numerical utility. An action's **lottery** is the set of possible outcomes and their probabilities. Choose an action with the greatest probability-weighted average utility.
+- A **rollout** is a simulated continuation under a specified policy. The average payoff from a position (its state value, `V`) or after a specified first action (its action value, `Q`) can be estimated from rollouts. The action with the greatest expected payoff can differ from the original choice.
 
 The project should therefore treat universal policy reconstruction and expected-utility factorization as two related but distinct research problems.
 
@@ -301,7 +301,7 @@ The answer is objective-relative.
 | Exact deterministic behavioral reproduction | action score plus fixed-tie-break `argmax` |
 | Exact stochastic behavioral reproduction | log score/energy plus normalized sampling |
 | Reproduce only the modal action of a stochastic policy | `argmax` over action scores |
-| Test whether `P` greedily maximizes a declared return | `argmax` over rollout-estimated `Q_U^P` |
+| Measure how often `P` chooses a highest-return move and how much payoff its choices forgo | Compare the source move probabilities with the estimated return of each legal move under `Q_U^P` |
 | Give a VNM-style rational-agent interpretation | `argmax` over expected cardinal utility of induced trajectory lotteries |
 | Give a stochastic utility-like interpretation | random-utility, entropy-regularized, or soft choice with an explicit contract |
 
@@ -338,7 +338,7 @@ This stage establishes the broad policy-value representation claim.
 
 ### Stage B: expected-utility factorization
 
-Ask whether the behaviorally faithful score admits a simpler consequential structure:
+Measure how closely a shared utility over outcomes approximates the scores that reproduce the original choices. The proposed form is
 
 ```text
 S_P(h,a) approximately equals
@@ -347,7 +347,7 @@ E[U(tau) | h, a, environment, continuation rule]
 
 up to the invariances relevant to the decoder.
 
-This is the stronger scientific question. It asks whether the policy’s apparent preferences can be explained by a stable utility over consequences rather than by a context-indexed action lookup table.
+Compare this utility with a table of scores for individual positions and actions. Report the error in predicting new choices, the number of adjustable values in each explanation, and how much each varies across independent fits.
 
 Desirable evidence includes:
 
@@ -391,7 +391,7 @@ Return-value baseline:
     greedily maximize Q_phi
 ```
 
-For deterministic policies, report action agreement, action margins, and regret under the source score. For stochastic policies, report KL divergence, cross-entropy, calibration, and sampling fidelity. For return values, separately report return calibration and the exact or estimated greedy-improvement gap.
+For fixed-move policies, report the fraction of matching moves, the difference between the best and next-best scores, and the average source score forgone. For randomized policies, compare their move probabilities directly. Total variation is half the sum of the absolute probability differences. Cross-entropy is the average negative logarithm of the recovered probability of a source move. Subtracting the same quantity calculated with the source's own probabilities gives the Kullback–Leibler (KL) divergence. Report the logarithm base and any missing probability on a move the source makes. For return models also report prediction error and the average payoff forgone by the chosen moves.
 
 ---
 

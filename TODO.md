@@ -4,13 +4,15 @@ Last updated 2026-11-17
 
 ## Resume here
 
-**Next task is 23. Introduce the minimal PyTorch-backed model and training interfaces.** Tasks 60, 61, and the pre-migration pilot checkpoint are complete. Use the frozen pilot outputs for Task 24 parity. [Checkpoint decisions](TICTACTOE_PILOT.md#checkpoint-decisions)
+**Next task is 23.** Define how the existing models will use PyTorch, a library for training neural networks. Tasks 60 and 61 produced saved predictions and game outcomes for comparing the current and future implementations in Task 24. [Pilot measurements](TICTACTOE_PILOT.md#move-agreement-and-probability-differences)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
 ## Main philosophical stance
 
-This project adopts a **value-first semantics of policy**:
+A **source policy** is the original rule that chooses moves or gives them probabilities. A **value** is a numerical score assigned to a move or its consequences. A **decoder** converts scores into moves or move probabilities. Choosing a highest-scoring move is called **argmax**. A **rollout** plays a game forward under a specified policy. Its average payoff over possible continuations is the **expected return**. Write `V(s)` for that average from position `s` and `Q(s,a)` for the average after first taking move `a` there. A **multilayer perceptron (MLP)** is a neural network that transforms inputs into predictions using successive layers of adjustable weights.
+
+This project investigates **value-first semantics**, the idea that values give meaning to a policy's choices.
 
 > A policy is a discrete or probabilistic behavioral readout from a richer value-like landscape over actions, reachable states, continuations, or trajectories. Values are the primary semantic object; policy choices are obtained from them by `argmax`, softmax/sampling, thresholding, or another declared decoder.
 
@@ -101,7 +103,7 @@ pi_(tau,mu)(a|h) proportional to mu(a|h) * exp(V(h,a)/tau),
 
 where `mu` is a base measure and `tau` a temperature. The zero-temperature limit should recover the deterministic argmax when it is unique.
 
-**Research route:** prove invariances and scale/temperature relations, then test whether stochastic completions are stable across recovered values and useful for exploration, diversity, or uncertainty-aware behavior.
+**Research route:** prove which changes in scores or temperature preserve the move probabilities. Measure how much the resulting distributions vary across recovered values, how many different moves and states they explore, and how those quantities change with uncertainty in the estimated scores.
 
 ### PV-H6 — One recovery contract can span heterogeneous policy classes
 
@@ -113,7 +115,7 @@ The same conceptual interface—history, candidates, policy access, counterfactu
 
 For neural policies, externally recovered value structure may be predictable from, aligned with, or causally mediated by internal activations and gradients. Backpropagated `-loss` gradients are local marginal-value signals relative to the training objective and provide one bridge to test.
 
-**Research route:** begin only after external recovery is stable; test probes, representation similarity, activation interventions, gradient/value alignment, and changed-objective transfer. A negative mechanistic result would leave the behavioral value artifact intact while narrowing the internal interpretation.
+**Research route:** quantify variation across independent external recoveries. Measure how well internal activity predicts recovered values, how choices change when that activity is altered, and how both relationships change under a new objective.
 
 ## Minimum publishable path and expansion path
 
@@ -136,6 +138,8 @@ For a von Neumann–Morgenstern (VNM) expected-utility model, each move induces 
 For temperature sampling use `p(a|s) ∝ μ(a|s) exp(S(s,a)/T)` on legal moves, with `S = -E` under the energy convention. Record the base measure `μ`, support, score scale, temperature, and tie rule. Distinguish randomness in the source, randomness in the recovered choice, and Monte Carlo error in the score estimate.
 
 ## Work and evidence protocol
+
+Two rules govern every experiment, saved comparison, report, progress update, and chat summary. Keep each measurable question quantitative from design through reporting. Give counts, rates, magnitudes, differences and applicable uncertainty without adding a success cutoff or a yes/no research verdict. Define every new term at first use in each standalone communication, including every named player's move rule and how each measure is calculated. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
 
 For each numbered task:
 
@@ -196,11 +200,11 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
 # First milestone — Exact tic-tac-toe reconstruction on the current backend
 
 - [x] **60. Freeze the source policies, opponents, and pilot protocol.**
-  - Include a fixed-tie minimax policy, a scripted policy with deliberate mistakes, a frozen trained policy network, and a stochastic source with known legal probabilities. Save the network checkpoint, policy versions, and decoding rules. Reserve independent policies or network seeds for confirmation.
-  - Freeze opponents including uniform random legal moves, a panel of **untrained random neural networks** with saved architecture, initialization seeds, weights and legal-action decoder, the existing heuristic, and minimax. A frozen random-weight network may play deterministically. Record its behavior separately from uniform random play.
-  - Before measuring results, fix the opening distribution, equal X/O weights, opponent-family weights, tie rules, and the fidelity threshold meant by “recover much of the policy.” Use action agreement for deterministic sources and total variation distance for stochastic ones. Report uniform-over-reachable-board and source-visitation-weighted fidelity. Assign distinct positions to train, validation, and test, keeping symmetry equivalents together while retaining each orientation's actual policy labels. Record distinct board counts as well as visits.
+  - Define and save five original players. The **priority-rule player** takes an immediate win, blocks one, takes the center, takes a corner, or takes any legal cell, in that order. The **perfect-play player** chooses the best guaranteed outcome assuming the opponent always makes its best reply. The **missed-win player** deliberately takes the first move that does not win immediately when an immediate win is also available, otherwise it follows the priority rule. The **trained neural player** uses a network taught the priority player's choices on 528 boards and plays its highest-scoring legal move. These four players resolve ties by the lowest cell number, counting across rows from 0. The **randomized priority player** independently uses the priority rule with probability 3/4 on each turn and otherwise draws uniformly from legal cells.
+  - Save four equally weighted opponent groups. One chooses a legal cell uniformly each turn. The second contains five untrained networks, each with fixed randomly initialized weights, choosing its highest-scoring legal cell with the lowest-numbered one breaking ties. The other groups are the priority-rule and perfect-play players. Reserve independent random seeds (integers that reproduce random choices) for confirmation.
+  - Fix the opening, equal weights for playing as X and O, opponent weights, tie rules and numerical comparisons. **Move agreement** is the fraction of boards with the same chosen move. For a randomized source, **total variation distance** is half the sum of the absolute differences in legal-move probabilities, averaged over boards. Report equal weights per reachable board and weights proportional to the probability that the source reaches each board playing both sides. Keep rotations and reflections together when assigning boards to training, validation and test groups. Preserve choices for each orientation and give distinct board and visit counts.
   - Deliver a reproducible pilot manifest that identifies every source, opponent, split, game payoff, and continuation policy. Record how to reproduce both the full-board exact reference and the held-out learned comparison.
-  - Completed 2026-11-17 before measuring pilot outcomes. The manifest fixes five sources, eight individual opponents in four equally weighted families, distinct confirmation seeds, and 2,980 training, 760 validation, and 780 test decision boards. The deterministic agreement threshold is 0.80 and the stochastic total variation limit is 0.20. This defines the test of the README claim. [Manifest](experiments/tictactoe_pilot/manifest.json) · [Frozen weights](experiments/tictactoe_pilot/weights.json)
+  - Completed 2026-11-17. Five sources, eight individual opponents, independent confirmation seeds, and 2,980 training, 760 validation and 780 test decision boards were fixed before the pilot. The reporting rules and measure descriptions were revised after data collection. [Study settings and definitions](experiments/tictactoe_pilot/manifest.json) · [Saved player weights](experiments/tictactoe_pilot/weights.json)
   - Rebuilt the checkpoints with `python scripts/freeze_tictactoe_pilot.py experiments/tictactoe_pilot/weights.json`. The protocol and network helpers are in `pilot_protocol.py` and `policy_mlp.py`, with coverage in `test_pilot_protocol.py`. The demo passed and all 50 tests passed on Windows after correcting the path separator assertion in `test_telemetry_io.py`.
 
 - [x] **61. Measure exact reconstruction and playing strength across the tic-tac-toe graph.**
@@ -209,14 +213,14 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
   - Run the existing learned policy, `V`, and `Q` comparison on distinct held-out positions against those exact references. Generate each set of rollout labels with the very source being reconstructed, including the frozen learned policy. Report calibration and which actions change when learned values replace exact ones.
   - Play the **original source and each reconstructed policy** for whole games against the same opponents, openings, and seats. Report absolute win, draw, and loss probabilities per opponent and seat, expected game score `P(win) - P(loss)`, and paired differences from the source. Compute exact probabilities where the move distributions are known. For sampled games report counts and paired uncertainty, keeping opponent-network seeds distinct from game seeds. Include separate head-to-head rows against the source.
   - Publish a per-board table and a per-matchup table with source rows and both state weightings for fidelity. Include a worked board where the tie rule matters and a deliberate mistake where exact return maximization changes the move.
-  - Completed 2026-11-17. Independent direct-Q and successor-V calculations agreed exactly on all 16,167 legal actions for each of five sources. On the 780 uniform test boards the trained source was copied on 90.90% of moves by learned imitation, 50.51% by learned V and 53.08% by learned Q. [Pilot findings and worked boards](TICTACTOE_PILOT.md) · [Fidelity table](experiments/tictactoe_pilot/results/fidelity.csv) · [Matchups](experiments/tictactoe_pilot/results/matchups.csv)
+  - Completed 2026-11-17. Computing the expected payoff from the board after a move and computing it directly for the board and move gave a difference of zero on all 16,167 legal moves for each source. On the 780 equally weighted test boards, a network trained to copy the trained neural player's moves matched 709 (90.90%). A network trained to predict payoff from the resulting board matched 394 (50.51%). A network trained to predict payoff from the current board and move matched 414 (53.08%). [Pilot findings and worked boards](TICTACTOE_PILOT.md) · [Move comparisons](experiments/tictactoe_pilot/results/fidelity.csv) · [Game outcomes](experiments/tictactoe_pilot/results/matchups.csv)
   - `python scripts/run_tictactoe_pilot.py` generated the six result files. A fresh replay reproduced them byte for byte. The exact, recovery, and reporting code is in `pilot_exact.py`, `pilot_recovery.py`, and `pilot_metrics.py`. The demo passed and all 56 tests passed on Windows and Ubuntu, including `test_pilot_exact.py` and `test_pilot_results.py`. [Published fixture hashes](experiments/tictactoe_pilot/results/run.json)
 
 ## Checkpoint before the PyTorch migration
 
-- [x] **Pilot checkpoint completed 2026-11-17.** Exact return recovery passed for minimax under both uniform and source-visitation weighting. It missed the registered threshold under both weightings for the deliberately fallible, heuristic, trained neural, and stochastic sources. Learned successor V missed for all five sources under both held-out weightings. The report records the ten decisions for each primary endpoint, including the number of distinct visited test boards. [Threshold results](TICTACTOE_PILOT.md#checkpoint-decisions)
+- [x] **Pilot checkpoint completed 2026-11-17.** On all 4,520 boards, choosing the move with the best exact return matched the perfect-play, missed-win, priority-rule and trained neural players on 100.00%, 37.70%, 75.93% and 56.62% of boards respectively. Weighting boards by visits in the source's own games gave 100.00%, 33.33%, 77.78% and 55.56%. For the randomized priority player the corresponding total variation distances were 0.2764 and 0.5381. The report gives the learned models' results on the same 780 test boards and the number reached by each source. [Move agreement and probability differences](TICTACTOE_PILOT.md#move-agreement-and-probability-differences)
   - For the frozen neural source, 1,094 of 4,520 exact choices differed only by a return tie, and 867 source moves had strictly lower return. Replacing exact scores with learned V restored the source move on 95 test boards and lost it on 145. The exact behavioral decoder matched all five source distributions. The fixed game payoff therefore explains move choice to different degrees across these policies. [Board-level attribution](TICTACTOE_PILOT.md#why-the-moves-differed)
-  - Audited the frozen source weights against Task 60 commit `eaf79b3` and the result hashes against Task 61 commit `bc74ccf`. Independently recomputed all 240 fidelity rows and their threshold decisions from the board table and checked the paired differences in all 900 matchup rows. Task 24 inherits the exact fractions, action choices, network checkpoints, and per-seat outcomes. Task 62 retains the independent seeds. [Parity fixtures and reproduction](TICTACTOE_PILOT.md#replay-and-parity-fixtures)
+  - The source weights were fixed in revision `eaf79b3`, and the measurements were first recorded in `bc74ccf`. Replaying the revised study preserved all previously measured values in the 240 move-comparison rows and all 900 game-outcome rows. The added payoff comparison measures the average points forgone by each player's chosen move relative to the best legal move, assuming the source plays both sides thereafter. An independent calculation from all 22,600 board records reproduced the two added averages for all 240 rows. All 58 software tests passed on Windows and Ubuntu, and the demo printed three sample boards, their payoffs and the chosen moves. [Reproducing the measurements](TICTACTOE_PILOT.md#reproducing-the-measurements)
 
 ---
 
@@ -272,10 +276,10 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
   - **Done when:** the document makes clear that reward nonuniqueness narrows a claim rather than refuting the base representation thesis.
 
 - [ ] **31. Create `CLAIM_LEDGER.md`.**
-  - Give PV-H1–PV-H7 stable IDs, exact scoped statements, theorem/experiment routes, support and falsification conditions, dependencies, and project impact.
+  - Give PV-H1–PV-H7 stable identifiers, scoped statements, dependencies and project impact. For mathematical claims state the proof obligation or counterexample. For empirical claims specify the measurements, their expected direction and magnitude, and how the estimates and their uncertainty bear on the claim.
   - Split broad theses into approximately 20 atomic claims.
   - Track exact behavioral representation, recovery from the supplied payoff, and recovery of a compact utility from choices as separately testable claims. Link each to its population, evidence, and possible negative result.
-  - **Done when:** no planned empirical claim is marked supported merely because it is motivating.
+  - **Done when:** each empirical entry states its planned measurement or gives the measured size, uncertainty and scope of an observed effect.
 
 - [ ] **32. Define the policy-access and value-semantics taxonomy.**
   - Create `docs/policy_value_taxonomy.md` covering deterministic action access, samples, probabilities/logits, constrained-choice access, rollout access, environment access, and white-box internals.
@@ -292,11 +296,11 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
   - Include discrete, continuous, and sequence examples.
   - **Done when:** later formal files link to one authoritative notation source.
 
-- [ ] **35. Define prospective success metrics and failure modes.**
+- [ ] **35. Define numerical comparisons for imitation, playing strength and interpretability.**
   - In `docs/evaluation_contract.md` define three decisions in advance. For **fidelity**, use held-out action agreement for deterministic sources and mean total variation distance between legal action distributions for stochastic sources. Also report ties, action gaps, cross-entropy and support violations where applicable.
   - For **playing strength**, rank by expected game payoff against the predeclared opponent mix. Publish the separate ranking by win probability, plus per-opponent, per-seat and head-to-head results. Deploy each recovered policy for the whole game. One-step return under the source continuation is a separate measurement.
-  - For **interpretability**, measure how accurately a formulation predicts fresh source choices when moves are removed or outcome probabilities change. Compare with direct logits, behavior cloning, and a simple heuristic at matched access. Among methods within the prespecified predictive tolerance, prefer compact, stable explanations by declared complexity and cross-seed criteria.
-  - Specify the held-out populations, uncertainty, equivalence tolerances, and tie rules for selecting a formulation for each objective. Relate ordinal, cardinal and geometric diagnostics to those endpoints. Claims about human usefulness or internal mechanism require their own evidence.
+  - For **interpretability**, measure how accurately an explanation predicts new source choices after moves are removed or outcome probabilities change. Compare with the source network's raw move scores, a model trained to copy its moves, and a simple decision rule given the same information. Report prediction error, explanation size, and variation across independent fits for each. Use the measured trade-offs to explain a choice of formulation.
+  - Specify the held-out populations, paired differences (measurements made on the same positions or opponents), sampling uncertainty, and how exact ties will be reported for each objective. Relate differences in move order, score magnitude and score patterns across nearby boards to these measurements. Claims about human usefulness or internal mechanism require their own evidence.
 
 - [ ] **36. Produce a small hand-worked policy/value atlas.**
   - For one tic-tac-toe state, manually show the source action, all legal alternatives, exact/rollout/revealed values, action gaps, normalizations, and one softmax completion.
@@ -327,7 +331,7 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
 - [ ] **40. Prove action-value to state-value lifting.**
   - Show how `Q(h,a)` can be represented as state value on an action-augmented history or successor object.
   - State when an ordinary `V(h)` plus a transition/action harness is sufficient.
-  - Test whether a single score per actual successor board can satisfy all source choices simultaneously under fixed tie-breaking. Give a feasible example and a counterexample with conflicting ordering constraints, then analyze the less restricted action-augmented representation.
+  - Characterize when one score per resulting board can reproduce every source choice under a fixed rule for ties. Give an exact example and a counterexample with conflicting move orders. In the counterexample, give the highest attainable fraction of reproduced moves or bounds on it. Compare with scores that also take the action as input.
   - **Done when:** the theorem covers the current deterministic game convention and a general history-based form.
 
 - [ ] **41. Define decoder-relative value equivalence and prove the quotient result.**
@@ -433,7 +437,7 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
 Tasks 60–61 run before the backend migration. Use their graph, manifests, and pilot findings to design independent confirmation runs here.
 
 - [ ] **62. Freeze the first confirmation protocol.**
-  - Extend the pilot with fresh frozen source and opponent-network seeds, stochastic mixtures with known probabilities, and context-dependent sources that can violate a single preference ranking. Freeze pilot-informed thresholds, state weightings, opponent weights, rollout and policy-query budgets, repetitions, uncertainty estimates, and stopping rules.
+  - Extend the pilot with independently initialized source and opponent networks, randomized players with known move probabilities, and players whose choice ordering depends on context. Before collecting confirmation data, specify the quantities and differences to estimate, board and opponent weights, numbers of simulated games and requests for source choices, independent repetitions, and how to estimate uncertainty. Fix the data-collection budget in advance.
   - Lock the three Task 35 selection rules. Match deployable models on available information, training positions, and capacity or compute budget where feasible. Record extra access such as logits or an environment model. Select checkpoints, utility features, temperatures and other settings on validation data. Reserve the test split and held-out interventions for the final comparisons.
 
 - [ ] **63. Run exact decoder-score recovery baselines.**
@@ -441,7 +445,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 - [ ] **64. Run constrained-choice ranking recovery.**
   - Measure query complexity, ordering recovery, inconsistency diagnostics, and active-vs-random probing.
-  - **Done when:** deterministic policies acquire a tested ranking over unchosen alternatives under the declared query model.
+  - **Done when:** the report gives the fraction of alternative move pairs whose order was recovered, the number left undetermined and the number of requests for source choices.
 
 - [ ] **65. Run stochastic/log-score recovery.**
   - Compare access to true probabilities or logits with repeated action samples at fixed query budgets. Include a mixture with zero support on a legal action and one that gives positive mass to a lower-return move. Check exact log-score recovery with the declared support, base measure, and temperature.
@@ -449,17 +453,17 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 - [ ] **66. Compare behavior and gameplay under exact and learned return values.**
   - Compare the raw behavioral decoder with greedy expected game utility on identical boards and matchups. Score exact returns, rollout estimates before fitting, learned successor `V`, and learned direct `Q` on all legal alternatives. Sweep rollout budgets on on-policy and off-policy positions. Include exact best-response game scores against known individual opponents as strength references and record the opponent information they require.
-  - Give per-source counts for the Task 61 disagreement categories and report what changes when replacing exact scores with estimates, including discrepancies that accidentally restore the source move. Publish the source and formulation win probabilities, paired game-score differences, fidelity, and return errors together. Test the registered fidelity threshold under both state weightings.
+  - Give per-source counts for each Task 61 disagreement category and the average payoff forgone. Measure how often estimated scores restore or lose the source's move. Publish original and recovered win probabilities, paired game-score differences, move agreement or total variation distance, and return errors. Report values and differences for both equal board weights and weights proportional to the source's visits.
 
 - [ ] **67. Measure how residual training error affects fidelity and playing strength.**
   - At fixed training data and targets, compare checkpoints and model capacities across independent seeds. In separate paired sweeps vary data coverage or rollout budget while holding evaluation boards and opponents fixed. Plot fidelity and game score against training residual and held-out exact-target error. Break down move disagreements by the exact best-to-runner-up action gap.
   - Include a zero-estimation-error reference. Perturb exact scores at matched error magnitudes with a common offset or a change that crosses an action margin. This isolates the effect of ranking errors from correlations along training. Track probability shifts under soft choice at fixed temperature.
-  - Report when reducing residual error helps, has little effect, or moves choices away from the source. Include return-target noise, generalization error, and run-to-run variation in rankings, aligned values and local geometry.
+  - Report the size and direction of the change in move agreement or probability distance for each reduction in training error. Include variation in estimated returns, error on unseen boards, and variation across fits in rankings, values on the same scale and score patterns across nearby boards.
 
 - [ ] **68. Establish attainable fidelity and explain the gaps for each formulation.**
   - For every score family and decoder in the game comparison, separate best validation-selected performance on held-out data, fidelity with its exact scores, and any certified optimum within that family. Compute a finite optimum or give justified bounds where possible. Label unresolved gaps and record when independent recoveries converge to different aligned solutions.
   - Include exact encoding controls and constructive limits. For a stochastic source `P`, the best deterministic action has total variation error `1 - max_a P(a|s)` on that board. A mixture restricted to expected-utility maximizers must miss at least the source mass outside that set. A fixed tie or temperature rule can impose further error.
-  - Test whether more data, rollout budget, capacity, or optimization closes each observed gap. Exhibit limits from indistinguishable inputs or shared successor states, restricted utility features, unobserved actions, conflicting rankings, incompatible support or choice rules. Record whether changing an assumption improves the fit and what extra information it uses.
+  - Measure the reduction and remaining gap as training data, simulated games, network size, or training time increases. Derive bounds from indistinguishable inputs, shared resulting boards, restricted utility features, unobserved moves, conflicting rankings, or restrictions on move probabilities. Quantify the change in fit when each assumption changes and record what extra information the method uses.
 
 - [ ] **69. Produce exhaustive value-atlas visualizations.**
   - Show action values, runner-up gaps, nearby reachable-state values, uncertainty, and disagreement clusters on the exact state graph.
@@ -467,17 +471,17 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 - [ ] **70. Test value-derived stochastic completions.**
   - Cross deterministic and stochastic sources with greedy and temperature-based decoding of raw scores, fixed-payoff returns, and fitted expected utilities. Sweep temperature with score scale and base measure recorded. Include the low-temperature limit, ties, support masks, and a validation-selected temperature.
-  - For a known stochastic source, check whether the candidate scores on its support satisfy `S(s,a) = T log(P(a|s)/μ(a|s)) + c(s)` for a shared positive temperature. Check support separately. Compare a scalar expected-utility predictor with a network predicting outcome probabilities and computing the expected utility of that lottery.
+  - For a known stochastic source, compare each score with the score predicted by its move probability. In `S(s,a) = T log(P(a|s)/μ(a|s)) + c(s)`, `S` is the score, `P` the source probability, `μ` the reference move weight, `T` a shared positive temperature governing the spread of choices, and `c` an offset common to that board's moves. On moves with positive probabilities and weights report score residuals and the resulting probability differences. Report probability mass assigned or omitted where the sets of possible moves differ. Compare a network that predicts expected utility directly with one that predicts outcome probabilities and averages their utilities.
   - Compare these distributions with classical expected-utility choice under a specified tie mixture and one declared random-utility model that samples a utility then maximizes its expectation. Report distributional fidelity, win probability and game score for each, with uncertainty across independent recoveries.
 
-- [ ] **71. Test whether a compact utility explains held-out choices and lotteries.**
+- [ ] **71. Measure how closely a compact utility predicts held-out choices over moves and lotteries.**
   - Compare direct scores, the supplied payoff, and the shared utility fitted in Task 53 at matched access and budgets. Measure the change in held-out fidelity and game performance from requiring scores to factor through expected utility. Report utility complexity and stability up to the allowed normalization.
   - Before querying the source, predict its response to action removal, controlled policy edits, and changed consequence lotteries, such as a sure draw versus a specified win/loss gamble. Define how the source can observe and choose between each offered alternative. Use explicit lottery-choice fixtures when an ordinary board policy lacks that interface. Report which comparisons the original source actually supports.
-  - Evaluate counterfactual prediction against direct scores and simple baselines, including policies generated from a known utility and deliberately incompatible choices. Check recovery of known utility trade-offs up to identifiable scale and offset. Record equivalent explanations and cases where a compact utility loses fidelity or fails transfer.
+  - Compare predictions under changed conditions with direct scores and simple decision rules. Include policies generated from a known utility and deliberately incompatible choices. Measure errors in known utility trade-offs after aligning scale and offset. Record equivalent explanations and the change in prediction error when applying each fitted utility in a new setting.
 
 - [ ] **72. Publish the finite-domain result report.**
   - Publish a machine-readable table by source, score, decoder, access, and budget. Link the opponent/seat results, error and action-gap curves, fidelity bounds, counterfactual predictions, representative atlases, and negative results to the claim ledger.
-  - Name the formulation and decoder selected for each of three goals using Task 35's criteria. Give held-out evidence for the most faithful imitation, strongest game player, and most predictive interpretation of the source's choices. Include the source itself, ties or inconclusive comparisons, and the trade-offs when improving one objective costs another.
+  - For each of the three goals in Task 35, give all methods' measured values, differences on the same cases, and applicable uncertainty. Name the formulation and move rule favored by each objective with the size of its advantage or disadvantage. Include the source, ties, uncertainty in rankings, and trade-offs between goals.
 
 ## Checkpoint E — First research adjudication
 
@@ -507,7 +511,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 - [ ] **78. Test prospective interpretability tasks.**
   - Freeze predictions of runner-up choices, responses to action removal or policy edits, and trajectory trade-offs before observing the source responses. Compare direct probabilities/logits, revealed rankings, and compact expected utilities at matched query budgets. Score held-out predictive accuracy, cross-seed stability, and explanation complexity.
-  - State which formulation best predicts what the original policy values under each supported intervention, including ties or lack of evidence. Use separate blinded human evaluation if claiming improved human understanding. Use the later intervention studies for claims about internal mechanism.
+  - Compare prediction errors and their differences for every formulation under each intervention, then name the most predictive formulation given those results, including ties and uncertainty. Use separate blinded human evaluation if claiming improved human understanding. Use the later intervention studies for claims about internal mechanism.
 
 - [ ] **79. Build interactive/static neural-policy value atlases.**
   - Provide state views, action profiles, gaps, uncertainty, counterfactual masks, and trajectory summaries.
@@ -566,7 +570,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 ## Checkpoint G — Non-sequence portability
 
-- [ ] Decide whether the shared recovery contract genuinely spans discrete games, control, and forecasting. Split the interface only where the evidence requires it.
+- [ ] Report coverage across discrete games, control, and forecasting. Give the tasks and measurements supported in each domain, errors under the shared assumptions, and the changes required for uncovered cases. Use those results to decide any changes to the interface.
 
 ---
 
@@ -608,7 +612,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 - [ ] **99. Produce the sequence/agent portability report.**
   - Include access requirements, compute costs, failure modes, and a direct comparison with native logits when available.
   - Report distributional fidelity, downstream task score, and held-out interpretive predictions separately. Identify where the game-based choice of formulation transfers.
-  - **Done when:** PV-H6 is supported, narrowed, or split by policy class.
+  - **Done when:** the report gives the measured error, cost and coverage in each policy class and states the resulting scope of PV-H6.
 
 ## Checkpoint H — General policy-to-value adjudication
 
@@ -632,7 +636,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 - [ ] **103. Test causal interventions on candidate value features.**
   - Use activation patching, steering, ablation, or controlled latent edits and predict their effect on action values and choices.
-  - **Done when:** interventions have preregistered direction/magnitude tests and matched controls.
+  - **Done when:** predicted direction and size are recorded before intervention and observed changes are compared numerically with matched controls.
 
 - [ ] **104. Test backpropagated marginal-value semantics.**
   - Compare `-dL/dh` or objective gradients with recovered local value differences and policy sensitivity.
@@ -640,27 +644,27 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 - [ ] **105. Search for interpretable value directions or concepts.**
   - Relate features to stable action/trajectory tradeoffs, not merely labels.
-  - **Done when:** concepts predict held-out counterfactual comparisons and survive appropriate controls.
+  - **Done when:** the report gives prediction errors for choices under changed conditions, with paired differences from the comparison methods on the same unseen examples.
 
 - [ ] **106. Test changed-decoder and changed-objective transfer.**
-  - Ask whether retained value representations answer new thresholds, temperatures, constraints, costs, or action sets better than direct policy labels.
+  - Compare errors in predicting choices from retained values and from direct policy labels when the rule for taking an action, sampling temperature, constraints, costs, or available moves change. Give the magnitude and direction of the difference on the same cases.
   - **Done when:** the experiment directly connects this repo to the value-first thesis.
 
 - [ ] **107. Compare value-based interpretability against standard baselines.**
   - Include logits/probabilities, saliency, local linear surrogates, behavior cloning, and mechanistic probes not trained on value.
-  - **Done when:** value adds measurable leverage or the claim is narrowed.
+  - **Done when:** the report gives the size, direction and uncertainty of the differences between methods on the same interpretability tasks.
 
 - [ ] **108. Run one preregistered mechanistic confirmation experiment.**
   - Select the most promising policy class and hypothesis only after pilot work, then freeze the final protocol.
-  - **Done when:** PV-H7 receives a transparent disposition.
+  - **Done when:** the confirmation reports measured effects, uncertainty and tested conditions for PV-H7.
 
 - [ ] **109. Write the neural value-semantics research report.**
   - Separate behavioral representation, external interpretability, and internal mechanism throughout.
-  - **Done when:** successful and unsuccessful bridges are equally traceable.
+  - **Done when:** every proposed connection to an internal mechanism links to its measured effects, uncertainty and conditions, including estimates near zero.
 
 ## Checkpoint I — Interpretability adjudication
 
-- [ ] Decide whether “policy-to-value” has become a genuine mechanistic interpretability method, a behavioral/counterfactual interpretability method, or both. Update the project title/subtitle only after this result.
+- [ ] Quantify how accurately recovered values predict behavior under changed conditions and how much altering the proposed internal mechanism changes decisions. Report both effects, their uncertainty and the tested conditions before updating the project title or subtitle.
 
 ---
 

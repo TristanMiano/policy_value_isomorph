@@ -80,13 +80,7 @@ A decoder score may be constructed to reproduce a policy by design. A rollout re
 pi(s) need not equal argmax_a Q^pi(s,a).
 ```
 
-The right-hand side is the one-step greedy improvement of `pi` under the declared payoff, environment, and continuation rule. Matching the source policy is therefore an empirical result. Disagreement can reflect value-estimation error, insufficient state, stochasticity, or genuine failure of the source policy to greedily maximize its own induced expected return.
-
-Evaluation should eventually distinguish:
-
-1. exact or learned decoder-score reconstruction;
-2. estimation error in `V^pi` or `Q^pi`; and
-3. genuine greedy-improvement differences from the source policy.
+The right-hand side chooses the best expected payoff for the first move, then follows the original player for the remaining turns. Report the fraction of matching moves, differences in move probabilities, and average payoff forgone relative to the best available move. Give these values with exact payoffs and with learned predictions on the same boards. This measures how much disagreement is already present with exact payoffs and how much the estimates change it. The tic-tac-toe report defines each player and measurement before giving the results. [Pilot comparisons](TICTACTOE_PILOT.md)
 
 ## When path/history matters
 

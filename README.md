@@ -2,11 +2,13 @@
 
 A small research/demo project exploring the following idea:
 
-> If we start from an agent's **policy**—a mapping from states or histories to actions—can we reconstruct a useful **value representation** together with a declared selection mechanism that reproduces the policy's behavior?
+> A **policy** gives a move or probabilities for the legal moves in each position. A **value representation** assigns numerical scores to moves or their consequences. How closely can choices made from those scores reproduce the original policy, and how does playing strength change?
 
 This repo is meant to be a concrete, economical implementation of a claim inspired by Thoth-Hermes's post "Condensed response to 'hidden complexity of wishes'", especially the suggestion that there is an approximate correspondence between a policy-like representation and a utility/value-like representation over states, actions, continuations, or trajectories.
 
-The immediate practical goal is **not** to settle the philosophical claim in full generality. The current implementation starts with small games where the policy, environment, rollouts, and recovered values can all be inspected directly.
+The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
+
+Two protocols apply throughout this project. Keep quantitative questions and answers numerical, including magnitudes and differences. Never turn a measurable comparison into a yes/no verdict. Define every new term before using it in a design, report, progress update, or chat summary. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
 
 ---
 
@@ -16,25 +18,25 @@ The project now separates two questions that should not be conflated.
 
 ### 1. Behavioral reconstruction
 
-For an arbitrary policy `P`, recover a value-like score or energy `S_P` and a matching decoder `D` such that
+Write `P` for the original policy, `S_P` for scores constructed to represent its choices, and `D` for the decoder that turns those scores into choices. The aim is to recover scores such that
 
 ```text
 P approximately equals D(S_P).
 ```
 
-For deterministic policies, direct action scores plus a fixed-tie-break `argmax` can represent the behavior exactly. For stochastic policies, log scores or energies plus normalized sampling can represent the full action distribution exactly. These are therefore the theoretically closest mechanisms when the sole objective is to reproduce arbitrary `P`.
+A **deterministic** policy chooses one fixed move per position. Choosing the highest-scoring legal move (`argmax`) with a fixed rule for ties can reproduce it exactly. A **stochastic** policy specifies move probabilities. Taking their logarithms as scores and converting the scores back to probabilities gives an exact representation of the move distribution.
 
 ### 2. Expected-utility factorization
 
-Ask whether a behaviorally faithful score also admits the stronger form
+Measure how closely an action score that reproduces the policy can be expressed as the average utility of the outcomes of that action. Here `h` is the history, `a` a move, and `U(tau)` the numerical utility assigned to a complete course of play `tau`. The proposed form is
 
 ```text
 S_P(h,a) approximately equals E[U(tau) | h, a, environment, continuation rule],
 ```
 
-followed by an `argmax` over actions. This treats each action as inducing a lottery over trajectories and is the form most directly connected to VNM expected utility. It is potentially more explanatory, transferable, and interpretable, but it is not guaranteed to reproduce an arbitrary policy.
+followed by an `argmax` over actions. The possible courses of play and their probabilities form a **lottery**. Maximizing the probability-weighted utility of its outcomes is the formulation associated with von Neumann–Morgenstern (VNM) expected utility.
 
-A rollout-trained `V^P` or `Q^P` often already approximates the expectation over future trajectories. In that case, `argmax_a Q^P(h,a)` is already an expected-trajectory selector; another outer rollout average is unnecessary. However, greedily maximizing `Q^P` can be a one-step improvement over `P` rather than an exact reconstruction of it.
+The **state value** `V^P` is the expected payoff from a position when play follows `P`. The **action value** `Q^P` is the expected payoff after a specified first move and then following `P`. Either can be estimated from rollouts. Choosing the move with the highest `Q^P` may change the original player's move, even with perfectly estimated payoffs. The experiment measures how often this changes the choice and by how many payoff points.
 
 The resulting conceptual spine is
 
@@ -169,7 +171,7 @@ The stronger empirical thesis is:
 
 > Some behaviorally faithful scores can also be recovered or approximated as expected utility over trajectories under a compact, stable return contract.
 
-The current game pipeline primarily tests the stronger return-value route: estimate `V^pi` or `Q^pi` from policy rollouts, train a value model, greedily maximize the estimated expected trajectory value, and measure how closely that value-guided policy matches the source policy. The planned direct decoder-score baselines are needed to separate universal behavioral reconstructability from the stronger question of whether the policy is approximately greedy with respect to a recovered return value.
+The game experiment estimates `V^pi` or `Q^pi` from policy rollouts, trains a value model, and measures how closely the selected moves match the source. A model trained directly on the source's moves supplies a comparison. For a source move with lower expected payoff, measure both how often it occurs and how many payoff points it gives up.
 
 ---
 
@@ -201,7 +203,7 @@ Advantages:
 - easy to compare against minimax ground truth
 - very fast training and rollout generation
 
-If the idea works there, we can move to Connect Four as the next step.
+Connect Four provides a larger board on which to compare the same measurements.
 
 ---
 
@@ -213,7 +215,7 @@ Before using neural nets, do the simplest possible version.
 
 1. Implement the tic-tac-toe environment.
 2. Create a policy `pi`:
-   - either minimax,
+   - either minimax (choose the best guaranteed payoff against the opponent's best replies),
    - or a small trained policy,
    - or even a scripted suboptimal policy.
 3. Enumerate or sample many reachable states.
@@ -259,7 +261,7 @@ Train a separate network:
 
 `V_phi(s) ~ target_value(s)`
 
-using MSE or another simple regression loss.
+using mean squared error (MSE), the average squared difference between predicted and target values, or another stated loss.
 
 Optionally also train:
 
@@ -281,7 +283,7 @@ Because `V_phi` and `Q_phi` are trained toward expected rollout returns, these p
 
 ### Phase 5: expand to Connect Four
 
-If the tic-tac-toe demo works, repeat the same experiment on a slightly larger game.
+Repeat the measurements on a larger game and report how the results change.
 
 Why Connect Four:
 
@@ -296,35 +298,40 @@ An RTX 5070 should be more than enough for small-scale versions of this experime
 
 ## Metrics to report
 
-The repo should not just produce a cool picture; it should measure the reconstruction.
+1. **Direct decoder fidelity**
 
-Recommended metrics:
+   This measures how closely choices made directly from the recovered scores copy the original player. Report the fraction of matching moves for a fixed-move player and the differences between legal-move probabilities for a randomized player.
 
-1. **Direct decoder fidelity**  
-   Action agreement for deterministic policies and distributional fidelity for stochastic policies.
+2. **Action agreement**
 
-2. **Action agreement**  
    Percentage of states where the return-value-guided policy chooses the same move as the original policy.
 
-3. **Top-k agreement**  
-   Whether the recovered move lies in the original policy's top-k actions.
+3. **Top-k agreement**
 
-4. **KL divergence / cross-entropy**  
-   If the original policy is stochastic.
+   The fraction of positions where the reference move appears among the evaluated model's `k` highest-scoring legal moves. Give `k`, the count, and the denominator.
 
-5. **Win rate / draw rate**  
-   Play the recovered policy against the original policy.
+4. **Move-probability differences**
 
-6. **Calibration of value predictions**  
-   Compare `V_phi(s)` against empirical rollout returns.
+   Total variation distance is half the sum of absolute differences between the players' legal-move probabilities. Cross-entropy is the mean negative log probability the recovered model assigns to a move drawn from the source. Kullback–Leibler (KL) divergence subtracts the source's cross-entropy with itself to give the excess on that scale.
 
-7. **Comparison to ground-truth minimax value**  
-   Especially useful for tic-tac-toe.
+5. **Win, draw and loss rates**
 
-8. **Greedy-improvement gap**  
-   Separate disagreement caused by value-estimation error from disagreement because `pi` does not itself greedily maximize `Q^pi`.
+   Give each player's probabilities of winning, drawing and losing whole games. Evaluate the original and every recovered player against the same opponents as both X and O. Give each rate and its difference from the original player's rate. Also report games against the original player separately.
 
-9. **Utility-factorization gap**  
+6. **Calibration of value predictions**
+
+   For positions with similar predicted payoffs, compare the average prediction with the average payoff observed or calculated exactly. Give the number of observations and the difference in payoff points.
+
+7. **Comparison with perfect play**
+
+   The **minimax value** is the payoff a player can guarantee against an opponent that always makes its best reply. In tic-tac-toe this can be calculated exactly. Give the difference between each estimated payoff and this reference when perfect play is the intended target.
+
+8. **Payoff forgone by a move**
+
+   Give the best expected payoff available minus the chosen move's expected payoff, from the acting player's perspective. Specify who plays the remaining turns. Report differences caused by estimation error and differences already present with exact payoffs.
+
+9. **Utility-factorization gap**
+
    Measure how much behavioral fidelity is lost when a direct policy score is constrained to arise from a declared expected-trajectory model.
 
 ---
@@ -402,7 +409,7 @@ A good first milestone is:
 - show how often greedy expected-return selection via `V^pi(T(s,a))` matches the original policy
 - separate direct reconstruction error, value-estimation error, and genuine greedy-improvement differences
 
-If that works, the repo demonstrates both the universal representation baseline and the stronger return-value question in a real, inspectable setting.
+The resulting percentages and payoff differences quantify both forms of recovery on the same boards.
 
 ---
 
@@ -431,22 +438,11 @@ If that works, the repo demonstrates both the universal representation baseline 
 
 ---
 
-## What success would look like
+## What the evidence measures
 
-This project is successful at the behavioral-representation level if it shows that:
+The mathematical representation question calls for an explicit construction and proof under stated assumptions. For learned scores, report move agreement or move-probability distance, differences in action rankings, and variation across independent recoveries.
 
-- deterministic and stochastic policies admit explicit value-plus-decoder representations;
-- learned decoder scores reproduce source behavior under the appropriate selection mechanism; and
-- repeated recoveries converge on stable behavioral or ordinal structure after accounting for value equivalences.
-
-It is successful at the stronger utility-factorization level if it additionally shows that:
-
-- a value function induced by policy rollouts can be estimated accurately;
-- expected-trajectory selection through the learned value reproduces a substantial fraction of the original policy's choices;
-- reconstruction error and genuine greedy-policy improvement can be distinguished; and
-- the expected-trajectory representation is compact, stable, transferable, or interpretively useful relative to a direct decoder score.
-
-That would not prove a universal philosophical isomorphism or establish VNM rationality from behavior alone. It would provide a concrete bridge from arbitrary policy behavior to value-like representation, while identifying when that representation supports the stronger interpretation of expected utility over consequences.
+For values learned from game outcomes, report prediction error, the frequency and payoff cost of deviations, and the change in win, draw, and loss probabilities. To compare an explanation based on consequences with direct imitation, give its size, prediction error on unseen choices, and the variation across fits. Record the population, weights, and units for each comparison.
 
 ---
 

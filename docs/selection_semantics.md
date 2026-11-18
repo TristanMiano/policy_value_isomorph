@@ -1,12 +1,12 @@
 # Selection Semantics, Rollout Value, and Lotteries
 
-A real-valued representation does not, by itself, specify how an agent selects an action. The value artifact must also declare what its numbers mean and how they are consumed.
+A **policy** is a rule for choosing actions. A **score** assigns a number to an action or its consequences. A **decoder** converts the scores into a chosen action or probabilities for the available actions. When reporting a value, give both its meaning and the decoder.
 
 This project distinguishes two closely related but importantly different uses of value.
 
 ## 1. Direct score decoding
 
-A policy can be recovered from an action score or successor-state score by a decoder such as
+Write `h` for the current history, `C(h)` for the available actions and `a` for one action. The score `S` can use the history and action, or the resulting position `T(h,a)`. The policy `pi_score` chooses a highest-scoring action, written `argmax`. The first form is
 
 ```text
 pi_score(h) in argmax_{a in C(h)} S(h,a)
@@ -20,7 +20,7 @@ pi_score(h) in argmax_{a in C(h)} S(T(h,a)).
 
 This is a broad policy-representation mechanism. With a sufficiently expressive, context-sensitive score, many policies can be represented this way, including policies whose scores have no established interpretation as cardinal utility over uncertain outcomes.
 
-Direct argmax therefore remains an important baseline and an exact decoder for many policy classes, but it does not by itself establish von Neumann-Morgenstern (VNM) rationality.
+Choosing the largest score gives an exact reference for copying a fixed-action policy. The **von Neumann–Morgenstern (VNM) expected-utility** formulation additionally gives each possible consequence a numerical utility and weights it by its probability when evaluating a move.
 
 ## 2. Expected-trajectory selection
 
@@ -96,7 +96,7 @@ An exact decoder score can be constructed to reproduce a source policy `P` by de
 P(h) need not equal argmax_a Q^P(h,a).
 ```
 
-The right-hand side is the one-step greedy improvement of `P` under the declared return contract. Agreement is therefore an empirical result, not a tautology. High agreement supports the interpretation that `P` behaves approximately as if it maximizes its own induced expected trajectory utility. Systematic disagreement may reveal suboptimality, stochasticity, insufficient state, estimation error, or a mismatch between the policy’s operative objective and the declared rollout payoff.
+The right-hand side selects a move with the highest expected payoff and then assumes the source plays the remaining turns. Report how often its selected move matches the source, the frequency or probability of a different equally good move, and the probability of a strictly lower-payoff move. For the size of the difference, subtract each chosen move's expected payoff from the best available payoff for the acting player and average over moves and positions. Give the population and its weights. For a randomized source also give the difference between the two move distributions.
 
 The project should report direct decoder reconstruction separately from expected-return greedy selection whenever both are available.
 

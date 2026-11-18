@@ -1,4 +1,4 @@
-"""Replay the frozen Task 60 protocol and publish the Task 61 parity tables."""
+"""Repeat the frozen tic-tac-toe experiment and write its quantitative comparisons."""
 
 from __future__ import annotations
 
@@ -68,6 +68,8 @@ def board_rows(
 
 
 def generate(directory: Path, manifest: dict) -> None:
+    for name, definition in manifest["source_definitions"].items():
+        print(f"{definition} Its table name is {name}.", flush=True)
     graph = GameGraph.build(manifest["split"])
     decisions = [s for s in graph.states if graph.children[s]]
     counts = Counter(graph.split[s] for s in decisions)
@@ -82,7 +84,7 @@ def generate(directory: Path, manifest: dict) -> None:
         with gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as compressed:
             with io.TextIOWrapper(compressed, encoding="utf-8", newline="") as boards:
                 for i, source in enumerate(manifest["sources"]):
-                    print(f"Evaluating {source} ({i + 1}/{len(manifest['sources'])})", flush=True)
+                    print(f"Evaluating {source} ({i + 1} of {len(manifest['sources'])} players).", flush=True)
                     laws = tables[source]
                     exact = evaluate_source(graph, laws)
                     decoded = decode_behavior(laws)
@@ -97,7 +99,7 @@ def generate(directory: Path, manifest: dict) -> None:
                     if list(methods) != manifest["recovery"]["decoders"]:
                         raise ValueError("decoder list differs from registered methods")
                     write_rows(boards, board_rows(source, graph, laws, decoded, exact, pred, orbits), header=i == 0)
-                    fidelity.extend(fidelity_rows(source, graph, methods, exact, manifest["endpoints"]))
+                    fidelity.extend(fidelity_rows(source, graph, methods, exact))
                     calibration.extend(calibration_rows(source, graph, exact, pred))
                     matchups.extend(matchup_rows(source, graph, methods, tables, manifest))
                     checkpoints[source] = {name: asdict(getattr(models, name)) for name in ("policy", "value", "q")}
@@ -109,7 +111,8 @@ def generate(directory: Path, manifest: dict) -> None:
         json.dumps(checkpoints, sort_keys=True, separators=(",", ":"), allow_nan=False), encoding="utf-8"
     )
     metadata = dict(
-        version=manifest["version"], protocol_sha256=fingerprint(manifest), weights_sha256=manifest["weights_sha256"],
+        version=manifest["version"], reporting_revision=manifest["reporting_revision"],
+        protocol_sha256=fingerprint(manifest), weights_sha256=manifest["weights_sha256"],
         states=len(graph.states), decision_boards=len(decisions), edges=sum(map(len, graph.children.values())),
         decision_orbits=len(set(orbits.values())), split_decision_counts=counts, training=training_counts,
         sha256={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(directory.iterdir())},
@@ -140,7 +143,7 @@ def main() -> None:
                     path.replace(output / path.name)
         else:
             stage.rename(output)
-    print(f"Verified pilot tables and checkpoints in {output}")
+    print(f"Verified pilot tables and saved network weights in {output}")
 
 
 if __name__ == "__main__":

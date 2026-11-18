@@ -1,37 +1,84 @@
 {
   "version": "tic-tac-toe-pilot-v1",
   "frozen_date": "2026-11-17",
+  "reporting_revision": 2,
+  "reporting_note": "Code revision eaf79b3 fixed the game setup, board groups, and original players before play was measured. Reporting revision 2 was made after the experiment. SHA-256 is the calculation used here to identify saved settings and weights by their contents.",
   "weights_sha256": "8ea145b04cade4568706bbb715c7318cca48e57d14e4887949799c13a8367256",
-  "game": "Standard 3x3, X opens on the empty board with probability 1, stop on first win or full board. Moves are row-major 0 through 8.",
+  "game": "X opens on the empty 3 by 3 board. Number cells 0 through 8 from left to right, top to bottom. Stop on the first three in a row or a full board. A source policy is the fixed rule whose choices the experiment tries to reproduce.",
   "payoff": "Terminal X win +1, draw 0, O win -1. Both players follow the same frozen source after the candidate first move. Maximize for X and minimize for O. No discount or intermediate rewards.",
   "tie_rule": "Smallest legal cell index among exact maxima from the mover's perspective. Use rational arithmetic for exact return ties and ordinary equality for network scores.",
-  "sources": ["minimax", "miss_win", "heuristic", "trained_net", "stochastic_heuristic"],
   "source_definitions": {
-    "minimax": "Exact minimax to terminal, with the declared tie rule.",
-    "miss_win": "When an immediate win and a nonwinning move both exist, take the smallest nonwinning move. Otherwise use the frozen heuristic.",
-    "heuristic": "Repository heuristic at b99d663: win, block, center, corners, remaining legal moves.",
-    "trained_net": "Frozen 10-16-9 tanh policy, legal argmax. Supervised imitation of the heuristic on sorted unique training-split positions from uniform random games.",
-    "stochastic_heuristic": "Draw a fresh mixture independently at each decision. Follow the heuristic with probability 3/4 and choose a uniform legal move with probability 1/4."
+    "heuristic": "The priority-rule player wins immediately if possible, otherwise blocks an immediate win, takes the center, takes a corner, or takes any legal cell, in that order. Among eligible cells at the first applicable priority it picks the lowest number.",
+    "minimax": "The perfect-play player considers all legal continuations, assumes the opponent always makes its best reply, and picks the lowest-numbered move with the best guaranteed payoff.",
+    "miss_win": "The missed-win player takes the lowest-numbered move that does not win immediately whenever an immediate win and such an alternative both exist. In all other positions it follows the win/block/center/corner priority rule.",
+    "trained_net": "The trained neural player is a network fitted to the priority-rule player's choices on 528 distinct training boards. Its ten inputs encode the nine cells and the player to move. Sixteen intermediate units produce nine move scores. The saved weights are fixed and the player chooses the highest-scoring legal cell, breaking ties by lowest cell number.",
+    "stochastic_heuristic": "The randomized priority player independently follows the win/block/center/corner priority rule with probability 3/4 at each turn and otherwise chooses uniformly among legal cells. The random draw can also select the priority move."
   },
+  "sources": ["minimax", "miss_win", "heuristic", "trained_net", "stochastic_heuristic"],
   "heuristic_mixture": [3, 4],
+  "training_terms": "An episode is one complete game. A seed is an integer that repeats a particular sequence of random choices. The data seed is for collecting training positions. The model seed sets the network's initial weights and training order. Hidden dimension counts intermediate units, learning rate sets the size of a weight update, and an epoch is one pass over the training examples.",
   "source_training": {"episodes": 192, "data_seed": 6001, "hidden_dim": 16, "learning_rate": 0.025, "epochs": 30, "seed": 6011},
+  "opponent_definitions": {
+    "uniform": "Choose among legal cells with equal probability on every turn.",
+    "random_net": "Five untrained neural players of the same shape as the trained source. A seed is an integer that reproduces a random initialization. Each seed fixes one set of weights. Each network consistently plays its highest-scoring legal cell, breaking ties by lowest cell number.",
+    "heuristic": "Use the priority-rule player defined above as the opponent.",
+    "minimax": "Use the perfect-play player defined above as the opponent."
+  },
   "opponent_families": {"uniform": 0.25, "random_net": 0.25, "heuristic": 0.25, "minimax": 0.25},
-  "random_opponents": {"seeds": [6101, 6102, 6103, 6104, 6105], "hidden_dim": 16, "decoder": "Frozen 10-16-9 tanh, legal argmax. Equal weight within family."},
+  "random_opponents": {"seeds": [6101, 6102, 6103, 6104, 6105], "hidden_dim": 16, "decoder": "Select the highest-scoring legal cell, breaking ties by lowest cell number. Each network has one fifth of this family's weight."},
   "reserved_confirmation": {"source_network_seeds": [6201, 6202, 6203], "opponent_network_seeds": [6211, 6212, 6213, 6214, 6215], "source_data_seed": 6221, "split_salt": "ttt-confirmation-v1"},
-  "split": {"salt": "ttt-pilot-v1", "train_end": 65, "validation_end": 80, "rule": "Empty board is test to guarantee positive test visitation. For all other positions take the lexicographically smallest board tuple across D4 under O < empty < X. Encode as O.X symbols, concatenate salt + ':' + board, and take the first four SHA-256 bytes as a big-endian integer modulo 100. Buckets below 65 train, 65 to 79 validation, remaining test. Preserve oriented labels."},
-  "endpoints": {"min_agreement": 0.8, "max_total_variation": 0.2, "primary": "Exact greedy recovery on all nonterminal boards, learned successor V on held-out test boards. Report every formulation under both uniform board weight and exact source self-play visitation, renormalized within the split. Thresholds are inclusive."},
+  "split": {"salt": "ttt-pilot-v1", "train_end": 65, "validation_end": 80, "rule": "Put the empty board in the test group so the original player visits at least one test position. For every other board, use the first of its eight rotations and reflections in cell-by-cell order with O before empty before X. Write the cells as O, dot and X. Prefix the salt (the fixed text above) and a colon. Read the first four SHA-256 bytes as an integer with the most significant byte first and take its remainder upon division by 100. Assign 0 to 64 to training, 65 to 79 to validation and 80 to 99 to test. Retain the move labels for each orientation."},
+  "method_definitions": {
+    "source": "Play the original fixed rule for this row's source.",
+    "behavior_exact": "Use the source's own move probabilities as the reference. Taking their logarithms as scores and converting them back to probabilities reproduces the original distribution, including zero probabilities.",
+    "return_exact": "For each legal move calculate the average final payoff when both players then follow the source. Choose the best value for the mover, with the lowest-numbered cell breaking exact ties.",
+    "policy_mlp": "A newly fitted network learns directly from source moves. For a source with a fixed move on each board it chooses the highest-scoring legal move. For a randomized source it converts each legal score to its exponential and divides by the sum of those exponentials to get move probabilities.",
+    "value_mlp": "A newly fitted network called V predicts the final payoff from a board. Score each move using its resulting board and choose the best score for the mover.",
+    "q_mlp": "A newly fitted network called Q predicts the final payoff for a board and a proposed move together. Choose the best legal move score for the mover."
+  },
+  "primary_comparisons": "Measure exact return choices across all boards where a move remains, and learned V choices across test boards withheld from fitting. Compare every method with the same source under equal board weights and weights proportional to visits when the source plays both sides. Normalize each set of weights over the indicated boards.",
+  "population_definitions": {
+    "source": "Original player whose moves are being copied, named in source_definitions.",
+    "method": "Player being evaluated, named in method_definitions.",
+    "split": "The set of boards in the row. All means every reachable decision board. Train, validation and test identify the mutually exclusive groups used for fitting, checking during development and final comparison.",
+    "weighting": "Uniform gives every board weight one. Visitation gives a board the probability of reaching it when the original player plays both sides from the empty board.",
+    "boards": "Number of distinct decision boards in the indicated group.",
+    "positive_weight_boards": "Number of those boards with weight greater than zero.",
+    "weight_sum": "Sum of board weights used as the denominator for each average. For visitation this is the expected number of visits to the group per game. An average with zero total weight is left blank."
+  },
+  "measure_definitions": {
+    "agreement": "Fraction of weighted boards on which the same move is chosen as the deterministic source, which has one fixed move per board. A blank denotes an inapplicable measure or zero total board weight.",
+    "total_variation": "Half the sum of the absolute differences between two legal-move probability distributions on a board, averaged over boards. Zero means identical probabilities and one means disjoint choices.",
+    "source_fixed_match": "Source probability of choosing the exact return player's selected move, averaged over boards.",
+    "source_other_tie": "Source probability of choosing a different move with the same best expected payoff, averaged over boards.",
+    "source_strict_loss": "Source probability of choosing a move with strictly lower expected payoff for the mover, averaged over boards. A game loss is recorded separately in the matchup table.",
+    "changed_from_exact_move": "Evaluated player's probability of choosing any move other than the exact return player's selected move, averaged over boards.",
+    "selected_lower_return": "Evaluated player's probability of choosing a move with strictly lower expected payoff for the mover, averaged over boards.",
+    "source_mean_payoff_gap": "Average points forgone by the original source's choices relative to the best legal move. Evaluate one move and then continue with the source on both sides. Zero to two points on the mover's loss/draw/win scale of -1/0/+1.",
+    "method_mean_payoff_gap": "The same average points forgone, using the evaluated player's move probabilities for that first move."
+  },
   "split_decision_counts": {"train": 2980, "validation": 760, "test": 780},
   "recovery": {
     "hidden_dim": 16, "epochs": 20, "learning_rate": 0.015,
     "policy_seed": 6301, "value_seed": 6302, "q_seed": 6303,
     "policy_label_seed": 6311, "v_rollout_seed": 6312, "q_rollout_seed": 6313,
     "stochastic_action_samples": 8, "stochastic_rollouts": 16,
-    "design": "Use every train decision for policy and Q. Use actual frozen source actions, one per board for deterministic sources or eight independent draws for the stochastic source. V uses train positions including terminals, excluding successors of any validation/test decision. No validation/test input or symmetry equivalent is supervised for its corresponding prediction. Rollout trajectories may traverse held-out positions. Use separate RNG streams for action, V and Q labels, reset for each source. Traverse boards in ascending ply then ASCII board order, legal moves ascending. One rollout suffices for deterministic sources. Train on X-perspective Monte Carlo returns. No terminal shortcut at decoding for either learned V or Q. No tuning, early stopping or replacement seeds.",
+    "design": "Fit direct imitation on every training decision and Q on every legal move there. Record one source move per board for a fixed-move player or eight independent draws for a randomized player. Train V on training boards including finished games, excluding boards reached by a legal move from any validation or test decision. Each prediction's training inputs also exclude rotations and reflections of its held-out inputs. A rollout is a game played to completion using the source. It may pass through held-out positions. Estimate the payoff for X from one rollout for fixed-move sources or sixteen for the randomized source. Restart separate random-number streams for imitation moves, V rollouts and Q rollouts for each source. Process boards by number of moves already played, then by the nine-cell text in character order (dot, O, X). Process legal moves in cell-number order. Both learned payoff models use their predictions even for finished games. Use the specified settings, training passes and seeds throughout.",
     "decoders": ["source", "behavior_exact", "return_exact", "policy_mlp", "value_mlp", "q_mlp"],
-    "stochastic_decoder": "The exact behavioral control normalizes log probabilities. The policy imitation network uses its masked temperature-one softmax for stochastic sources and legal argmax otherwise. Both return networks act greedily for all sources."
+    "stochastic_decoder": "The exact copy uses the source probabilities. For a randomized source direct imitation samples legal moves in proportion to the exponential of each score. For a fixed-move source it selects a highest-scoring legal move. Both learned payoff models choose the move with the best predicted payoff for the player to act."
   },
-  "gameplay": "Play complete games from the empty board. Evaluate each participant as X and O with weight 1/2, against all opponents and separately against its own source. Compute the entire outcome distribution by recursion with no sampled matches. Report W/D/L, W-L and same-opponent same-seat differences from the original source. Overall panel weights are by family. Head-to-head has zero panel weight.",
-  "calibration": "On held-out decision boards compare V(s) to exact V(s) and Q(s,a) and V(T(s,a)) to exact Q(s,a) on every legal candidate. Report mean predictions and truths, MSE and counts in five fixed prediction bins with boundaries -0.6,-0.2,0.2,0.6 and open tails.",
+  "gameplay": "Play complete games from the empty board. A seat is playing as X or O. Balanced gives each seat half weight. Sum the probabilities of all possible outcomes. Win, draw and loss are probabilities for the evaluated player. Score is win probability minus loss probability. A delta is the evaluated player's result minus the original player's result against the same opponent in the same seat. Panel is the average with the stated opponent-family weights. Head-to-head means playing against the original source and is reported separately.",
+  "calibration": "Compare predictions with the exact average payoff for X. State V scores the 780 test boards. Successor V scores the board after each legal test move. Direct Q scores the test board and move together. Report the count, average predicted and exact payoffs, and mean squared error (the average squared difference in payoff points). Show all observations together and grouped by predicted payoff with boundaries at -0.6, -0.2, 0.2 and 0.6. Include the lower boundary in each group. The outer groups extend without limit.",
+  "board_columns": {
+    "board, to_move, ply, orbit, split, visitation": "The nine cells in row order, the player to move, the number of moves already played, the representative shared by rotations and reflections, the assigned board group, and the probability of reaching the board in source self-play.",
+    "legal_moves": "Legal cell numbers, in the order used by every per-move array in the row.",
+    "source_move, source_probs, behavior_exact_probs, imitation_probs": "The source move whenever it gives a single move probability one (otherwise blank), followed by the move probabilities of the source, its exact behavioral copy, and direct imitation.",
+    "v_exact_x, q_exact_x": "Exact expected payoff for X on this board or after each candidate move, continuing with the source on both sides.",
+    "best_moves, return_move": "All moves with the best exact return for the mover, and the lowest-numbered one.",
+    "fixed_match_mass, other_tie_mass, strict_loss_mass": "Source probabilities of the selected best move, another equally good move, or a strictly worse move, respectively.",
+    "v_hat_x, successor_v_hat_x, q_hat_x": "Predicted X payoff from V on the current board, from V on each resulting board, and from Q for each candidate move.",
+    "v_move, q_move": "Legal moves chosen using learned V and Q respectively."
+  },
   "reproduce_freeze": "python scripts/freeze_tictactoe_pilot.py OUTPUT_JSON",
   "reproduce_results": "python scripts/run_tictactoe_pilot.py --output-dir OUTPUT_DIRECTORY"
 }
