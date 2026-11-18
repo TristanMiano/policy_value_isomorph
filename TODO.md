@@ -4,7 +4,7 @@ Last updated 2026-11-17
 
 ## Resume here
 
-**Next is the pilot checkpoint.** Tasks 60 and 61 have produced the preregistration, exhaustive comparison, and replayable fixtures.
+**Next task is 23. Introduce the minimal PyTorch-backed model and training interfaces.** Tasks 60, 61, and the pre-migration pilot checkpoint are complete. Use the frozen pilot outputs for Task 24 parity. [Checkpoint decisions](TICTACTOE_PILOT.md#checkpoint-decisions)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -214,7 +214,9 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
 
 ## Checkpoint before the PyTorch migration
 
-- [ ] Record whether the predeclared pilot fidelity threshold was met for each source and state distribution. Identify disagreements attributable to ties, a source choosing a lower-return move, and a learned score changing the exact decision. Retain the exact tables as parity fixtures for Task 24 and reserve the held-out confirmation sources for Task 62.
+- [x] **Pilot checkpoint completed 2026-11-17.** Exact return recovery passed for minimax under both uniform and source-visitation weighting. It missed the registered threshold under both weightings for the deliberately fallible, heuristic, trained neural, and stochastic sources. Learned successor V missed for all five sources under both held-out weightings. The report records the ten decisions for each primary endpoint, including the number of distinct visited test boards. [Threshold results](TICTACTOE_PILOT.md#checkpoint-decisions)
+  - For the frozen neural source, 1,094 of 4,520 exact choices differed only by a return tie, and 867 source moves had strictly lower return. Replacing exact scores with learned V restored the source move on 95 test boards and lost it on 145. The exact behavioral decoder matched all five source distributions. The fixed game payoff therefore explains move choice to different degrees across these policies. [Board-level attribution](TICTACTOE_PILOT.md#why-the-moves-differed)
+  - Audited the frozen source weights against Task 60 commit `eaf79b3` and the result hashes against Task 61 commit `bc74ccf`. Independently recomputed all 240 fidelity rows and their threshold decisions from the board table and checked the paired differences in all 900 matchup rows. Task 24 inherits the exact fractions, action choices, network checkpoints, and per-seat outcomes. Task 62 retains the independent seeds. [Parity fixtures and reproduction](TICTACTOE_PILOT.md#replay-and-parity-fixtures)
 
 ---
 
