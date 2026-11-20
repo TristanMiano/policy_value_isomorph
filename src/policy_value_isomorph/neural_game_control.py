@@ -76,7 +76,8 @@ def train_source(graph: GameGraph, states: list[State], seed: int) -> tuple[nn.M
 
 
 def fit_values(x: Tensor, train: Tensor, labels: Tensor, validation: Tensor,
-               truth: Tensor, seed: int, full: bool, log_loss: bool = False) -> tuple[nn.Module, dict]:
+               truth: Tensor, seed: int, full: bool, log_loss: bool = False,
+               examples_per_pass: int | None = None) -> tuple[nn.Module, dict]:
     """Fit the conditional frequency of a legal move using bounded scalar predictions."""
     torch.manual_seed(seed)
     model = network(x.shape[1], 1)
@@ -86,9 +87,18 @@ def fit_values(x: Tensor, train: Tensor, labels: Tensor, validation: Tensor,
     target = labels
     best = float("inf")
     history = []
+    n_examples = len(train) if examples_per_pass is None else examples_per_pass
+    if not len(train) or n_examples < 1:
+        raise ValueError("A fit requires observed training examples and a positive training budget.")
     for epoch in range(1, (300 if full else 120) + 1):
         adjust_rate(optimizer, epoch)
-        for i in torch.randperm(len(train), generator=order).split(256):
+        indices = torch.randperm(len(train), generator=order)
+        if n_examples > len(train):
+            # Each full cycle gives equal weight to observed candidates, regardless of visit count.
+            cycles = [indices] + [torch.randperm(len(train), generator=order)
+                                  for _ in range((n_examples - 1) // len(train))]
+            indices = torch.cat(cycles)
+        for i in indices[:n_examples].split(256):
             outputs = model(training_x[i])
             if log_loss:
                 loss = nn.functional.binary_cross_entropy_with_logits(outputs[:, 0], target[i])

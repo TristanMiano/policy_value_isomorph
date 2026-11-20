@@ -16,6 +16,8 @@ For a board `s` and move `a`, let `C(s,a)` count occasions when the frozen playe
 
 We first played 256 complete games from the empty board with the source playing both sides. Then we played 32 games starting at each reachable decision board. The latter gives poorly visited boards direct observations. Within each of the training, validation and test groups we counted transitions from all visits to parents in that group in the games started in that group. This yields independent batches for estimating each group's frequencies. Training has 2,980 decision boards, validation has 760 for choosing training duration, and the test comparison uses 780. Rotations and reflections are kept together. The raw counts from empty-board games and the counts used for fitting are saved separately. [Counts, denominators and normalized targets](experiments/neural_tictactoe_control/visits.csv.gz)
 
+A subsequent experiment repeated the collection with one complete game per starting board. For the frozen optimal neural player this gave identical normalized frequencies on all 16,167 legal moves. It also compared empty starts, random opponents and restarts on rarely observed boards at fixed numbers of observed source moves. [Coverage, agreement on common and unusual boards, and game outcomes](TICTACTOE_SAMPLING.md)
+
 All new recovery networks use two hidden layers of 128 rectified linear units and a single output converted to the interval from zero to one by the logistic function. The fitted output is the learned move score. We measure its squared difference from the observed frequency on each legal candidate move. Candidates receive equal weight during fitting. The same weights and score scale are used for both decoders.
 
 | Network name | Inputs to the learned score |

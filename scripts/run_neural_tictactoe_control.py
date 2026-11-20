@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / "src"))
 import numpy as np
 import torch
 
+from policy_value_isomorph.coverage_sampling import enumerated_counts
 from policy_value_isomorph.neural_game_control import fit_values, train_source
 from policy_value_isomorph.pilot_exact import evaluate_source
 from policy_value_isomorph.pilot_metrics import fidelity_rows, matchup_rows
@@ -37,15 +38,9 @@ def write_table(path: Path, rows: list[dict]) -> None:
 
 def collect_counts(sampler: MoveSampler, graph: GameGraph):
     """Use independent games for the three board groups. Count only parents belonging to that group."""
-    state_split = np.array([graph.split[s] for s in graph.states])
     empty = np.array([graph.states.index(State.initial())])
     opening_counts = sampler.visits(empty, 256, 8100)
-    counts = np.zeros(len(sampler.edges), dtype=np.int64)
-    for i, group in enumerate(("train", "validation", "test")):
-        starts = np.flatnonzero(sampler.active & (state_split == group))
-        visits = sampler.visits(starts, 32, 8101 + i)
-        mask = state_split[sampler.parent] == group
-        counts[mask] = visits[mask]
+    counts, _ = enumerated_counts(sampler, graph, 32)
     return opening_counts, counts
 
 

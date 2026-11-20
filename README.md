@@ -249,6 +249,8 @@ The network outputs scores or probabilities for legal moves. For the optimal neu
 
 Sample games from the frozen network to completion. For each observed board, divide the count of each outgoing transition by the total visits to that board. Record the starting positions, counts, denominators and coverage. In a small game the resulting table can drive move selection directly.
 
+In tic-tac-toe the frozen optimal player reaches nine of the 4,520 decision boards playing against its own copy from empty. Starting one complete game at each training board recovers every training move frequency for this deterministic player in 7,082 source turns. When drawing starts from random legal play, keeping some empty starts and favoring boards with few prior observations increased the fraction of exact move matches on the 780 held-out boards. Count only turns taken by the player being reconstructed. For a player that randomizes its moves, measure both the number of distinct boards reached and error in the estimated move probabilities on those boards. [Sampling rules, game outcomes and uncertainty](TICTACTOE_SAMPLING.md)
+
 ### Phase 3 — Fit the visit scores
 
 Use those observed fractions as training labels for a network scoring the current and resulting board, or the current board and candidate move. A network that sees only the resulting board provides a comparison when several moves share a successor. Report prediction error and distinguish fits on all positions from fits evaluated on omitted positions.
