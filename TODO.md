@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 23.** Define how the existing models will use PyTorch, a library for training neural networks. Tasks 60 and 61 produced saved predictions and game outcomes for comparing the current and future implementations in Task 24. [Pilot measurements](TICTACTOE_PILOT.md#move-agreement-and-probability-differences)
+**Next task is 24.** Move the three existing trainers to PyTorch, a library for training neural networks, and replay the pilot's saved predictions and game outcomes. [Pilot measurements](TICTACTOE_PILOT.md#move-agreement-and-probability-differences)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -233,10 +233,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 # Phase 0 — Finish the PyTorch foundation
 
-- [ ] **23. Introduce minimal internal interfaces for PyTorch-backed models and training steps.**
+- [x] **23. Introduce minimal internal interfaces for PyTorch-backed models and training steps.**
   - Add explicit model, optimizer, batch, device, and prediction boundaries shared by policy, `V`, and `Q` without building a large framework.
   - Preserve pure data preparation and evaluation functions.
   - **Done when:** interfaces support the current one-hidden-layer models and are covered by focused shape/type tests.
+  - Completed 2026-11-20. The shared model reads the original weight layout, accepts rows of board or board-and-move inputs, and exposes an update step that accepts the optimizer (the rule for changing weights). Tests cover all three input/output shapes, legal moves, scalar targets, CPU placement, 64-bit precision and independent weight snapshots. All 77 tests passed with `python -m pytest -q`, and `python scripts/demo_tictactoe.py` printed the three sample boards, payoffs and moves. [Model and training step](src/policy_value_isomorph/torch_mlp.py) · [Interface tests](tests/test_torch_mlp.py)
 
 - [ ] **24. Port policy, value, and Q MLPs to PyTorch with parity fixtures.**
   - Preserve public APIs, legal-action masking, perspective/sign conventions, and telemetry.

@@ -183,6 +183,8 @@ The primary game experiment uses the frozen player's move frequencies to train a
 
 For the current modernization phase, this project treats **PyTorch as the canonical training backend** for policy, state-value `V(s)`, and action-value `Q(s,a)` models.
 
+An editable install (`pip install -e .`) installs PyTorch. The shared one-hidden-layer network reads the original JSON weights directly. It computes on the CPU using 64-bit floating-point numbers, the precision of the original Python weights.
+
 Migration constraints:
 
 1. Keep tic-tac-toe rollout/value-recovery APIs and value-sign semantics stable.

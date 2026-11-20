@@ -8,14 +8,14 @@ version = "0.1.0"
 description = "Minimal tic-tac-toe policy-to-value reconstruction demo"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["torch>=2.0"]
 
 
 [project.scripts]
 policy-value-cli = "policy_value_isomorph.cli:main"
 
 [project.optional-dependencies]
-neural-control = ["torch>=2.0", "numpy>=1.24"]
+neural-control = ["numpy>=1.24"]
 dev = [
   "pytest>=8.0",
 ]
