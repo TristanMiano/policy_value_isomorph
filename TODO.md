@@ -121,7 +121,7 @@ For neural policies, externally recovered value structure may be predictable fro
 
 The first scientific milestone is the exact tic-tac-toe pilot in Tasks 60–61 below. The source policy supplies choices. The game supplies the transitions and win/draw/loss payoff. Measure how much move choice is recovered from that payoff, then test how much a compact utility inferred from choices can explain.
 
-After the pilot, Tasks 23–59 cover backend parity, formal results, and recovery methods. Tasks 62–72 deliver the finite-domain confirmation at Checkpoint E. Tasks 73–82 test transfer and interpretability in Connect Four, with the first publication decision at Checkpoint F. Broader domains and neural-mechanism studies begin at Task 83. Checkpoints can narrow that work in light of the results.
+After the pilot, Tasks 23–59 compare the existing and PyTorch implementations, develop formal results, and build recovery methods. Tasks 62–72 repeat and extend the tic-tac-toe measurements with independently trained players. Tasks 73–81 study Connect Four. Task 81a adds 4×4 Reversi, a disc-flipping game in which the player with more discs at the end wins. Task 82 brings the three games together before the first publication decision at Checkpoint F. Broader domains and neural-mechanism studies begin at Task 83. Checkpoints can narrow that work in light of the results.
 
 ## Formulations to compare in games
 
@@ -218,6 +218,8 @@ At each checkpoint, audit work since the previous checkpoint, record the decisio
   - `python scripts/run_tictactoe_pilot.py` generated the six result files. A fresh replay reproduced them byte for byte. The exact, recovery, and reporting code is in `pilot_exact.py`, `pilot_recovery.py`, and `pilot_metrics.py`. The demo passed and all 56 tests passed on Windows and Ubuntu, including `test_pilot_exact.py` and `test_pilot_results.py`. [Published fixture hashes](experiments/tictactoe_pilot/results/run.json)
 
 ## Checkpoint before the PyTorch migration
+
+Treat the size of the latest tic-tac-toe training gains as provisional. The frozen player takes the lowest-numbered move that preserves the best outcome against perfect replies. The reconstruction scores each candidate move given the board and takes its highest-scoring move. Increasing its training set from 2,980 to 3,740 boards at the same number of training updates raised its average agreement with the frozen player from 96.92% to 97.78% on the same 780 equally weighted boards withheld from training. The increase was 0.85 percentage points with a standard error of 1.06 points (the sample standard deviation of the three paired differences divided by the square root of three). Each fit's agreement is an exact count on those boards. The uncertainty here concerns variation across training runs with this one player and board split. Task 62 plans independent repetitions. [Training-set comparison](TICTACTOE_CHOICE_TRAINING.md#how-much-does-the-number-of-distinct-training-boards-matter)
 
 The neural follow-up verified the trained player's guaranteed outcome on every reachable decision board. It then sampled complete games under the fixed player and trained networks to predict normalized transition counts. It compared direct move selection with the expected learned utility of sampled plays using the same weights. Keep the empirical counts, coverage, paired decoders, different network inputs and separate payoff-trained reference in Tasks 62, 66 and 71 and in the independent confirmation. [Training procedure and side-by-side results](NEURAL_TICTACTOE_CONTROL.md)
 
@@ -492,7 +494,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 ## Checkpoint E — First research adjudication
 
-- [ ] Answer the original README question for each policy class and state weighting. Record which limits are structural, which shrink with training, and which remain open. Use the three objective-specific results from Task 72 to select methods for Connect Four, including a direct behavioral control and an expected-utility comparison.
+- [ ] Answer the original README question for each policy class and state weighting. Record which limits are structural, which shrink with training, and which remain open. Use the three objective-specific results from Task 72 to select methods for Connect Four and 4×4 Reversi, including a direct behavioral control and an expected-utility comparison.
 
 ---
 
@@ -531,12 +533,17 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
   - Include behavior cloning, policy distillation/logits, and simple local surrogate baselines.
   - **Done when:** any claimed interpretive advantage is incremental rather than merely a consequence of fitting another network.
 
+- [ ] **81a. Measure how well the same methods recover a frozen player's choices in 4×4 Reversi.**
+  - Use the Othello rules on a four-by-four board. Start with White on the northwest and southeast squares of the central four, Black on the other two, and Black to move. A placement must bracket at least one uninterrupted line of opposing discs between the new disc and a friendly disc. Flip all discs bracketed horizontally, vertically or diagonally. A player with no placement must pass if the opponent can play. When neither can play, the player with more discs wins, and equal counts draw. Record the side to move so a pass is an observable transition. [World Othello Federation rules adapted for this board size](https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english)
+  - Enumerate positions reachable from that opening and compute the best outcome each side can guarantee against perfect replies. Train a neural player to choose the first placement in row order, left to right, that preserves that outcome. Freeze it and record its actual choices and any guaranteed outcome given up. Sample complete games from the opening and from varied reachable positions. Retain move counts and visits per position. Train both the network scoring the board after a move and the network scoring a board and candidate move on the fraction of visits taking each move.
+  - Compare choosing the highest immediate score with **von Neumann–Morgenstern (VNM) selection**, which chooses the move with the highest average learned utility of a completed game. Use the same fitted scores for both rules. Carry forward the methods selected in Task 72 and specify how scores along a game determine its utility, how each side continues play, how later moves are weighted, how ties are resolved and how many continuations are sampled per move. Report exact-move agreement separately for positions with multiple legal placements, one placement, and a forced pass, with a count and denominator for each. Alongside agreement, report win, draw and loss rates for the original and reconstructed players against the same opponents as Black and as White. On positions with multiple moves, also measure how often each method predicts the frozen player's next choice when its favourite is removed. Report uncertainty for sampled quantities and variation across independent fits.
+
 - [ ] **82. Write the neural-game empirical paper/report draft.**
-  - Report which fidelity, game-performance, and interpretability selections from Task 72 replicate in Connect Four and which depend on game, policy class, opponent or access. Connect representation and stability results to the evidence for each selection. Link every figure and claim to its reproducible artifact.
+  - For tic-tac-toe, Connect Four and 4×4 Reversi, report how often each method predicts the original player's choices, how its win, draw and loss rates change, and how accurately it predicts responses to removing a move. Give within-game differences between the Task 72 methods, their denominators and the uncertainty on sampled results. Relate the differences to the original player's move rule, the opponent, and each method's access to the original player. Include how the learned scores vary across training runs and network designs. Link every figure and claim to its reproducible artifact.
 
 ## Checkpoint F — Minimum publishable program
 
-- [ ] Audit Tasks 73–82 and decide whether to release a first paper/software benchmark before broader adapters. Freeze which results are established and which remain conjectures.
+- [ ] Audit the three-game comparison in Task 82, including the Reversi measurements from Task 81a. Review Tasks 73–82 and decide whether to release a first paper/software benchmark before broader adapters. Record the scope and uncertainty of each empirical claim.
 
 ---
 
