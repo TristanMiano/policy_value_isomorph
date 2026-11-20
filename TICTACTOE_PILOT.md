@@ -98,10 +98,11 @@ The experiment settings and original player weights were fixed in code revision 
 
 Recovery used 2,980 training boards and reserved another 760 **validation boards**, positions set aside during training, as well as the 780 test boards. Rotations and reflections of the same board were assigned to the same group. Imitation used training decisions and Q used their 10,864 legal moves. V had 1,215 eligible training positions after also excluding every resulting board that a validation or test decision would ask it to score. V and Q consequently had different numbers of training examples. For the randomized priority source we used eight independent move draws per training decision and sixteen rollouts per estimated payoff. [Study settings](experiments/tictactoe_pilot/manifest.json) · [Training counts and file checksums](experiments/tictactoe_pilot/results/run.json)
 
-Run these commands from the repository root.
+The archived weights and tables came from the original Python trainers. From the repository root, the first command below replays those weights with PyTorch and compares every move and matchup. The second trains fresh networks with PyTorch using the pilot's settings and writes a separate set of tables. To reproduce the original file checksums by training from scratch, use repository revision `4ff4bc2`. [Comparison of the two implementations](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
 
 ```sh
-python scripts/run_tictactoe_pilot.py --output-dir artifacts/tictactoe_pilot_replay
+python scripts/replay_torch_pilot.py
+python scripts/run_tictactoe_pilot.py --output-dir artifacts/tictactoe_pilot_pytorch
 python -m pytest -q
 python scripts/demo_tictactoe.py
 ```

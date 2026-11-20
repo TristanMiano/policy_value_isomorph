@@ -1,0 +1,338 @@
+{
+  "torch_version": "2.8.0+cpu",
+  "device": "cpu",
+  "dtype": "float64",
+  "protocol_sha256": "6579067c47292868e695e8b230615f70aa5af82e5bc237d7707928fb2c1beef4",
+  "definitions": {
+    "policy": "Network trained to copy legal moves. Scores are before normalization. Top moves maximize the score.",
+    "value": "Network scoring the board after each move in expected game points for X.",
+    "q": "Network scoring the current board and candidate move in expected game points for X.",
+    "boards": "Number of positions, counting each original player once per position.",
+    "legal_scores": "Number of legal position/move scores compared across all original players.",
+    "old_tied_boards / new_tied_boards": "Positions with multiple equally best legal scores in Python / PyTorch.",
+    "different_best_sets / different_top_moves": "Positions with different sets of best moves / different first best moves in ascending cell order.",
+    "different_archived_top_moves": "Positions whose replayed choice or most probable legal move differs from the archived choice, ties by lowest cell.",
+    "max_abs_score_change / max_abs_probability_change": "Largest absolute difference per legal move in network score units / probability from 0 to 1.",
+    "max_abs_current_board_change": "Largest absolute change in predicted X points on the decision boards themselves.",
+    "different_signs": "Legal scores changing category among negative, exactly zero and positive.",
+    "frozen_players": "Scores and choices of the original trained player and five untrained opponents, compared on every decision board. different_public_choices counts changes in their legal move rule.",
+    "outcomes": "Count of matchup rows and largest absolute differences from the archive in win, draw and loss probability and in expected points (win minus loss).",
+    "balanced": "Absolute replay probabilities and expected points from the opening, equal weight per seat and per opponent family, equal weight within family. Each row enumerates all continuations."
+  },
+  "sources": {
+    "heuristic": "The priority-rule player wins immediately if possible, otherwise blocks an immediate win, takes the center, takes a corner, or takes any legal cell, in that order. Among eligible cells at the first applicable priority it picks the lowest number.",
+    "minimax": "The perfect-play player considers all legal continuations, assumes the opponent always makes its best reply, and picks the lowest-numbered move with the best guaranteed payoff.",
+    "miss_win": "The missed-win player takes the lowest-numbered move that does not win immediately whenever an immediate win and such an alternative both exist. In all other positions it follows the win/block/center/corner priority rule.",
+    "trained_net": "The trained neural player is a network fitted to the priority-rule player's choices on 528 distinct training boards. Its ten inputs encode the nine cells and the player to move. Sixteen intermediate units produce nine move scores. The saved weights are fixed and the player chooses the highest-scoring legal cell, breaking ties by lowest cell number.",
+    "stochastic_heuristic": "The randomized priority player independently follows the win/block/center/corner priority rule with probability 3/4 at each turn and otherwise chooses uniformly among legal cells. The random draw can also select the priority move."
+  },
+  "opponents": {
+    "uniform": "Choose among legal cells with equal probability on every turn.",
+    "random_net": "Five untrained neural players of the same shape as the trained source. A seed is an integer that reproduces a random initialization. Each seed fixes one set of weights. Each network consistently plays its highest-scoring legal cell, breaking ties by lowest cell number.",
+    "heuristic": "Use the priority-rule player defined above as the opponent.",
+    "minimax": "Use the perfect-play player defined above as the opponent."
+  },
+  "methods": {
+    "source": "Play the original fixed rule for this row's source.",
+    "behavior_exact": "Use the source's own move probabilities as the reference. Taking their logarithms as scores and converting them back to probabilities reproduces the original distribution, including zero probabilities.",
+    "return_exact": "For each legal move calculate the average final payoff when both players then follow the source. Choose the best value for the mover, with the lowest-numbered cell breaking exact ties.",
+    "policy_mlp": "A newly fitted network learns directly from source moves. For a source with a fixed move on each board it chooses the highest-scoring legal move. For a randomized source it converts each legal score to its exponential and divides by the sum of those exponentials to get move probabilities.",
+    "value_mlp": "A newly fitted network called V predicts the final payoff from a board. Score each move using its resulting board and choose the best score for the mover.",
+    "q_mlp": "A newly fitted network called Q predicts the final payoff for a board and a proposed move together. Choose the best legal move score for the mover."
+  },
+  "frozen_players": {
+    "boards": 27120,
+    "old_tied_boards": 0,
+    "new_tied_boards": 0,
+    "different_best_sets": 0,
+    "different_top_moves": 0,
+    "legal_scores": 97002,
+    "max_abs_score_change": 4.440892098500626e-15,
+    "different_public_choices": 0
+  },
+  "moves": {
+    "policy": {
+      "boards": 22600,
+      "old_tied_boards": 0,
+      "new_tied_boards": 0,
+      "different_best_sets": 0,
+      "different_top_moves": 0,
+      "legal_scores": 80835,
+      "max_abs_score_change": 5.329070518200751e-15,
+      "max_abs_probability_change": 9.992007221626409e-16,
+      "different_archived_top_moves": 0
+    },
+    "value": {
+      "max_abs_current_board_change": 1.1102230246251565e-15,
+      "boards": 22600,
+      "old_tied_boards": 0,
+      "new_tied_boards": 0,
+      "different_best_sets": 0,
+      "different_top_moves": 0,
+      "legal_scores": 80835,
+      "max_abs_score_change": 1.1102230246251565e-15,
+      "different_archived_top_moves": 0,
+      "different_signs": 0
+    },
+    "q": {
+      "boards": 22600,
+      "old_tied_boards": 0,
+      "new_tied_boards": 0,
+      "different_best_sets": 0,
+      "different_top_moves": 0,
+      "legal_scores": 80835,
+      "max_abs_score_change": 1.4432899320127035e-15,
+      "different_archived_top_moves": 0,
+      "different_signs": 0
+    }
+  },
+  "outcomes": {
+    "rows": 900,
+    "win": 2.220446049250313e-16,
+    "draw": 2.220446049250313e-16,
+    "loss": 2.220446049250313e-16,
+    "score": 2.220446049250313e-16
+  },
+  "balanced": [
+    {
+      "source": "minimax",
+      "method": "source",
+      "win": 0.4251426091269841,
+      "draw": 0.5748573908730159,
+      "loss": 0.0,
+      "score": 0.4251426091269841
+    },
+    {
+      "source": "minimax",
+      "method": "behavior_exact",
+      "win": 0.4251426091269841,
+      "draw": 0.5748573908730159,
+      "loss": 0.0,
+      "score": 0.4251426091269841
+    },
+    {
+      "source": "minimax",
+      "method": "return_exact",
+      "win": 0.4251426091269841,
+      "draw": 0.5748573908730159,
+      "loss": 0.0,
+      "score": 0.4251426091269841
+    },
+    {
+      "source": "minimax",
+      "method": "policy_mlp",
+      "win": 0.4386656746031746,
+      "draw": 0.1728629298941799,
+      "loss": 0.3884713955026455,
+      "score": 0.05019427910052915
+    },
+    {
+      "source": "minimax",
+      "method": "value_mlp",
+      "win": 0.4506634424603175,
+      "draw": 0.2838603670634921,
+      "loss": 0.2654761904761905,
+      "score": 0.185187251984127
+    },
+    {
+      "source": "minimax",
+      "method": "q_mlp",
+      "win": 0.3889012896825397,
+      "draw": 0.007721560846560846,
+      "loss": 0.6033771494708995,
+      "score": -0.2144758597883598
+    },
+    {
+      "source": "miss_win",
+      "method": "source",
+      "win": 0.18678695436507936,
+      "draw": 0.6825541501322752,
+      "loss": 0.1306588955026455,
+      "score": 0.056128058862433855
+    },
+    {
+      "source": "miss_win",
+      "method": "behavior_exact",
+      "win": 0.18678695436507936,
+      "draw": 0.6825541501322752,
+      "loss": 0.1306588955026455,
+      "score": 0.056128058862433855
+    },
+    {
+      "source": "miss_win",
+      "method": "return_exact",
+      "win": 0.3238250248015873,
+      "draw": 0.04705894510582011,
+      "loss": 0.6291160300925926,
+      "score": -0.30529100529100534
+    },
+    {
+      "source": "miss_win",
+      "method": "policy_mlp",
+      "win": 0.14790013227513227,
+      "draw": 0.49117063492063495,
+      "loss": 0.3609292328042328,
+      "score": -0.2130291005291005
+    },
+    {
+      "source": "miss_win",
+      "method": "value_mlp",
+      "win": 0.29744233630952377,
+      "draw": 0.03505187665343915,
+      "loss": 0.6675057870370371,
+      "score": -0.37006345072751334
+    },
+    {
+      "source": "miss_win",
+      "method": "q_mlp",
+      "win": 0.18310701884920635,
+      "draw": 0.11744688326719577,
+      "loss": 0.6994460978835979,
+      "score": -0.5163390790343916
+    },
+    {
+      "source": "heuristic",
+      "method": "source",
+      "win": 0.45205646494708995,
+      "draw": 0.5463562334656085,
+      "loss": 0.001587301587301587,
+      "score": 0.45046916335978837
+    },
+    {
+      "source": "heuristic",
+      "method": "behavior_exact",
+      "win": 0.45205646494708995,
+      "draw": 0.5463562334656085,
+      "loss": 0.001587301587301587,
+      "score": 0.45046916335978837
+    },
+    {
+      "source": "heuristic",
+      "method": "return_exact",
+      "win": 0.5199156746031746,
+      "draw": 0.33669808201058204,
+      "loss": 0.1433862433862434,
+      "score": 0.37652943121693117
+    },
+    {
+      "source": "heuristic",
+      "method": "policy_mlp",
+      "win": 0.4687634341931217,
+      "draw": 0.5275431960978836,
+      "loss": 0.003693369708994708,
+      "score": 0.465070064484127
+    },
+    {
+      "source": "heuristic",
+      "method": "value_mlp",
+      "win": 0.4273726851851852,
+      "draw": 0.27977017195767195,
+      "loss": 0.29285714285714287,
+      "score": 0.1345155423280423
+    },
+    {
+      "source": "heuristic",
+      "method": "q_mlp",
+      "win": 0.33682622354497355,
+      "draw": 0.03951822916666667,
+      "loss": 0.6236555472883598,
+      "score": -0.28682932374338627
+    },
+    {
+      "source": "trained_net",
+      "method": "source",
+      "win": 0.3888919890873016,
+      "draw": 0.4383081183862434,
+      "loss": 0.17279989252645503,
+      "score": 0.21609209656084657
+    },
+    {
+      "source": "trained_net",
+      "method": "behavior_exact",
+      "win": 0.3888919890873016,
+      "draw": 0.4383081183862434,
+      "loss": 0.17279989252645503,
+      "score": 0.21609209656084657
+    },
+    {
+      "source": "trained_net",
+      "method": "return_exact",
+      "win": 0.4030784970238095,
+      "draw": 0.042468584656084656,
+      "loss": 0.5544529183201059,
+      "score": -0.1513744212962964
+    },
+    {
+      "source": "trained_net",
+      "method": "policy_mlp",
+      "win": 0.3855654761904762,
+      "draw": 0.3159422536375661,
+      "loss": 0.2984922701719577,
+      "score": 0.08707320601851853
+    },
+    {
+      "source": "trained_net",
+      "method": "value_mlp",
+      "win": 0.3667824074074074,
+      "draw": 0.07868096891534392,
+      "loss": 0.5545366236772487,
+      "score": -0.18775421626984123
+    },
+    {
+      "source": "trained_net",
+      "method": "q_mlp",
+      "win": 0.33725611772486774,
+      "draw": 0.3249255952380953,
+      "loss": 0.33781828703703703,
+      "score": -0.0005621693121692917
+    },
+    {
+      "source": "stochastic_heuristic",
+      "method": "source",
+      "win": 0.41670383675388556,
+      "draw": 0.3738858565073164,
+      "loss": 0.20941030673879796,
+      "score": 0.2072935300150876
+    },
+    {
+      "source": "stochastic_heuristic",
+      "method": "behavior_exact",
+      "win": 0.41670383675388556,
+      "draw": 0.3738858565073164,
+      "loss": 0.20941030673879796,
+      "score": 0.2072935300150876
+    },
+    {
+      "source": "stochastic_heuristic",
+      "method": "return_exact",
+      "win": 0.5604704034391534,
+      "draw": 0.3121486441798942,
+      "loss": 0.12738095238095237,
+      "score": 0.43308945105820107
+    },
+    {
+      "source": "stochastic_heuristic",
+      "method": "policy_mlp",
+      "win": 0.4016201518724556,
+      "draw": 0.3171395208853288,
+      "loss": 0.2812403272422156,
+      "score": 0.12037982463024
+    },
+    {
+      "source": "stochastic_heuristic",
+      "method": "value_mlp",
+      "win": 0.3924313822751323,
+      "draw": 0.295796130952381,
+      "loss": 0.31177248677248676,
+      "score": 0.08065889550264554
+    },
+    {
+      "source": "stochastic_heuristic",
+      "method": "q_mlp",
+      "win": 0.2814422123015873,
+      "draw": 0.2674995866402116,
+      "loss": 0.45105820105820105,
+      "score": -0.16961598875661377
+    }
+  ]
+}

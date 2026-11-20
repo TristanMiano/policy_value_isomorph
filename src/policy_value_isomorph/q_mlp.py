@@ -7,6 +7,9 @@ import random
 import time
 from typing import List, Sequence
 
+from torch.optim import SGD
+
+from .torch_mlp import TorchMLP, TrainingBatch, train_epoch
 from .checkpointing import latest_checkpoint_path, load_checkpoint, save_checkpoint
 from .policy_mlp import encode_state
 from .rollout_value import PolicyFn, rollout_return
@@ -78,23 +81,6 @@ def _init_model(input_dim: int, hidden_dim: int, rng: random.Random) -> TinyMLPQ
     w2 = [rng.uniform(-scale2, scale2) for _ in range(hidden_dim)]
     b2 = 0.0
     return TinyMLPQ(w1=w1, b1=b1, w2=w2, b2=b2)
-
-
-def _forward(model: TinyMLPQ, x: Sequence[float]) -> tuple[List[float], float]:
-    hidden_pre = [0.0 for _ in range(model.hidden_dim)]
-    for j in range(model.hidden_dim):
-        v = model.b1[j]
-        for i in range(model.input_dim):
-            v += x[i] * model.w1[i][j]
-        hidden_pre[j] = v
-
-    hidden = [math.tanh(v) for v in hidden_pre]
-
-    out = model.b2
-    for j in range(model.hidden_dim):
-        out += hidden[j] * model.w2[j]
-
-    return hidden, out
 
 
 def estimate_q_pi(
@@ -183,6 +169,7 @@ def train_q_mlp(
 
     rng = random.Random(seed)
     model = _init_model(input_dim=19, hidden_dim=hidden_dim, rng=rng)
+    order = list(range(len(dataset)))
     start_epoch = 0
     if resume_latest or resume_checkpoint_path is not None:
         if checkpoint_dir is None and resume_latest:
@@ -192,43 +179,25 @@ def train_q_mlp(
         model = loaded["model"]
         metadata = loaded.get("metadata", {})
         start_epoch = int(loaded["step"])
+        saved_order = metadata.get("order")
+        if saved_order is not None and len(saved_order) == len(dataset):
+            order = saved_order
         rng_state_text = metadata.get("rng_state")
         if isinstance(rng_state_text, str):
             rng.setstate(ast.literal_eval(rng_state_text))
     losses: List[float] = []
-    order = list(range(len(dataset)))
     records: list[TelemetryRecord] = []
     start_time = time.perf_counter()
 
+    network = TorchMLP(model)
+    optimizer = SGD(network.parameters(), lr=learning_rate)
+    rows = [_encode_state_action(sample.state, sample.action) for sample in dataset]
+    batch = TrainingBatch.regression(network, rows, [sample.value for sample in dataset])
+
     for epoch in range(start_epoch, epochs):
         rng.shuffle(order)
-        total_loss = 0.0
-
-        for idx in order:
-            sample = dataset[idx]
-            x = _encode_state_action(sample.state, sample.action)
-            hidden, pred = _forward(model, x)
-
-            err = pred - sample.value
-            total_loss += err * err
-
-            d_out = 2.0 * err
-
-            d_hidden = [0.0 for _ in range(model.hidden_dim)]
-            for j in range(model.hidden_dim):
-                d_hidden[j] = model.w2[j] * d_out
-                grad_w2 = hidden[j] * d_out
-                model.w2[j] -= learning_rate * grad_w2
-            model.b2 -= learning_rate * d_out
-
-            for j in range(model.hidden_dim):
-                dpre = (1.0 - hidden[j] * hidden[j]) * d_hidden[j]
-                for i in range(model.input_dim):
-                    grad_w1 = x[i] * dpre
-                    model.w1[i][j] -= learning_rate * grad_w1
-                model.b1[j] -= learning_rate * dpre
-
-        epoch_loss = total_loss / len(dataset)
+        epoch_loss = train_epoch(network, optimizer, batch, order)
+        model = TinyMLPQ(**network.weights())
         losses.append(epoch_loss)
         records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
         if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
@@ -237,7 +206,7 @@ def train_q_mlp(
                 run_type="q",
                 step=epoch + 1,
                 model=model,
-                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
             )
 
     if checkpoint_dir is not None and (checkpoint_interval == 0 or epochs % checkpoint_interval != 0):
@@ -246,7 +215,7 @@ def train_q_mlp(
             run_type="q",
             step=epochs,
             model=model,
-            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
         )
 
     telemetry = TrainingTelemetry(
@@ -262,8 +231,7 @@ def train_q_mlp(
 
 def q_mlp_predict(state: TicTacToeState, action: Move, model: TinyMLPQ) -> float:
     """Predict Q_phi(s,a) from fixed-root-player training perspective."""
-    _, pred = _forward(model, _encode_state_action(state, action))
-    return pred
+    return TorchMLP(model).predict([_encode_state_action(state, action)]).item()
 
 
 def recovered_action_from_q(state: TicTacToeState, model: TinyMLPQ, *, root_player: int) -> Move:

@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 24.** Move the three existing trainers to PyTorch, a library for training neural networks, and replay the pilot's saved predictions and game outcomes. [Pilot measurements](TICTACTOE_PILOT.md#move-agreement-and-probability-differences)
+**Next task is 25.** Add configurable AdamW, a training rule that adapts the size of each weight update and controls weight shrinkage separately. The three trainers now run in PyTorch, a library for training neural networks. Their current update subtracts each example's loss gradient times a fixed learning rate. [Frozen moves and game outcomes compared across implementations](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -239,12 +239,13 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** interfaces support the current one-hidden-layer models and are covered by focused shape/type tests.
   - Completed 2026-11-20. The shared model reads the original weight layout, accepts rows of board or board-and-move inputs, and exposes an update step that accepts the optimizer (the rule for changing weights). Tests cover all three input/output shapes, legal moves, scalar targets, CPU placement, 64-bit precision and independent weight snapshots. All 77 tests passed with `python -m pytest -q`, and `python scripts/demo_tictactoe.py` printed the three sample boards, payoffs and moves. [Model and training step](src/policy_value_isomorph/torch_mlp.py) · [Interface tests](tests/test_torch_mlp.py)
 
-- [ ] **24. Port policy, value, and Q MLPs to PyTorch with parity fixtures.**
+- [x] **24. Port policy, value, and Q MLPs to PyTorch with parity fixtures.**
   - Preserve public APIs, legal-action masking, perspective/sign conventions, and telemetry.
   - Keep the first architecture equivalent to the current tanh MLP.
   - Verify forward behavior and small deterministic training fixtures within declared tolerances. Replay the Task 61 frozen inputs and checkpoints to compare legal choices, ties, value signs, and resulting matchup scores across backends.
+  - Completed 2026-11-20. The public trainers and prediction functions now use the shared model. For each of the three network types, the highest-scoring legal move for the player to act matched on 22,600/22,600 archived player–board cases. The maximum absolute win, draw or loss probability difference over 900 matchup rows was 2.22 × 10⁻¹⁶. A separate four-example training comparison measured a largest absolute weight change between implementations of 5.55 × 10⁻¹⁷ across 170 weights and biases. All 82 tests passed with `pytest -q`, including saved-weight replay and continuation from old and new checkpoints. The installed training command and `python scripts/demo_tictactoe.py` also ran. [Implementation, definitions and quantitative comparisons](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks) · [Saved replay](experiments/tictactoe_pilot/torch_replay.json)
 
-- [ ] **25. Replace manual optimization with configurable `torch.optim.AdamW`.**
+- [ ] **25. Add configurable AdamW training through `torch.optim.AdamW`.**
   - Add device selection, dtype, seeding, and deterministic settings where available.
   - Expose optimizer parameters through existing CLI paths.
   - **Done when:** all three training paths run end to end and baseline commands are documented.

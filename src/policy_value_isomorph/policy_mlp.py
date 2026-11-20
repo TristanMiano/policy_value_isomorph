@@ -7,6 +7,9 @@ import random
 import time
 from typing import List, Sequence
 
+from torch.optim import SGD
+
+from .torch_mlp import TorchMLP, TrainingBatch, train_epoch
 from .checkpointing import latest_checkpoint_path, load_checkpoint, save_checkpoint
 from .gameplay_eval import GameplayEvalRecord
 from .gameplay_samples import GameplaySample, append_gameplay_samples_text
@@ -72,26 +75,6 @@ def untrained_policy_mlp(hidden_dim: int, *, seed: int) -> TinyMLPPolicy:
     return _init_model(10, hidden_dim, 9, random.Random(seed))
 
 
-def _forward(model: TinyMLPPolicy, x: Sequence[float]) -> tuple[List[float], List[float]]:
-    hidden_pre = [0.0 for _ in range(model.hidden_dim)]
-    for j in range(model.hidden_dim):
-        v = model.b1[j]
-        for i in range(model.input_dim):
-            v += x[i] * model.w1[i][j]
-        hidden_pre[j] = v
-
-    hidden = [math.tanh(v) for v in hidden_pre]
-
-    logits = [0.0 for _ in range(9)]
-    for k in range(9):
-        v = model.b2[k]
-        for j in range(model.hidden_dim):
-            v += hidden[j] * model.w2[j][k]
-        logits[k] = v
-
-    return hidden, logits
-
-
 def _masked_softmax(logits: Sequence[float], legal_moves: Sequence[Move]) -> List[float]:
     if not legal_moves:
         raise ValueError("masked softmax called without legal moves")
@@ -150,6 +133,7 @@ def train_policy_mlp(
 
     rng = random.Random(seed)
     model = _init_model(input_dim=10, hidden_dim=hidden_dim, output_dim=9, rng=rng)
+    order = list(range(len(dataset)))
     start_epoch = 0
     if resume_latest or resume_checkpoint_path is not None:
         if checkpoint_dir is None and resume_latest:
@@ -159,53 +143,31 @@ def train_policy_mlp(
         model = loaded["model"]
         metadata = loaded.get("metadata", {})
         start_epoch = int(loaded["step"])
+        saved_order = metadata.get("order")
+        if saved_order is not None and len(saved_order) == len(dataset):
+            order = saved_order
         rng_state_text = metadata.get("rng_state")
         if isinstance(rng_state_text, str):
             rng.setstate(ast.literal_eval(rng_state_text))
     losses: List[float] = []
 
-    order = list(range(len(dataset)))
     records: list[TelemetryRecord] = []
     gameplay_evals: list[GameplayEvalRecord] = []
     start_time = time.perf_counter()
 
+    network = TorchMLP(model)
+    optimizer = SGD(network.parameters(), lr=learning_rate)
+    rows = [encode_state(sample.state) for sample in dataset]
+    masks = []
+    for sample in dataset:
+        legal = sample.state.legal_moves()
+        masks.append([move in legal for move in range(9)])
+    batch = TrainingBatch.policy(network, rows, [sample.action for sample in dataset], masks)
+
     for epoch in range(start_epoch, epochs):
         rng.shuffle(order)
-        total_loss = 0.0
-
-        for idx in order:
-            sample = dataset[idx]
-            x = encode_state(sample.state)
-            hidden, logits = _forward(model, x)
-            probs = _masked_softmax(logits, sample.state.legal_moves())
-
-            target = sample.action
-            p_target = max(probs[target], 1e-12)
-            total_loss += -math.log(p_target)
-
-            dlogits = list(probs)
-            dlogits[target] -= 1.0
-
-            # second layer gradients / update
-            dhidden = [0.0 for _ in range(model.hidden_dim)]
-            for j in range(model.hidden_dim):
-                for k in range(9):
-                    dhidden[j] += model.w2[j][k] * dlogits[k]
-                    grad_w2 = hidden[j] * dlogits[k]
-                    model.w2[j][k] -= learning_rate * grad_w2
-
-            for k in range(9):
-                model.b2[k] -= learning_rate * dlogits[k]
-
-            # first layer gradients / update
-            for j in range(model.hidden_dim):
-                dpre = (1.0 - hidden[j] * hidden[j]) * dhidden[j]
-                for i in range(model.input_dim):
-                    grad_w1 = x[i] * dpre
-                    model.w1[i][j] -= learning_rate * grad_w1
-                model.b1[j] -= learning_rate * dpre
-
-        epoch_loss = total_loss / len(dataset)
+        epoch_loss = train_epoch(network, optimizer, batch, order)
+        model = TinyMLPPolicy(**network.weights())
         losses.append(epoch_loss)
         records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
         if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
@@ -214,7 +176,7 @@ def train_policy_mlp(
                 run_type="policy",
                 step=epoch + 1,
                 model=model,
-                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
             )
 
         if eval_interval > 0 and (epoch + 1) % eval_interval == 0:
@@ -276,7 +238,7 @@ def train_policy_mlp(
             run_type="policy",
             step=epochs,
             model=model,
-            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate())},
+            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
         )
 
     telemetry = TrainingTelemetry(
@@ -300,7 +262,7 @@ def train_policy_mlp(
 
 def policy_mlp_probabilities(state: TicTacToeState, model: TinyMLPPolicy) -> list[float]:
     """Return the temperature-one softmax over the nine cells, masking illegal moves."""
-    _, logits = _forward(model, encode_state(state))
+    logits = TorchMLP(model).predict([encode_state(state)])[0].tolist()
     return _masked_softmax(logits, state.legal_moves())
 
 
@@ -310,5 +272,5 @@ def policy_mlp_action(state: TicTacToeState, model: TinyMLPPolicy) -> Move:
     if not legal:
         raise ValueError("policy_mlp_action called on terminal state")
 
-    _, logits = _forward(model, encode_state(state))
+    logits = TorchMLP(model).predict([encode_state(state)])[0].tolist()
     return max(legal, key=lambda mv: (logits[mv], -mv))

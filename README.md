@@ -185,6 +185,8 @@ For the current modernization phase, this project treats **PyTorch as the canoni
 
 An editable install (`pip install -e .`) installs PyTorch. The shared one-hidden-layer network reads the original JSON weights directly. It computes on the CPU using 64-bit floating-point numbers, the precision of the original Python weights.
 
+The three trainers and their prediction functions now use that network. Replaying the saved tic-tac-toe weights reproduced the top legal move in all 67,800 comparisons across five original players, 4,520 boards and three reconstruction methods. [Move comparisons, game outcomes and reproduction commands](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
+
 Migration constraints:
 
 1. Keep tic-tac-toe rollout/value-recovery APIs and value-sign semantics stable.

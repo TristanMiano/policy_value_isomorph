@@ -122,7 +122,8 @@ def generate(directory: Path, manifest: dict) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output-dir", type=Path, default=PILOT / "results")
+    parser.add_argument("--output-dir", type=Path, default=ROOT / "artifacts/tictactoe_pilot_pytorch",
+                        help="Destination for the newly fitted networks and their tables.")
     args = parser.parse_args()
     manifest = json.loads((PILOT / "manifest.json").read_text(encoding="utf-8"))
     output = args.output_dir.resolve()

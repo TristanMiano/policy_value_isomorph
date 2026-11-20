@@ -1,4 +1,4 @@
-"""Recreate the six frozen pilot checkpoints from the registered training recipe."""
+"""Run the pilot's original training recipe and export the resulting checkpoints."""
 
 import argparse
 import json
@@ -17,6 +17,9 @@ def main() -> None:
     args = parser.parse_args()
     manifest = json.loads((ROOT / "experiments/tictactoe_pilot/manifest.json").read_text())
     weights = freeze_weights(manifest)
+    archived = ROOT / "experiments/tictactoe_pilot/weights.json"
+    if args.output.resolve() == archived.resolve() and fingerprint(weights) != manifest["weights_sha256"]:
+        parser.error("These newly fitted weights differ from the frozen pilot. Choose a new output file.")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(weights, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     print(f"{args.output}  {fingerprint(weights)}")
