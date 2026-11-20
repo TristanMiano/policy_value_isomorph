@@ -363,6 +363,10 @@ def run(out: Path) -> None:
     counts_archive["edge_move"] = np.array([a for s, a in sampler.edges])
     np.savez_compressed(out / "counts.npz", **counts_archive)
     torch.save(checkpoints, out / "low_visit_weights.pt")
+    for rows in (metrics, games):
+        for row in rows:
+            rule = row["method"].rsplit("/", 1)[-1]
+            row["selection"] = {"discounted": "VNM discounted sum", "direct": "Direct", "source": "Source"}[rule]
     for file, rows in (
         ("coverage", sampled),
         ("agreement", metrics),

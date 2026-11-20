@@ -1,6 +1,6 @@
 # Policy–Value Isomorph Research Program — TODO
 
-Last updated 2026-11-19
+Last updated 2026-11-20
 
 ## Resume here
 
@@ -462,6 +462,7 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
   - Give per-source counts for each Task 61 disagreement category and the average payoff forgone. Measure how often estimated scores restore or lose the source's move. Publish original and recovered win probabilities, paired game-score differences, move agreement or total variation distance, and return errors. Report values and differences for both equal board weights and weights proportional to the source's visits.
 
 - [ ] **67. Measure how residual training error affects fidelity and playing strength.**
+  - The 2026-11-20 tic-tac-toe investigation compared losses, inputs and tie handling on two board partitions. With the frozen neural player that chooses the earliest cell preserving its best guaranteed outcome, a network using board and move geometry reached 96.45% direct move agreement on 780 withheld boards, up from 83.72%. Extending three fits to 120 passes recovered all 2,980 training moves in each and averaged 96.92% on those withheld boards. Carry forward the separate measurement of same-board fit, withheld-board prediction, moves corrected or lost by VNM expected-utility selection, and game outcomes. Repeat on independently trained sources with other tie conventions. [Training losses, example count predictions and results](TICTACTOE_CHOICE_TRAINING.md)
   - At fixed training data and targets, compare checkpoints and model capacities across independent seeds. In separate paired sweeps vary data coverage or rollout budget while holding evaluation boards and opponents fixed. Plot fidelity and game score against training residual and held-out exact-target error. Break down move disagreements by the exact best-to-runner-up action gap.
   - Include a zero-estimation-error reference. Perturb exact scores at matched error magnitudes with a common offset or a change that crosses an action margin. This isolates the effect of ranking errors from correlations along training. Track probability shifts under soft choice at fixed temperature.
   - Report the size and direction of the change in move agreement or probability distance for each reduction in training error. Include variation in estimated returns, error on unseen boards, and variation across fits in rankings, values on the same scale and score patterns across nearby boards.

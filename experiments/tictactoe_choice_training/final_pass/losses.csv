@@ -1,0 +1,13 @@
+design,model,seed,selected_pass,group,objective,boards,candidates,loss
+all_training_starts,Q_three_levels,7201,120,train,joint_log,2980,10864,5.079866696178215e-06
+all_training_starts,Q_three_levels,7201,120,validation,joint_log,760,2556,0.2648530602455139
+all_training_starts,V_three_levels,7201,120,train,joint_log,978,2993,2.563213274697773e-05
+all_training_starts,V_three_levels,7201,120,validation,joint_log,453,1452,0.7192179560661316
+all_training_starts,Q_three_levels,7202,120,train,joint_log,2980,10864,5.758517545473296e-06
+all_training_starts,Q_three_levels,7202,120,validation,joint_log,760,2556,0.09731200337409973
+all_training_starts,V_three_levels,7202,120,train,joint_log,978,2993,2.0728091840283014e-05
+all_training_starts,V_three_levels,7202,120,validation,joint_log,453,1452,0.5892463326454163
+all_training_starts,Q_three_levels,7203,120,train,joint_log,2980,10864,5.999088898533955e-06
+all_training_starts,Q_three_levels,7203,120,validation,joint_log,760,2556,0.2554873824119568
+all_training_starts,V_three_levels,7203,120,train,joint_log,978,2993,1.7266957001993433e-05
+all_training_starts,V_three_levels,7203,120,validation,joint_log,453,1452,0.4199606776237488

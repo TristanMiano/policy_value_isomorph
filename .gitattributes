@@ -5,3 +5,7 @@ experiments/neural_tictactoe_control/*.gz binary
 experiments/tictactoe_sampling/*.csv text eol=lf
 experiments/tictactoe_sampling/*.pt binary
 experiments/tictactoe_sampling/*.npz binary
+experiments/tictactoe_choice_training/**/*.csv text eol=lf
+experiments/tictactoe_choice_training/**/*.json text eol=lf
+experiments/tictactoe_choice_training/**/*.pt binary
+experiments/tictactoe_choice_training/**/*.npz binary

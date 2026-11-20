@@ -16,6 +16,8 @@ Two protocols apply throughout this project. Keep quantitative questions and ans
 
 The primary tic-tac-toe experiment first trains and freezes a neural player and checks its moves against every reachable decision board. It samples games, counts transitions from each board, and trains networks to predict the fraction of visits taking each move. For each fitted network it compares choosing the highest immediate score with choosing by the average learned utility of complete sampled games. [Architecture, training procedure and results](NEURAL_TICTACTOE_CONTROL.md)
 
+A training follow-up separates exact reproduction on observed boards from predicting the player's moves on withheld boards. It compares losses, board geometry and rules for resolving tied move scores, and measures how often expected-utility planning corrects or introduces a disagreement. [Move agreement, game results and exact constructions](TICTACTOE_CHOICE_TRAINING.md)
+
 The project now separates two questions that should not be conflated.
 
 ### 1. Behavioral reconstruction

@@ -14,7 +14,11 @@ For neural tic-tac-toe comparisons with minimax (the best outcome a player can g
 
 Compare a board-scoring network (V) and a board-and-move-scoring network (Q) under both direct move selection and the von Neumann–Morgenstern (VNM) expected-utility formulation. For the latter, define the learned utility of a complete trajectory, the environment, continuation policy, perspective, and rule for ties. For each move take the expectation of that same utility over possible continuations. Report move fidelity and game outcomes side by side, and disclose access to the source during selection. A fixed win/draw/loss payoff provides an additional reference.
 
+Label expected-utility selection explicitly as **VNM** in reporting tables. Identify the utility and which player continues each rollout when those vary across rows.
+
 In the primary visit-count experiment, train and freeze the source first. Sample complete games, retain transition counts and their denominators, and specify how games start. Fit the value networks to normalized observed transition counts. Compare direct selection with sampled expected-utility selection using the same fitted scores. Record the continuation rule for both players, rollout budget, whole-game utility and time decay. Show how many distinct boards were observed. Report results obtained from game-outcome training as a separate experiment.
+
+For visit-trained networks, give the loss actually optimized, its units and weighting, the normalization of the target counts, and the measured training loss at the checkpoint reported. When diagnosing residual disagreements, show legal-move predictions and observed source counts for example positions, stating whether each was fitted or withheld. Compare predicted and observed counts at the same number of visits.
 
 ## Project goals (Task 1)
 - Keep the implementation minimal, correct, and easy to inspect.

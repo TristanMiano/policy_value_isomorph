@@ -1,0 +1,457 @@
+{
+  "certificate": {
+    "boards": 4520,
+    "optimal_moves": 4520,
+    "mean_payoff_forgone": 0.0,
+    "worst_payoff_forgone": 0,
+    "same_minimax_move": 4520
+  },
+  "checks": {},
+  "split": {
+    "salt": "ttt-pilot-v1",
+    "train_end": 65,
+    "validation_end": 80,
+    "rule": "Put the empty board in the test group so the original player visits at least one test position. For every other board, use the first of its eight rotations and reflections in cell-by-cell order with O before empty before X. Write the cells as O, dot and X. Prefix the salt (the fixed text above) and a colon. Read the first four SHA-256 bytes as an integer with the most significant byte first and take its remainder upon division by 100. Assign 0 to 64 to training, 65 to 79 to validation and 80 to 99 to test. Retain the move labels for each orientation."
+  },
+  "seeds": [
+    7201,
+    7202,
+    7203
+  ],
+  "q_geometry_inputs": 227,
+  "v_geometry_inputs": 114,
+  "fits": {
+    "all_nontest_fixed_duration/Q_three_levels/7201": {
+      "epoch": 120,
+      "training_boards": 3740,
+      "validation_boards": 0,
+      "epoch_train_validation_log_loss": [
+        [
+          1,
+          0.212871253490448,
+          null
+        ],
+        [
+          10,
+          0.07796680182218552,
+          null
+        ],
+        [
+          20,
+          0.025170382112264633,
+          null
+        ],
+        [
+          30,
+          0.01850019209086895,
+          null
+        ],
+        [
+          40,
+          0.007916636765003204,
+          null
+        ],
+        [
+          50,
+          0.0075574941001832485,
+          null
+        ],
+        [
+          60,
+          6.36775148450397e-05,
+          null
+        ],
+        [
+          70,
+          2.8292219212744385e-05,
+          null
+        ],
+        [
+          80,
+          1.7381051293341443e-05,
+          null
+        ],
+        [
+          90,
+          1.1562044164747931e-05,
+          null
+        ],
+        [
+          100,
+          8.070312105701305e-06,
+          null
+        ],
+        [
+          110,
+          7.058180926833302e-06,
+          null
+        ],
+        [
+          120,
+          6.152342393761501e-06,
+          null
+        ]
+      ]
+    },
+    "all_nontest_fixed_duration/V_three_levels/7201": {
+      "epoch": 120,
+      "training_boards": 2218,
+      "validation_boards": 0,
+      "epoch_train_validation_log_loss": [
+        [
+          1,
+          0.4794243276119232,
+          null
+        ],
+        [
+          10,
+          0.08174218237400055,
+          null
+        ],
+        [
+          20,
+          0.014957978390157223,
+          null
+        ],
+        [
+          30,
+          0.00323458481580019,
+          null
+        ],
+        [
+          40,
+          0.0003226434637326747,
+          null
+        ],
+        [
+          50,
+          0.00014510420442093164,
+          null
+        ],
+        [
+          60,
+          8.361107757082209e-05,
+          null
+        ],
+        [
+          70,
+          5.39678949280642e-05,
+          null
+        ],
+        [
+          80,
+          3.629551429185085e-05,
+          null
+        ],
+        [
+          90,
+          2.7221803975407965e-05,
+          null
+        ],
+        [
+          100,
+          2.0403476810315624e-05,
+          null
+        ],
+        [
+          110,
+          1.833199530665297e-05,
+          null
+        ],
+        [
+          120,
+          1.6721545762266032e-05,
+          null
+        ]
+      ]
+    },
+    "all_nontest_fixed_duration/Q_three_levels/7202": {
+      "epoch": 120,
+      "training_boards": 3740,
+      "validation_boards": 0,
+      "epoch_train_validation_log_loss": [
+        [
+          1,
+          0.13683244585990906,
+          null
+        ],
+        [
+          10,
+          0.0188453271985054,
+          null
+        ],
+        [
+          20,
+          0.056797921657562256,
+          null
+        ],
+        [
+          30,
+          0.012457529082894325,
+          null
+        ],
+        [
+          40,
+          0.0028014983981847763,
+          null
+        ],
+        [
+          50,
+          0.000738849223125726,
+          null
+        ],
+        [
+          60,
+          3.131725679850206e-05,
+          null
+        ],
+        [
+          70,
+          1.6826495993882418e-05,
+          null
+        ],
+        [
+          80,
+          1.0729266250564251e-05,
+          null
+        ],
+        [
+          90,
+          7.2764719334372785e-06,
+          null
+        ],
+        [
+          100,
+          5.254675670585129e-06,
+          null
+        ],
+        [
+          110,
+          4.666530003305525e-06,
+          null
+        ],
+        [
+          120,
+          4.0847658056009095e-06,
+          null
+        ]
+      ]
+    },
+    "all_nontest_fixed_duration/V_three_levels/7202": {
+      "epoch": 120,
+      "training_boards": 2218,
+      "validation_boards": 0,
+      "epoch_train_validation_log_loss": [
+        [
+          1,
+          0.3765002191066742,
+          null
+        ],
+        [
+          10,
+          0.04776518791913986,
+          null
+        ],
+        [
+          20,
+          0.02434593066573143,
+          null
+        ],
+        [
+          30,
+          0.02475062571465969,
+          null
+        ],
+        [
+          40,
+          0.04281523451209068,
+          null
+        ],
+        [
+          50,
+          0.0022777619305998087,
+          null
+        ],
+        [
+          60,
+          0.0002912116760853678,
+          null
+        ],
+        [
+          70,
+          0.00013877390301786363,
+          null
+        ],
+        [
+          80,
+          8.693047129781917e-05,
+          null
+        ],
+        [
+          90,
+          6.47381239105016e-05,
+          null
+        ],
+        [
+          100,
+          4.923165761283599e-05,
+          null
+        ],
+        [
+          110,
+          4.510735016083345e-05,
+          null
+        ],
+        [
+          120,
+          4.0931172406999394e-05,
+          null
+        ]
+      ]
+    },
+    "all_nontest_fixed_duration/Q_three_levels/7203": {
+      "epoch": 120,
+      "training_boards": 3740,
+      "validation_boards": 0,
+      "epoch_train_validation_log_loss": [
+        [
+          1,
+          0.13677166402339935,
+          null
+        ],
+        [
+          10,
+          0.04518658295273781,
+          null
+        ],
+        [
+          20,
+          0.019675176590681076,
+          null
+        ],
+        [
+          30,
+          0.05238946154713631,
+          null
+        ],
+        [
+          40,
+          0.0009567504748702049,
+          null
+        ],
+        [
+          50,
+          9.699669317342341e-05,
+          null
+        ],
+        [
+          60,
+          5.1657320000231266e-05,
+          null
+        ],
+        [
+          70,
+          3.2799052860355005e-05,
+          null
+        ],
+        [
+          80,
+          2.127068910340313e-05,
+          null
+        ],
+        [
+          90,
+          1.4451216884481255e-05,
+          null
+        ],
+        [
+          100,
+          1.037778019963298e-05,
+          null
+        ],
+        [
+          110,
+          9.059961485036183e-06,
+          null
+        ],
+        [
+          120,
+          7.843889761716127e-06,
+          null
+        ]
+      ]
+    },
+    "all_nontest_fixed_duration/V_three_levels/7203": {
+      "epoch": 120,
+      "training_boards": 2218,
+      "validation_boards": 0,
+      "epoch_train_validation_log_loss": [
+        [
+          1,
+          0.35831931233406067,
+          null
+        ],
+        [
+          10,
+          0.03307253122329712,
+          null
+        ],
+        [
+          20,
+          0.05729424208402634,
+          null
+        ],
+        [
+          30,
+          0.003228721907362342,
+          null
+        ],
+        [
+          40,
+          0.0004363486950751394,
+          null
+        ],
+        [
+          50,
+          0.00019573832105379552,
+          null
+        ],
+        [
+          60,
+          0.00011748622637242079,
+          null
+        ],
+        [
+          70,
+          8.05187810328789e-05,
+          null
+        ],
+        [
+          80,
+          5.7129360357066616e-05,
+          null
+        ],
+        [
+          90,
+          4.403561615617946e-05,
+          null
+        ],
+        [
+          100,
+          3.222574741812423e-05,
+          null
+        ],
+        [
+          110,
+          2.937157296400983e-05,
+          null
+        ],
+        [
+          120,
+          2.6921448807115667e-05,
+          null
+        ]
+      ]
+    }
+  }
+}

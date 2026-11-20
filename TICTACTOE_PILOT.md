@@ -33,7 +33,7 @@ In the project's **von Neumann–Morgenstern (VNM) expected-utility formulation*
 
 The full population comprises all 4,520 reachable boards with a move remaining. The 780 **test boards** were held out of training. **Uniform** weights give each board equal weight. **Visited** weights are proportional to the probability of reaching each board in **self-play**, where the source plays both sides from the empty board. We divide by the total weight in the population being evaluated.
 
-| Frozen source | Exact return, uniform | Exact return, visited | Learned V, uniform test | Learned V, visited test | Test boards with positive visitation |
+| Frozen source | VNM exact return, uniform | VNM exact return, visited | Learned V, uniform test | Learned V, visited test | Test boards with positive visitation |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Perfect play | 100.00% | 100.00% | 56.92% | 50.00% | 2 |
 | Missed win | 37.70% | 33.33% | 33.85% | 66.67% | 3 |
@@ -47,7 +47,7 @@ Each deterministic source visited nine boards in its game from the empty board. 
 
 We calculated exact returns in two ways, once from X's payoff on the resulting boards and once from the acting player's payoff for each candidate move. Their difference was zero on all 16,167 legal moves for each source. The **mean payoff gap** measures the size of a deviation. Subtract the expected payoff of the chosen move from that of the best legal move for the acting player, continuing with the source after that one move. Average over move probabilities and boards. Zero points means the choices have equal return. Two points is the difference between a guaranteed loss and a guaranteed win.
 
-| Deterministic source | Same move as exact return | Different equally good move | Strictly lower return | Mean payoff gap of source (points, all 4,520 boards equally weighted) |
+| Deterministic source | Same move as VNM exact return | Different equally good move | Strictly lower return | Mean payoff gap of source (points, all 4,520 boards equally weighted) |
 | --- | ---: | ---: | ---: | ---: |
 | Perfect play | 4,520 | 0 | 0 | 0.000 |
 | Missed win | 1,704 | 1,016 | 1,800 | 0.558 |
@@ -66,7 +66,7 @@ Three held-out positions illustrate the attribution. Cells are numbered 0–8 in
 
 The first four measurement columns compare move choices on equally weighted test boards. **Mean squared error (MSE)** is the average squared difference between a predicted and exact X payoff, in squared payoff points. These two error columns cover all 2,747 legal moves on the test boards. The final column counts changes from the exact return player's move and distinguishes an equally good alternative from a lower-return move.
 
-| Source | Exact return | Direct imitation | Learned V | Learned Q | V MSE | Q MSE | V changes (tied / lower return) |
+| Source | VNM exact return | Direct imitation | Learned V | Learned Q | V MSE | Q MSE | V changes (tied / lower return) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Perfect play | 100.00% | 76.54% | 56.92% | 49.36% | 0.583 | 0.520 | 203 / 133 |
 | Missed win | 38.46% | 70.77% | 33.85% | 33.85% | 0.500 | 0.483 | 250 / 215 |
@@ -80,7 +80,7 @@ For the trained neural player, replacing exact returns with learned V restored i
 
 **Win, draw, and loss rates** are the probabilities of those outcomes when a player plays entire games from the empty board. A **seat** is playing as X or as O. The two seats have equal weight. The **opponent panel** is a weighted group of opponents. It gives one quarter each to (1) a player that chooses uniformly among legal moves each turn, (2) five untrained neural players, (3) the priority-rule player, and (4) the perfect-play player. Each untrained neural player has its own fixed random weights and always selects its highest-scoring legal move, taking the lowest-numbered cell in a tie. Each accounts for 5% of the panel. The **game score** is win probability minus loss probability, in points per game.
 
-| Source | Original wins / draws / losses (%) | Original score | Exact return (win %, score) | Direct imitation (win %, score) | Learned V (win %, score) | Learned Q (win %, score) |
+| Source | Original wins / draws / losses (%) | Original score | VNM exact return (win %, score) | Direct imitation (win %, score) | Learned V (win %, score) | Learned Q (win %, score) |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Perfect play | 42.51 / 57.49 / 0.00 | +0.425 | 42.51%, +0.425 | 43.87%, +0.050 | 45.07%, +0.185 | 38.89%, −0.214 |
 | Missed win | 18.68 / 68.26 / 13.07 | +0.056 | 32.38%, −0.305 | 14.79%, −0.213 | 29.74%, −0.370 | 18.31%, −0.516 |

@@ -56,17 +56,17 @@ The following means give equal weight to the three held-out fits. Agreement and 
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | Original neural source | Highest legal policy score | 100.00% | 100.00% | 42.51% | 57.49% | 0.00% |
 | Board | Direct | 71.11% | 83.50% | 39.77% | 41.28% | 18.94% |
-| Board | Final move | 79.02% | 99.32% | 44.28% | 55.49% | 0.23% |
-| Board | Sum of moves | 73.63% | 93.12% | 38.60% | 53.02% | 8.38% |
-| Board | Time-discounted sum | 74.79% | 92.99% | 40.34% | 59.58% | 0.08% |
+| Board | VNM final move | 79.02% | 99.32% | 44.28% | 55.49% | 0.23% |
+| Board | VNM sum of moves | 73.63% | 93.12% | 38.60% | 53.02% | 8.38% |
+| Board | VNM time-discounted sum | 74.79% | 92.99% | 40.34% | 59.58% | 0.08% |
 | Transition | Direct | 82.78% | 90.68% | 41.54% | 40.94% | 17.52% |
-| Transition | Final move | 74.87% | 92.78% | 43.27% | 49.98% | 6.75% |
-| Transition | Sum of moves | 84.06% | 95.56% | 38.70% | 44.12% | 17.18% |
-| Transition | Time-discounted sum | 84.74% | 95.56% | 38.28% | 43.99% | 17.73% |
+| Transition | VNM final move | 74.87% | 92.78% | 43.27% | 49.98% | 6.75% |
+| Transition | VNM sum of moves | 84.06% | 95.56% | 38.70% | 44.12% | 17.18% |
+| Transition | VNM time-discounted sum | 84.74% | 95.56% | 38.28% | 43.99% | 17.73% |
 | Action | Direct | 83.72% | 91.54% | 43.75% | 31.53% | 24.72% |
-| Action | Final move | 77.61% | 95.90% | 42.98% | 53.40% | 3.62% |
-| Action | Sum of moves | 84.40% | 96.32% | 42.95% | 37.58% | 19.47% |
-| Action | Time-discounted sum | 84.96% | 96.37% | 41.57% | 43.16% | 15.27% |
+| Action | VNM final move | 77.61% | 95.90% | 42.98% | 53.40% | 3.62% |
+| Action | VNM sum of moves | 84.40% | 96.32% | 42.95% | 37.58% | 19.47% |
+| Action | VNM time-discounted sum | 84.96% | 96.37% | 41.57% | 43.16% | 15.27% |
 
 For action inputs, time-discounting raised agreement by 1.24 percentage points and lowered losses by 9.45 points relative to direct selection. Direct loss rates ranged from 16.32% to 41.49% across the three fits. With time-discounting the range was 13.49% to 16.36%. These ranges describe variation across fits of the same source. The files also give each fit's results with equal board weights and with boards weighted by the probability of visiting them in games played by the source. [Individual fit results](experiments/neural_tictactoe_control/move_comparisons.csv) · [Individual game results](experiments/neural_tictactoe_control/games.csv)
 
@@ -74,13 +74,15 @@ For action inputs, time-discounting raised agreement by 1.24 percentage points a
 
 **Whose play is simulated matters.** Holding the fitted scores and the undiscounted sum fixed, we changed both players after the candidate move. The entries below average the same three fits. “Network copies” means each copy chooses its highest-scoring legal move directly at each subsequent turn.
 
-| Score input | Both original, agreement / win / loss | Two network copies, agreement / win / loss |
+| Score input | VNM with both original, agreement / win / loss | VNM with two network copies, agreement / win / loss |
 | --- | ---: | ---: |
 | Board | 73.63% / 38.60% / 8.38% | 71.54% / 43.76% / 13.46% |
 | Transition | 84.06% / 38.70% / 17.18% | 83.68% / 45.66% / 16.10% |
 | Action | 84.40% / 42.95% / 19.47% | 84.06% / 44.73% / 19.76% |
 
 ## How much difference did training make?
+
+A follow-up tests changes to training on two partitions of the board positions. It also constructs a single score per resulting board that reproduces every observed choice directly. [Losses, tie rules and VNM comparisons](TICTACTOE_CHOICE_TRAINING.md)
 
 We fitted the action network on **all** 16,167 legal candidates from the optimal source's observed visit table. With squared frequency error as the training loss it reproduced the source on 97.39% of all 4,520 boards. In a follow-up check we changed only the fitting loss to **binary cross-entropy**, the average negative log probability assigned to observing or not observing each candidate according to its empirical frequency. We kept the architecture, initial weights, observations, batches, 300 training passes, and selection by squared training error fixed. Direct selection now reproduced **4,520/4,520 moves**, won **42.51%** of games and lost **0.00%**. Both the summed and time-discounted trajectory utilities also reproduced 4,520/4,520 moves with either continuation rule. The final-move utility reproduced 77.61% with the source continuing. This full-observation result demonstrates exact neural reconstruction under specified conditions. The 780-board held-out comparison measures how accurately a fit predicts source moves on omitted positions.
 
@@ -94,7 +96,7 @@ We also took the **original saved V and Q weights** from the earlier pilot. Dire
 
 Each cell below gives agreement on the 780 test boards followed by whole-game win rate. In the randomized row the first number is total variation distance on its 0–1 scale.
 
-| Original source | V direct | V final move | Q direct | Q final move |
+| Original source | V direct | VNM final move using V | Q direct | VNM final move using Q |
 | --- | ---: | ---: | ---: | ---: |
 | Minimax | 56.92%, 45.07% | 46.67%, 27.42% | 49.36%, 38.89% | 37.95%, 29.33% |
 | Missed win | 33.85%, 29.74% | 36.67%, 23.54% | 33.85%, 18.31% | 30.77%, 29.59% |

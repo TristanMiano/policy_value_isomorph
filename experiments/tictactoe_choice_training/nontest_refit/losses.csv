@@ -1,0 +1,7 @@
+design,model,seed,selected_pass,group,objective,boards,candidates,loss
+all_nontest_fixed_duration,Q_three_levels,7201,120,train,joint_log,3740,13420,6.152342393761501e-06
+all_nontest_fixed_duration,V_three_levels,7201,120,train,joint_log,2218,7373,1.6721545762266032e-05
+all_nontest_fixed_duration,Q_three_levels,7202,120,train,joint_log,3740,13420,4.0847658056009095e-06
+all_nontest_fixed_duration,V_three_levels,7202,120,train,joint_log,2218,7373,4.0931172406999394e-05
+all_nontest_fixed_duration,Q_three_levels,7203,120,train,joint_log,3740,13420,7.843889761716127e-06
+all_nontest_fixed_duration,V_three_levels,7203,120,train,joint_log,2218,7373,2.6921448807115667e-05
