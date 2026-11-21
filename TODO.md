@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 43**, recovering order from menus.
+**Next is Task 44**, recovering differences from probabilities.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -376,10 +376,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** the project has a justified comparison protocol rather than raw-output RMSE between arbitrary gauges.
   - Completed 2026-11-20. Proved the effects of offsets, scale, temperature and rank normalization on choices, probabilities and lotteries. [Statement and checks](formalism/42_score_units.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **43. Prove revealed ranking recovery from constrained choice sets.**
+- [x] **43. Prove revealed ranking recovery from constrained choice sets.**
   - If a deterministic policy chooses the unique maximum of one stable ordering from every offered finite subset, prove that pairwise or elimination queries recover the total order.
   - Record consistency tests and counterexamples when context effects violate the assumption.
   - **Done when:** this yields an implementable black-box preference-probing algorithm.
+  - Completed 2026-11-20. Proved pairwise and elimination recovery under a stable strict order, with query counts and explicit tests for context effects. [Statement and checks](formalism/43_menu_queries.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **44. Prove score-difference recovery for soft/stochastic choice.**
   - Under a declared Luce/softmax model, recover pairwise score differences from probability or repeated-choice ratios.
