@@ -39,7 +39,7 @@ def collect(sampler,split,count,block,k):
     return counts,calls
 
 
-def candidates(x,y,train,validation,init,*,widths=(64,192),penalties=(.01,1.,100.)):
+def candidates(x,y,train,validation,init,*,widths=(64,192),penalties=(.01,1.,100.),steps=(None,)):
     """Solve sum of squared errors plus lambda times squared non-intercept weights."""
     mean=x[train].mean(0)
     scale=x[train].std(0)
@@ -58,12 +58,20 @@ def candidates(x,y,train,validation,init,*,widths=(64,192),penalties=(.01,1.,100
         rhs=vec.T@(f[train].T@(y[train]-avg))
         for penalty in penalties:
             denom=(ev.clip(0)+penalty)
-            coef=vec@(rhs/(denom if rhs.ndim==1 else denom[:,None]))
-            pred=f@coef+avg
-            err=np.square(pred[train]-y[train]).mean()
-            valid=np.square(pred[validation]-y[validation]).mean()
-            yield pred,dict(width=width,penalty=penalty,train_loss=float(err),validation_loss=float(valid),
+            for step in steps:
+                # Exact iterate of full-batch gradient descent on this quadratic, starting at zero
+                # non-intercept weights. None is its limiting fitted solution.
+                solution=rhs/(denom if rhs.ndim==1 else denom[:,None])
+                if step is not None:
+                    shrink=1-(1-denom/denom.max()).clip(0,1)**step
+                    solution=solution*(shrink if rhs.ndim==1 else shrink[:,None])
+                coef=vec@solution
+                pred=f@coef+avg
+                err=np.square(pred[train]-y[train]).mean()
+                valid=np.square(pred[validation]-y[validation]).mean()
+                yield pred,dict(width=width,penalty=penalty,train_loss=float(err),validation_loss=float(valid),
                             training_candidates=int(train.sum()),validation_candidates=int(validation.sum()),
+                            **({"step":step} if len(steps)>1 else {}),
                             penalized_loss_per_candidate=float(err+penalty*np.square(coef).sum()/(train.sum()*(1 if y.ndim==1 else y.shape[1]))))
 
 
