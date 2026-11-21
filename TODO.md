@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 35**, the numerical comparisons for imitation, game performance and interpretation.
+**Next is Task 36**, a worked example of choices and scores on one tic-tac-toe board.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -318,11 +318,12 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** later formal files link to one authoritative notation source.
   - Completed 2026-11-20. Fixed terminology for histories, measures, decoders, menu-relative equivalence and utility. Specified the recovery record and worked through discrete, continuous and sequence inputs. Linked the existing formal notes to the authoritative notation. [Notation and recovery contract](formalism/00_notation.md)
 
-- [ ] **35. Define numerical comparisons for imitation, playing strength and interpretability.**
+- [x] **35. Define numerical comparisons for imitation, playing strength and interpretability.**
   - In `docs/evaluation_contract.md` define three decisions in advance. For **fidelity**, use held-out action agreement for deterministic sources and mean total variation distance between legal action distributions for stochastic sources. Also report ties, action gaps, cross-entropy and support violations where applicable.
   - For **playing strength**, rank by expected game payoff against the predeclared opponent mix. Publish the separate ranking by win probability, plus per-opponent, per-seat and head-to-head results. Deploy each recovered policy for the whole game. One-step return under the source continuation is a separate measurement.
   - For **interpretability**, measure how accurately an explanation predicts new source choices after moves are removed or outcome probabilities change. Compare with the source network's raw move scores, a model trained to copy its moves, and a simple decision rule given the same information. Report prediction error, explanation size, and variation across independent fits for each. Use the measured trade-offs to explain a choice of formulation.
   - Specify the held-out populations, paired differences (measurements made on the same positions or opponents), sampling uncertainty, and how exact ties will be reported for each objective. Relate differences in move order, score magnitude and score patterns across nearby boards to these measurements. Claims about human usefulness or internal mechanism require their own evidence.
+  - Completed 2026-11-20. Defined separate prospective rankings for imitation, points per game, win probability and predictions of changed choices. Fixed comparison players, populations, weights, tie handling, matched access and paired uncertainty. [Evaluation contract](docs/evaluation_contract.md)
 
 - [ ] **36. Produce a small hand-worked policy/value atlas.**
   - For one tic-tac-toe state, manually show the source action, all legal alternatives, exact/rollout/revealed values, action gaps, normalizations, and one softmax completion.
