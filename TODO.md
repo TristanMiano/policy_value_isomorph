@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 49**, defining how the project queries a policy (the player's rule for choosing moves). Phase II and Checkpoint C are complete. [Proofs](formalism/48_finite_checks.md) · [Checkpoint findings](CHECKPOINT_C.md)
+**Next is Task 50**, serializable recovery records.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -419,9 +419,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 # Phase III — Build the generalized recovery and comparison framework
 
-- [ ] **49. Define the `PolicyAdapter` protocol.**
+- [x] **49. Define the `PolicyAdapter` protocol.**
   - Support history encoding, feasible/candidate actions, deterministic action, sampled action, optional probabilities/logits, optional constrained choice, optional transition/rollout, and optional internals.
   - **Done when:** tic-tac-toe and Connect Four satisfy the protocol without changing their game logic.
+  - Completed 2026-11-20. Both game adapters preserve the existing legal moves and transitions and distinguish observed source queries from derived choices. [Implementation](src/policy_value_isomorph/policy_adapter.py) · [Checks](tests/test_policy_adapter.py). Full Windows suite: 110 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **50. Define `RecoveryContract` and `ValueArtifact` dataclasses.**
   - Record semantics level, access mode, query/state distribution, candidate generator, decoder, normalization, provenance, uncertainty, and supported scope.
