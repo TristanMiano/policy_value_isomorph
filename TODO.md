@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 48**, executable verification and conclusions.
+**Next is Checkpoint C**, the review of the formal proofs and their scope. Phase II Tasks 37–48 are complete. [Results and verification](formalism/48_finite_checks.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -405,9 +405,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** future work cannot mistake one counterexample for a refutation of PV-H1.
   - Completed 2026-11-20. Constructed six pairs of indistinguishable explanations and recorded what each preserves, what is hidden and which extra observations can help. [Statement and checks](formalism/47_ambiguities.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **48. Implement executable formal fixtures.**
+- [x] **48. Implement executable formal fixtures.**
   - Add a small exact module and tests for Tasks 37–47, independent of neural training.
   - **Done when:** one command checks every finite theorem example and normalization invariant.
+  - Completed 2026-11-20. Unified executable examples and independent enumeration checks in a standard-library verification command. Linked theorem results to the claim ledger. [Statement and checks](formalism/48_finite_checks.md). Verified with the executable examples, the three-board demo and the full Windows suite (107 passed, 1 skipped, 11 subtests passed).
 
 ## Checkpoint C — Formal spine audit
 
