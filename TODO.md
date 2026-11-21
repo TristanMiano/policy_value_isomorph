@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 54**, fresh constrained choice queries.
+**Next is Task 55**, candidate generation and coverage.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -446,9 +446,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Verify the implementation on a source with a known utility and on choices the restricted family cannot explain. Retain multiple compatible utilities or bounds when the observations admit them. Task 71 tests predictive value on held-out choices.
   - Completed 2026-11-20. Exposed exact and sampled outcome-and-duration distributions and fitted anchored common utilities with explicit ambiguity. [Implementation](src/policy_value_isomorph/consequence_utility.py) · [Checks](tests/test_consequence_utility.py). Full Windows suite: 115 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **54. Implement constrained-choice and active preference probing.**
+- [x] **54. Implement constrained-choice and active preference probing.**
   - Recover action rankings from masked candidate sets; add deterministic consistency diagnostics and a stochastic pairwise model.
   - **Done when:** the probe budget and query history are part of the artifact.
+  - Completed 2026-11-20. Retained the query budget and every response, quantified ordering conflicts and estimated pairwise choice odds. [Implementation](src/policy_value_isomorph/preference_probes.py) · [Checks](tests/test_preference_probes.py). Full Windows suite: 116 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **55. Implement candidate and neighborhood generators.**
   - Cover legal discrete actions, nearby reachable states, sampled continuous actions, and generated sequence candidates.
