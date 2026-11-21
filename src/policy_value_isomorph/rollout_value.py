@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Callable, Sequence
 
@@ -23,14 +24,11 @@ class StateValueTarget:
 
 
 def frozen_policy_from_mlp(model: TinyMLPPolicy) -> PolicyFn:
-    """Return a deterministic policy function backed by a trained MLP model.
-
-    The returned callable captures model parameters by closure and should be
-    treated as a frozen policy during value-target generation.
-    """
+    """Snapshot the weights and choose the highest-scoring legal move, ties by lowest cell."""
+    snapshot = deepcopy(model)
 
     def _policy(state: TicTacToeState) -> Move:
-        return policy_mlp_action(state, model)
+        return policy_mlp_action(state, snapshot)
 
     return _policy
 

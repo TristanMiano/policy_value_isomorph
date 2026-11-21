@@ -12,6 +12,19 @@ Two protocols apply throughout this project. Keep quantitative questions and ans
 
 ---
 
+## Run the current baseline
+
+Use Python 3.10 or newer in a virtual environment. From the repository root, install the project and run the following commands. PyTorch trains the networks. The short training check fits a move-selecting policy, freezes it, and plays out games to train networks that score a board or a board and move. It saves and resumes all three fits.
+
+```sh
+python -m pip install -e ".[dev]"
+python scripts/smoke_torch_training.py
+python scripts/demo_tictactoe.py
+python -m pytest -q
+```
+
+The demo prints three positions, payoffs and selected moves. The short training check reports move counts and two complete games per player. To reproduce the frozen study, use the experiment's own settings, board split and saved weights. [Reproduction commands and package options](REPRODUCIBILITY.md) · [Research roadmap](TODO.md#resume-here)
+
 ## Core idea: two nested claims
 
 The primary tic-tac-toe experiment first trains and freezes a neural player and checks its moves against every reachable decision board. It samples games, counts transitions from each board, and trains networks to predict the fraction of visits taking each move. For each fitted network it compares choosing the highest immediate score with choosing by the average learned utility of complete sampled games. [Architecture, training procedure and results](NEURAL_TICTACTOE_CONTROL.md)
@@ -183,9 +196,17 @@ The primary game experiment uses the frozen player's move frequencies to train a
 
 For the current modernization phase, this project treats **PyTorch as the canonical training backend** for policy, state-value `V(s)`, and action-value `Q(s,a)` models.
 
-An editable install (`pip install -e .`) installs PyTorch. The shared one-hidden-layer network reads the original JSON weights directly. It computes on the CPU using 64-bit floating-point numbers, the precision of the original Python weights.
+An editable install (`pip install -e .`) installs PyTorch. The shared one-hidden-layer network reads the original JSON weights directly. Prediction and the historical training configuration use 64-bit CPU arithmetic, the precision of the original Python weights.
 
 The three trainers and their prediction functions now use that network. Replaying the saved tic-tac-toe weights reproduced the top legal move in all 67,800 comparisons across five original players, 4,520 boards and three reconstruction methods. [Move comparisons, game outcomes and reproduction commands](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
+
+For the adaptive training baseline, **AdamW** updates each weight using running averages of its gradient and squared gradient, and shrinks weights separately. **Stochastic gradient descent (SGD)** applies each example's gradient times the learning rate and is the default for historical runs. A seed fixes initial weights and the order of examples. The following command trains the move policy, the board-payoff network and the board-and-move payoff network on the central processor (CPU) using 64-bit arithmetic.
+
+```sh
+policy-value-cli train --optimizer adamw --learning-rate 0.001 --weight-decay 0.01 --beta1 0.9 --beta2 0.999 --epsilon 1e-8 --device cpu --dtype float64 --deterministic --seed 13 --episodes 4 --policy-epochs 3 --value-epochs 3 --q-epochs 3
+```
+
+The two beta settings control how much previous gradient information carries forward. Epsilon stabilizes division by small values. Use `--dtype float32` for 32-bit training or `--device cuda:0` for the first available NVIDIA graphics processor. The public prediction functions read the exported weights on CPU in 64-bit precision. The `eval` command accepts the same optimizer settings. [PyTorch AdamW parameters](https://docs.pytorch.org/docs/2.8/generated/torch.optim.AdamW.html)
 
 Migration constraints:
 
@@ -399,7 +420,7 @@ The resulting percentages and payoff differences quantify both forms of recovery
 
 ## Possible extensions
 
-1. **Compare decoder-score, `V`, and direct `Q` reconstruction.**  
+1. **Compare decoder-score, `V`, and direct `Q` reconstruction.**\
    This separates behavioral imitation from successor-state and action-return recovery.
 
 2. **Use intentionally imperfect policies.**  
@@ -414,10 +435,10 @@ The resulting percentages and payoff differences quantify both forms of recovery
 5. **Move beyond perfect-information games.**  
    This would force the repo to confront the trajectory/history and lottery issues more directly.
 
-6. **Test lottery preferences explicitly.**  
+6. **Test lottery preferences explicitly.**\
    Compare choices among induced trajectory distributions with the expectations predicted by a recovered cardinal value artifact.
 
-7. **Measure utility-factorization complexity.**  
+7. **Measure utility-factorization complexity.**\
    Ask how simple, stable, and transferable a trajectory utility can remain while preserving the direct decoder's behavioral fidelity.
 
 ---
@@ -443,43 +464,6 @@ For values learned from game outcomes, report prediction error, the frequency an
 
 ---
 
-## Notes for Codex
+## Continuing the project
 
-If Codex is asked to continue from this README, it should begin with the smallest robust version of the project:
-
-1. implement tic-tac-toe
-2. define a clean state encoding and transition function
-3. choose a policy representation
-4. implement a direct decoder-score baseline
-5. generate rollout-based expected-return labels from a frozen policy
-6. train a value net
-7. construct a value-guided policy by greedily maximizing the learned expected return
-8. evaluate decoder fidelity, agreement, greedy-improvement differences, calibration, and mistakes
-
-Prefer a simple, correct version over a flashy one. The first target is a reproducible tic-tac-toe demo, not a giant training stack.
-
----
-
-## Reproducibility
-
-For experiment settings (seeds, split protocol, baseline CLI commands, and reporting checklist), see `REPRODUCIBILITY.md`.
-
-## Task 1 status (implemented)
-
-The repository now contains a runnable minimal vertical slice for tic-tac-toe:
-
-- canonical tic-tac-toe state (`board` + `to_move`)
-- legal move generation, transition, terminal and winner detection
-- deterministic baseline policy (win/block/center/corners)
-- rollout-based `V^pi(s)` estimation from a fixed root-player perspective
-- recovered policy via successor-state expected-value comparison (max for root turn, min for opponent turn)
-- pytest coverage for game logic, value sign behavior, and recovered action behavior
-- runnable demo script printing sample states, values, and chosen actions
-
-### Quickstart
-
-```bash
-pip install -e .[dev]
-pytest -q
-python scripts/demo_tictactoe.py
-```
+Use the current roadmap to resume work. The tic-tac-toe environment, tabular rollout comparisons, PyTorch trainers, checkpoint replay and independent training checks are implemented. The next research phases and their dependencies are recorded in the TODO. [Current work](TODO.md#resume-here) · [Verification and reporting rules](AGENTS.md)

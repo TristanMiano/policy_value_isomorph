@@ -1,5 +1,5 @@
 from policy_value_isomorph.policy import heuristic_policy_action
-from policy_value_isomorph.policy_mlp import policy_mlp_action, train_policy_mlp
+from policy_value_isomorph.policy_mlp import TinyMLPPolicy, policy_mlp_action, train_policy_mlp
 from policy_value_isomorph.rollout_value import (
     estimate_v_pi,
     frozen_policy_from_mlp,
@@ -7,7 +7,7 @@ from policy_value_isomorph.rollout_value import (
     recovered_action_from_v,
 )
 from policy_value_isomorph.sampling import generate_on_policy_dataset
-from policy_value_isomorph.tictactoe import state_from_rows
+from policy_value_isomorph.tictactoe import TicTacToeState, state_from_rows
 
 
 def test_rollout_value_sign_root_wins_immediately():
@@ -74,3 +74,14 @@ def test_frozen_policy_from_mlp_matches_direct_mlp_actions():
 
     for sample in dataset[:30]:
         assert frozen_policy(sample.state) == policy_mlp_action(sample.state, trained.model)
+
+
+def test_frozen_policy_keeps_its_original_weights() -> None:
+    state = TicTacToeState.initial()
+    model = TinyMLPPolicy([[0.0] for _ in range(10)], [0.0], [[0.0] * 9], [0.0] * 9)
+    frozen = frozen_policy_from_mlp(model)
+    assert frozen(state) == 0
+    model.w1[9][0] = 1.0
+    model.w2[0][8] = 1.0
+    assert policy_mlp_action(state, model) == 8
+    assert frozen(state) == 0

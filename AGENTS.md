@@ -20,10 +20,9 @@ In the primary visit-count experiment, train and freeze the source first. Sample
 
 For visit-trained networks, give the loss actually optimized, its units and weighting, the normalization of the target counts, and the measured training loss at the checkpoint reported. When diagnosing residual disagreements, show legal-move predictions and observed source counts for example positions, stating whether each was fitted or withheld. Compare predicted and observed counts at the same number of visits.
 
-## Project goals (Task 1)
-- Keep the implementation minimal, correct, and easy to inspect.
-- Focus only on tic-tac-toe and rollout-based value recovery from a fixed policy.
-- Do not introduce neural-network training yet unless explicitly requested.
+## Current project scope
+
+Keep the implementation small and inspectable. The primary experiment freezes a trained tic-tac-toe player, measures its moves, and trains networks on those observations. The game-payoff baseline plays complete games under a fixed player and predicts the resulting points. PyTorch provides the three network trainers. The roadmap schedules comparisons in Connect Four and four-by-four Reversi. [Current task and scope](TODO.md#resume-here)
 
 ## Structure
 - Python package code lives in `src/policy_value_isomorph/`.
@@ -32,9 +31,8 @@ For visit-trained networks, give the loss actually optimized, its units and weig
 - Design and planning notes live in markdown files at repo root.
 
 ## Commands
-- Install package (editable): `pip install -e .`
-- Run tests: `pytest -q`
-- Run demo: `python scripts/demo_tictactoe.py`
+
+From the repository root, use `python -m pip install -e ".[dev]"` for an editable test installation. Run `python -m pytest -q` for the suite, `python scripts/demo_tictactoe.py` for sample moves, and `python scripts/smoke_torch_training.py` to exercise training and continuation from saved weights. [Reproduction guide](REPRODUCIBILITY.md)
 
 ## Verification rules
 Before finalizing changes:

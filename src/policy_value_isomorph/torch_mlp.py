@@ -27,11 +27,12 @@ class Weights(Protocol):
 class TorchMLP(nn.Module):
     """One tanh hidden layer, with a linear output for each score."""
 
-    def __init__(self, weights: Weights, device: torch.device = torch.device("cpu")) -> None:
+    def __init__(self, weights: Weights, device: torch.device = torch.device("cpu"),
+                 dtype: torch.dtype = torch.float64) -> None:
         super().__init__()
         # Load supplied weights directly, without drawing from the global torch RNG.
         def parameter(values: object) -> nn.Parameter:
-            return nn.Parameter(torch.tensor(values, dtype=torch.float64, device=device))
+            return nn.Parameter(torch.tensor(values, dtype=dtype, device=device))
 
         self.w1 = parameter(weights.w1)
         self.b1 = parameter(weights.b1)

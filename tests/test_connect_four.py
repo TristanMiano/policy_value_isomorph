@@ -1,10 +1,26 @@
-from policy_value_isomorph.connect_four import ConnectFourState
+from policy_value_isomorph import ConnectFourState, recovered_action_from_v_connect_four
 from policy_value_isomorph.connect_four_pipeline import (
     generate_off_policy_dataset,
     generate_on_policy_dataset,
     generate_value_targets,
     random_policy_action,
 )
+
+
+def test_successor_choice_uses_the_supplied_payoff_perspective() -> None:
+    # Column 3 wins for X in the first position and O in the second.
+    for history in ((0, 6, 1, 6, 2, 5), (6, 0, 6, 1, 5, 2, 4)):
+        state = ConnectFourState.initial()
+        for move in history:
+            state = state.apply_move(move)
+        for root in (1, -1):
+            def score(child: ConnectFourState) -> int:
+                return child.terminal_return(root) if child.is_terminal() else 0
+
+            assert recovered_action_from_v_connect_four(state, score, root_player=root) == 3
+            if root == 1:
+                assert recovered_action_from_v_connect_four(state, score) == 3
+            assert recovered_action_from_v_connect_four(state, lambda _: 0, root_player=root) == 0
 
 
 def test_initial_state_and_move_application() -> None:

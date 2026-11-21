@@ -1,0 +1,784 @@
+{
+  "protocol": {
+    "description": "Small engineering benchmark of weight updates on game-payoff training. The source takes an immediate win, blocks a win, takes the center, then a corner, then any legal move. At each priority it uses the lowest cell number. The opponent selects legal cells with equal probability.",
+    "methods": {
+      "adamw": "AdamW uses running gradient and squared-gradient averages and separate weight shrinkage for every parameter.",
+      "muon": "Use PyTorch Muon on the hidden input matrix, with AdamW on its bias and the entire output layer. Muon applies momentum and five iterative matrix transformations, with PyTorch's match_rms_adamw step scaling."
+    },
+    "networks": {
+      "policy": "From the board and side to move, predict the source move. Choose the highest legal score, ties by lowest cell.",
+      "value": "Predict X's game points from the resulting board. X maximizes and O minimizes, ties by lowest cell.",
+      "q": "Predict X's points from the board and proposed move. Use the same move and tie rules as value."
+    },
+    "population": "Sorted Task 61 game graph and archived split. Draw 64 training decision boards without replacement for policy and all their legal moves for Q. Independently draw 64 eligible board-value inputs after excluding successors of withheld decisions. Use one completed source-vs-source game per payoff label, with X win/draw/loss worth +1/0/-1. The 780 test boards each receive equal weight.",
+    "data_seed": 2600,
+    "fit_seeds": [
+      2611,
+      2612,
+      2613,
+      2614
+    ],
+    "boards_per_training_draw": 64,
+    "hidden_dim": 16,
+    "epochs": 6,
+    "learning_rate": 0.003,
+    "weight_decay": 0.01,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "epsilon": 1e-08,
+    "muon_momentum": 0.95,
+    "muon_steps": 5,
+    "muon_epsilon": 1e-07,
+    "execution": "One CPU thread, float32, deterministic algorithms, one update per example, equal training passes and learning rate. Use both optimizers with the same seed and shuffle. Alternate which runs first across seeds. Warm both on one separate example first.",
+    "measurements": {
+      "losses": "Per pass, mean pre-update loss across training examples. Policy uses minus the natural logarithm of the observed legal move probability, floored at 1e-12 for reporting. The regressors use squared game points per example. Lower is closer to the label.",
+      "seconds": "Elapsed seconds for the public fit including setup and training, excluding label generation and evaluation.",
+      "matches": "Number of the equally weighted withheld boards on which the highest-ranked legal move matches the source.",
+      "win_draw_loss": "Win, draw and loss probabilities enumerated from the opening against the uniform opponent, averaged equally over X and O.",
+      "differences": "Within-seed Muon minus AdamW. Means and standard errors use the four paired fits. The standard error is the sample standard deviation divided by two. No games are sampled."
+    }
+  },
+  "torch": "2.11.0+cu130",
+  "platform": "linux",
+  "test_boards": 780,
+  "training_counts": {
+    "policy": 64,
+    "value": 64,
+    "q": 231
+  },
+  "decision_boards": [
+    "OX.XOXO..",
+    "OOXX.O..X",
+    "..XO.X..O",
+    "XX.OX.XOO",
+    ".OXO.OX.X",
+    "O..XX...O",
+    ".X..O.X..",
+    "XOX..OXOX",
+    "XX..OXXOO",
+    "...X.O.OX",
+    "X..O.X..O",
+    "X.XXO.OXO",
+    ".O..X.XOX",
+    "XX.X.OO..",
+    "OXX.OOX..",
+    "XX..XOO.O",
+    "OX...OXX.",
+    "O..O.XXX.",
+    "XXOX.OO..",
+    "..O.....X",
+    ".XXXO...O",
+    "XX...OXOO",
+    "O.X.XO..X",
+    "X.XO.OXOX",
+    "....XX..O",
+    "O..XX.OXO",
+    "X...OOXOX",
+    "O...XOX.X",
+    ".X.O...OX",
+    "OX.XXOXO.",
+    "OXX.XXO.O",
+    "O.XXOXO..",
+    "X.O.OXX..",
+    ".X..X.O..",
+    "OOXX.XXOO",
+    ".XXX.OOO.",
+    "XX.O....O",
+    "X....OO.X",
+    "XOX.OOX.X",
+    ".OX.XX..O",
+    "...X.OO.X",
+    "OXO.X.X.O",
+    "XXOO.XO..",
+    "........X",
+    "OX...X.O.",
+    ".O.O.X.XX",
+    ".OXXXOOXO",
+    ".X.OX.X.O",
+    "XO..XOOX.",
+    "XO...OXOX",
+    "..O...X.X",
+    "X.O.OOXX.",
+    "O.XOX..OX",
+    "...OX.OX.",
+    ".XOXO.XXO",
+    "OX.XOX.O.",
+    ".O....XXO",
+    "XO.X.XO.O",
+    "..X..O.X.",
+    "OXOX..XOX",
+    ".OXXXOOOX",
+    "OXXXXO.O.",
+    ".OOO.XX.X",
+    "XX.OOX.XO"
+  ],
+  "value_inputs": [
+    "XO.XOX.XO",
+    "X...O....",
+    "..XO.X.XO",
+    "OX..XXOXO",
+    ".OXX.O.X.",
+    "O.OXOX..X",
+    "..O...XX.",
+    "XOXX.OXO.",
+    "XOX...X.O",
+    "OOXOXX...",
+    ".XOO..XXO",
+    ".X.XO.O..",
+    ".XO..O..X",
+    "..O.XX..O",
+    "XOXXXOXOO",
+    "....OX.XO",
+    "X.O.XOX.O",
+    "X.XOXX.OO",
+    "....X.X.O",
+    "XO.XX.O.O",
+    "O.OX.X.XO",
+    ".X.XO.X.O",
+    "...XOX...",
+    "X.OOX.OX.",
+    "XXOO..XXO",
+    "....X.OX.",
+    "X.OO..X.X",
+    ".XOX.OXO.",
+    ".X.OO.X..",
+    "OXXOXX.OO",
+    "XO...O.XX",
+    "XXXO.OXO.",
+    ".XXX.OOO.",
+    "XOX..O..X",
+    "O.X..OX.X",
+    "O..XXX.O.",
+    "...XO.OX.",
+    "XXOOX...O",
+    ".O...X.XO",
+    ".XOXX.O..",
+    "XO.XXXOO.",
+    "X..XX.O.O",
+    "XO.OOXX.X",
+    "OXO.XXX.O",
+    "XXOX..OO.",
+    ".XOOO.XX.",
+    ".X.O..XOX",
+    ".OXXOXOX.",
+    "..O.X.OXX",
+    "OXO.XX..O",
+    "X.O.X....",
+    "..X.OO.X.",
+    ".X..OOXXO",
+    "..XXOX.OO",
+    "...XXOX.O",
+    "XOX.X..OO",
+    ".XXOOX...",
+    "OO.X.XX..",
+    "OO.OX.XX.",
+    "XX...XOOO",
+    "O..OXXXO.",
+    "..X....O.",
+    ".O.X.OX.X",
+    "...XO..X."
+  ],
+  "source_win_draw_loss": [
+    0.9082258597883597,
+    0.08542493386243386,
+    0.006349206349206348
+  ],
+  "fits": [
+    {
+      "seed": 2611,
+      "method": "adamw",
+      "network": "policy",
+      "seconds": 0.07731645300000167,
+      "losses": [
+        1.189174541272223,
+        1.0573265487328172,
+        0.9576905011199415,
+        0.8848272273316979,
+        0.8147935457527637,
+        0.7617922375211492
+      ],
+      "matches": 350,
+      "win_draw_loss": [
+        0.42963376322751323,
+        0.1431382275132275,
+        0.42722800925925924
+      ]
+    },
+    {
+      "seed": 2611,
+      "method": "adamw",
+      "network": "value",
+      "seconds": 0.0641009129999972,
+      "losses": [
+        0.8281141767588186,
+        0.6405365739763056,
+        0.5832184062383021,
+        0.5615277083968806,
+        0.5286047809233878,
+        0.5198147924493242
+      ],
+      "matches": 377,
+      "win_draw_loss": [
+        0.5785838293650793,
+        0.1142319775132275,
+        0.3071841931216931
+      ]
+    },
+    {
+      "seed": 2611,
+      "method": "adamw",
+      "network": "q",
+      "seconds": 0.2356704239999985,
+      "losses": [
+        0.5939040409623558,
+        0.537890213023495,
+        0.5270056123492545,
+        0.5165978932572771,
+        0.5112594981058473,
+        0.5128733261454644
+      ],
+      "matches": 308,
+      "win_draw_loss": [
+        0.418328373015873,
+        0.13409391534391535,
+        0.4475777116402116
+      ]
+    },
+    {
+      "seed": 2611,
+      "method": "muon",
+      "network": "policy",
+      "seconds": 0.11110523800000038,
+      "losses": [
+        1.1905015241354704,
+        1.06627487950027,
+        0.9672114443965256,
+        0.8952949394006282,
+        0.8247980724554509,
+        0.7702226290712133
+      ],
+      "matches": 359,
+      "win_draw_loss": [
+        0.41555059523809523,
+        0.17329695767195766,
+        0.411152447089947
+      ]
+    },
+    {
+      "seed": 2611,
+      "method": "muon",
+      "network": "value",
+      "seconds": 0.10008804900000001,
+      "losses": [
+        0.8234686867041319,
+        0.6794276681698648,
+        0.6094032598655303,
+        0.5650759137538444,
+        0.5246206319858402,
+        0.49332813492137717
+      ],
+      "matches": 382,
+      "win_draw_loss": [
+        0.5575851521164021,
+        0.15264963624338623,
+        0.28976521164021163
+      ]
+    },
+    {
+      "seed": 2611,
+      "method": "muon",
+      "network": "q",
+      "seconds": 0.5573383750000005,
+      "losses": [
+        0.6122732861355292,
+        0.5388209823036177,
+        0.509658606965849,
+        0.480670327238223,
+        0.45205338622599417,
+        0.4323992746789258
+      ],
+      "matches": 286,
+      "win_draw_loss": [
+        0.5486152447089947,
+        0.13247354497354497,
+        0.3189112103174603
+      ]
+    },
+    {
+      "seed": 2612,
+      "method": "muon",
+      "network": "policy",
+      "seconds": 0.10494716499999868,
+      "losses": [
+        1.1565688392147422,
+        1.0254493542015553,
+        0.9252431159839034,
+        0.8440797278890386,
+        0.7745944058988243,
+        0.7158319664304145
+      ],
+      "matches": 380,
+      "win_draw_loss": [
+        0.41136326058201056,
+        0.189781746031746,
+        0.3988549933862433
+      ]
+    },
+    {
+      "seed": 2612,
+      "method": "muon",
+      "network": "value",
+      "seconds": 0.0980709920000038,
+      "losses": [
+        0.8896923558495473,
+        0.7326933577714954,
+        0.6520337666057969,
+        0.6020815875608605,
+        0.5596032372050104,
+        0.5261861239945347
+      ],
+      "matches": 382,
+      "win_draw_loss": [
+        0.7591063161375661,
+        0.029464285714285714,
+        0.21142939814814812
+      ]
+    },
+    {
+      "seed": 2612,
+      "method": "muon",
+      "network": "q",
+      "seconds": 0.5611171319999997,
+      "losses": [
+        0.5907011767225256,
+        0.5236992405494061,
+        0.49673990283699193,
+        0.4794996532832834,
+        0.4588414265920686,
+        0.4344237639217516
+      ],
+      "matches": 286,
+      "win_draw_loss": [
+        0.40978422619047616,
+        0.13661541005291006,
+        0.4536003637566137
+      ]
+    },
+    {
+      "seed": 2612,
+      "method": "adamw",
+      "network": "policy",
+      "seconds": 0.07665601600000116,
+      "losses": [
+        1.156883993651718,
+        1.020435880171135,
+        0.9206248510163277,
+        0.8415009257150814,
+        0.7732418740633875,
+        0.7137464238330722
+      ],
+      "matches": 365,
+      "win_draw_loss": [
+        0.39679646164021165,
+        0.1997519841269841,
+        0.4034515542328042
+      ]
+    },
+    {
+      "seed": 2612,
+      "method": "adamw",
+      "network": "value",
+      "seconds": 0.06353428700000308,
+      "losses": [
+        0.8643223373933324,
+        0.6683520046397007,
+        0.588542286056736,
+        0.5573560856182098,
+        0.5349689257648436,
+        0.5181743174762232
+      ],
+      "matches": 368,
+      "win_draw_loss": [
+        0.5531498015873015,
+        0.10539847883597883,
+        0.3414517195767195
+      ]
+    },
+    {
+      "seed": 2612,
+      "method": "adamw",
+      "network": "q",
+      "seconds": 0.2514771040000028,
+      "losses": [
+        0.5902921240517709,
+        0.5388722020477101,
+        0.523725206131363,
+        0.5194447253185281,
+        0.5177589163800898,
+        0.5088371834105297
+      ],
+      "matches": 315,
+      "win_draw_loss": [
+        0.497234623015873,
+        0.09693700396825397,
+        0.405828373015873
+      ]
+    },
+    {
+      "seed": 2613,
+      "method": "adamw",
+      "network": "policy",
+      "seconds": 0.08903873999999945,
+      "losses": [
+        1.178907631430775,
+        1.056864439509809,
+        0.9620877737179399,
+        0.8777387099107727,
+        0.8070524281356484,
+        0.7516782134771347
+      ],
+      "matches": 374,
+      "win_draw_loss": [
+        0.4609747023809524,
+        0.17874917328042325,
+        0.3602761243386243
+      ]
+    },
+    {
+      "seed": 2613,
+      "method": "adamw",
+      "network": "value",
+      "seconds": 0.09163156299999997,
+      "losses": [
+        0.7320755585171952,
+        0.6224443641426483,
+        0.5741879185902024,
+        0.5525714762229654,
+        0.5295317242162128,
+        0.5166354548582603
+      ],
+      "matches": 373,
+      "win_draw_loss": [
+        0.579563492063492,
+        0.12061838624338622,
+        0.29981812169312166
+      ]
+    },
+    {
+      "seed": 2613,
+      "method": "adamw",
+      "network": "q",
+      "seconds": 0.26316023199999705,
+      "losses": [
+        0.5866339091978588,
+        0.5346124884944288,
+        0.5300219402828062,
+        0.5249513779980829,
+        0.5166348833133322,
+        0.517090332432052
+      ],
+      "matches": 306,
+      "win_draw_loss": [
+        0.3874007936507936,
+        0.13364748677248678,
+        0.4789517195767195
+      ]
+    },
+    {
+      "seed": 2613,
+      "method": "muon",
+      "network": "policy",
+      "seconds": 0.1320178990000045,
+      "losses": [
+        1.1822621198371053,
+        1.0701489341445267,
+        0.9767838218249381,
+        0.8915431646164507,
+        0.8163611171767116,
+        0.7568390959640965
+      ],
+      "matches": 388,
+      "win_draw_loss": [
+        0.4883597883597883,
+        0.17415261243386243,
+        0.3374875992063492
+      ]
+    },
+    {
+      "seed": 2613,
+      "method": "muon",
+      "network": "value",
+      "seconds": 0.11602827299999774,
+      "losses": [
+        0.7260431247368615,
+        0.6429029683168324,
+        0.595164626079054,
+        0.5611653770720295,
+        0.5191232023225893,
+        0.48657880516840435
+      ],
+      "matches": 407,
+      "win_draw_loss": [
+        0.6105778769841269,
+        0.13579695767195765,
+        0.2536251653439153
+      ]
+    },
+    {
+      "seed": 2613,
+      "method": "muon",
+      "network": "q",
+      "seconds": 0.5866275569999999,
+      "losses": [
+        0.5938058339065355,
+        0.5195893882693065,
+        0.4912232710725677,
+        0.4649639737092742,
+        0.4302186651570347,
+        0.40989813904167965
+      ],
+      "matches": 278,
+      "win_draw_loss": [
+        0.4254133597883598,
+        0.13787615740740738,
+        0.43671048280423275
+      ]
+    },
+    {
+      "seed": 2614,
+      "method": "muon",
+      "network": "policy",
+      "seconds": 0.11346056099999657,
+      "losses": [
+        1.1664185472764075,
+        1.0430266838520765,
+        0.9492295423988253,
+        0.8641489043366164,
+        0.7997201906982809,
+        0.7387877511791885
+      ],
+      "matches": 379,
+      "win_draw_loss": [
+        0.4533234126984127,
+        0.17740575396825395,
+        0.3692708333333333
+      ]
+    },
+    {
+      "seed": 2614,
+      "method": "muon",
+      "network": "value",
+      "seconds": 0.0983178310000028,
+      "losses": [
+        0.6514396342699911,
+        0.5591843341057938,
+        0.5245843116679154,
+        0.49688342672197905,
+        0.4766047050316047,
+        0.4591337287256678
+      ],
+      "matches": 386,
+      "win_draw_loss": [
+        0.5726438492063491,
+        0.11911375661375659,
+        0.30824239417989413
+      ]
+    },
+    {
+      "seed": 2614,
+      "method": "muon",
+      "network": "q",
+      "seconds": 0.5568888080000036,
+      "losses": [
+        0.5980776478063174,
+        0.5257266232921738,
+        0.5049435106975737,
+        0.4855835603797522,
+        0.4602558748480015,
+        0.43848228996410094
+      ],
+      "matches": 294,
+      "win_draw_loss": [
+        0.4336722883597883,
+        0.1615203373015873,
+        0.40480737433862435
+      ]
+    },
+    {
+      "seed": 2614,
+      "method": "adamw",
+      "network": "policy",
+      "seconds": 0.09353096799999605,
+      "losses": [
+        1.166986288037151,
+        1.0349884869065136,
+        0.9419763968326151,
+        0.8585140204522759,
+        0.7955672850366682,
+        0.7392751996521838
+      ],
+      "matches": 368,
+      "win_draw_loss": [
+        0.4420510912698412,
+        0.19107969576719577,
+        0.36686921296296293
+      ]
+    },
+    {
+      "seed": 2614,
+      "method": "adamw",
+      "network": "value",
+      "seconds": 0.06716803399999804,
+      "losses": [
+        0.6622483769141354,
+        0.5654594263614854,
+        0.541551072540642,
+        0.5213714214196443,
+        0.5206166474910889,
+        0.514886209188262
+      ],
+      "matches": 374,
+      "win_draw_loss": [
+        0.5508267195767196,
+        0.10495205026455025,
+        0.3442212301587301
+      ]
+    },
+    {
+      "seed": 2614,
+      "method": "adamw",
+      "network": "q",
+      "seconds": 0.2325250419999989,
+      "losses": [
+        0.596905498866422,
+        0.5380475160765846,
+        0.5296457039274525,
+        0.5310489859070538,
+        0.5222121518713382,
+        0.5194803361727938
+      ],
+      "matches": 305,
+      "win_draw_loss": [
+        0.4223214285714285,
+        0.13568121693121693,
+        0.44199735449735444
+      ]
+    }
+  ],
+  "paired_summary": {
+    "policy": {
+      "final_loss": {
+        "adamw": 0.741623018620885,
+        "muon": 0.7454203606612282,
+        "difference": 0.00379734204034321,
+        "standard_error": 0.0019281700604749509
+      },
+      "seconds": {
+        "adamw": 0.08413554424999958,
+        "muon": 0.11538271575000003,
+        "difference": 0.031247171500000448,
+        "standard_error": 0.004838431064644661
+      },
+      "matches": {
+        "adamw": 364.25,
+        "muon": 376.5,
+        "difference": 12.25,
+        "standard_error": 1.3768926368215255
+      },
+      "win": {
+        "adamw": 0.43236400462962965,
+        "muon": 0.4421492642195767,
+        "difference": 0.009785259589947082,
+        "standard_error": 0.008682022592286242
+      },
+      "draw": {
+        "adamw": 0.17817977017195766,
+        "muon": 0.178659267526455,
+        "difference": 0.0004794973544973505,
+        "standard_error": 0.010067025535330442
+      },
+      "loss": {
+        "adamw": 0.38945622519841266,
+        "muon": 0.3791914682539682,
+        "difference": -0.010264756944444467,
+        "standard_error": 0.005650780095623884
+      }
+    },
+    "value": {
+      "final_loss": {
+        "adamw": 0.5173776934930174,
+        "muon": 0.491306698202496,
+        "difference": -0.026070995290521426,
+        "standard_error": 0.013097983805554176
+      },
+      "seconds": {
+        "adamw": 0.07160869924999957,
+        "muon": 0.10312628625000109,
+        "difference": 0.03151758700000151,
+        "standard_error": 0.0025809252296836583
+      },
+      "matches": {
+        "adamw": 373,
+        "muon": 389.25,
+        "difference": 16.25,
+        "standard_error": 6.223276200416198
+      },
+      "win": {
+        "adamw": 0.5655309606481481,
+        "muon": 0.6249782986111111,
+        "difference": 0.05944733796296295,
+        "standard_error": 0.0501339585391295
+      },
+      "draw": {
+        "adamw": 0.1113002232142857,
+        "muon": 0.10925615906084654,
+        "difference": -0.002044064153439152,
+        "standard_error": 0.02525890660016354
+      },
+      "loss": {
+        "adamw": 0.3231688161375661,
+        "muon": 0.2657655423280423,
+        "difference": -0.05740327380952378,
+        "standard_error": 0.02492814250332669
+      }
+    },
+    "q": {
+      "final_loss": {
+        "adamw": 0.51457029454021,
+        "muon": 0.4288008669016145,
+        "difference": -0.0857694276385955,
+        "standard_error": 0.007295551744655954
+      },
+      "seconds": {
+        "adamw": 0.2457082004999993,
+        "muon": 0.5654929680000009,
+        "difference": 0.3197847675000016,
+        "standard_error": 0.0034277127532009307
+      },
+      "matches": {
+        "adamw": 308.5,
+        "muon": 286,
+        "difference": -22.5,
+        "standard_error": 4.133198922545748
+      },
+      "win": {
+        "adamw": 0.43132130456349205,
+        "muon": 0.4543712797619047,
+        "difference": 0.023049975198412717,
+        "standard_error": 0.04478730532212543
+      },
+      "draw": {
+        "adamw": 0.12508990575396825,
+        "muon": 0.14212136243386242,
+        "difference": 0.01703145667989417,
+        "standard_error": 0.00958410680872562
+      },
+      "loss": {
+        "adamw": 0.4435887896825396,
+        "muon": 0.40350735780423275,
+        "difference": -0.04008143187830686,
+        "standard_error": 0.03603073184170424
+      }
+    }
+  }
+}

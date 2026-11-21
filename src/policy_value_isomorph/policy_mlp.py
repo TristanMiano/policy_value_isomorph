@@ -1,16 +1,14 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import ast
 import math
 import random
-import time
 from typing import List, Sequence
 
-from torch.optim import SGD
+from .training_config import TrainingConfig
 
-from .torch_mlp import TorchMLP, TrainingBatch, train_epoch
-from .checkpointing import latest_checkpoint_path, load_checkpoint, save_checkpoint
+from .torch_mlp import TorchMLP, TrainingBatch
+from .checkpointing import TrainingRun
 from .gameplay_eval import GameplayEvalRecord
 from .gameplay_samples import GameplaySample, append_gameplay_samples_text
 from .sampling import StateActionSample
@@ -99,7 +97,7 @@ def train_policy_mlp(
     dataset: Sequence[StateActionSample],
     *,
     hidden_dim: int = 32,
-    learning_rate: float = 0.05,
+    learning_rate: float | None = None,
     epochs: int = 60,
     seed: int = 0,
     eval_interval: int = 0,
@@ -110,13 +108,14 @@ def train_policy_mlp(
     checkpoint_dir: str | None = None,
     resume_checkpoint_path: str | None = None,
     resume_latest: bool = False,
+    config: TrainingConfig | None = None,
 ) -> TrainedPolicy:
     """Train a tiny MLP policy by supervised imitation on state-action pairs."""
     if not dataset:
         raise ValueError("dataset must be non-empty")
     if hidden_dim <= 0:
         raise ValueError("hidden_dim must be >= 1")
-    if learning_rate <= 0:
+    if learning_rate is not None and learning_rate <= 0:
         raise ValueError("learning_rate must be > 0")
     if epochs <= 0:
         raise ValueError("epochs must be >= 1")
@@ -133,53 +132,25 @@ def train_policy_mlp(
 
     rng = random.Random(seed)
     model = _init_model(input_dim=10, hidden_dim=hidden_dim, output_dim=9, rng=rng)
-    order = list(range(len(dataset)))
-    start_epoch = 0
-    if resume_latest or resume_checkpoint_path is not None:
-        if checkpoint_dir is None and resume_latest:
-            raise ValueError("checkpoint_dir is required when resume_latest is true")
-        checkpoint_to_load = resume_checkpoint_path or str(latest_checkpoint_path(checkpoint_dir, "policy"))
-        loaded = load_checkpoint(checkpoint_to_load, model_type=TinyMLPPolicy)
-        model = loaded["model"]
-        metadata = loaded.get("metadata", {})
-        start_epoch = int(loaded["step"])
-        saved_order = metadata.get("order")
-        if saved_order is not None and len(saved_order) == len(dataset):
-            order = saved_order
-        rng_state_text = metadata.get("rng_state")
-        if isinstance(rng_state_text, str):
-            rng.setstate(ast.literal_eval(rng_state_text))
+    run = TrainingRun("policy", model, rng, len(dataset), seed, learning_rate, config, checkpoint_dir,
+                      resume_checkpoint_path, resume_latest)
+    model = run.model
     losses: List[float] = []
 
     records: list[TelemetryRecord] = []
     gameplay_evals: list[GameplayEvalRecord] = []
-    start_time = time.perf_counter()
-
-    network = TorchMLP(model)
-    optimizer = SGD(network.parameters(), lr=learning_rate)
     rows = [encode_state(sample.state) for sample in dataset]
     masks = []
     for sample in dataset:
         legal = sample.state.legal_moves()
         masks.append([move in legal for move in range(9)])
-    batch = TrainingBatch.policy(network, rows, [sample.action for sample in dataset], masks)
+    batch = TrainingBatch.policy(run.network, rows, [sample.action for sample in dataset], masks)
 
-    for epoch in range(start_epoch, epochs):
-        rng.shuffle(order)
-        epoch_loss = train_epoch(network, optimizer, batch, order)
-        model = TinyMLPPolicy(**network.weights())
-        losses.append(epoch_loss)
-        records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
-        if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
-            save_checkpoint(
-                checkpoint_dir,
-                run_type="policy",
-                step=epoch + 1,
-                model=model,
-                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
-            )
-
-        if eval_interval > 0 and (epoch + 1) % eval_interval == 0:
+    for record in run.records(batch, epochs, checkpoint_interval):
+        model = TinyMLPPolicy(**run.network.weights())
+        losses.append(record.loss)
+        records.append(record)
+        if eval_interval > 0 and record.step % eval_interval == 0:
             wins = 0
             draws = 0
             losses_eval = 0
@@ -208,7 +179,7 @@ def train_policy_mlp(
                 if len(checkpoint_samples) < gameplay_samples_per_checkpoint:
                     checkpoint_samples.append(
                         GameplaySample(
-                            checkpoint_step=epoch + 1,
+                            checkpoint_step=record.step,
                             game_index=i,
                             moves=tuple(moves),
                             states=tuple(states),
@@ -221,7 +192,7 @@ def train_policy_mlp(
             loss_rate = losses_eval / denom
             gameplay_evals.append(
                 GameplayEvalRecord(
-                    step=epoch + 1,
+                    step=record.step,
                     n_games=eval_n_games,
                     win_rate=win_rate,
                     draw_rate=draw_rate,
@@ -232,23 +203,15 @@ def train_policy_mlp(
             if gameplay_samples_path is not None:
                 append_gameplay_samples_text(gameplay_samples_path, checkpoint_samples)
 
-    if checkpoint_dir is not None and (checkpoint_interval == 0 or epochs % checkpoint_interval != 0):
-        save_checkpoint(
-            checkpoint_dir,
-            run_type="policy",
-            step=epochs,
-            model=model,
-            metadata={"seed": seed, "epoch": epochs, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
-        )
 
     telemetry = TrainingTelemetry(
         run_type="policy",
         game="tic_tac_toe",
-        seed=seed,
+        seed=run.seed,
         checkpoint_step=epochs,
-        hyperparameters={
-            "hidden_dim": hidden_dim,
-            "learning_rate": learning_rate,
+        hyperparameters={**run.config.metadata(),
+            "hidden_dim": model.hidden_dim,
+            "learning_rate": run.rate,
             "epochs": epochs,
             "eval_interval": eval_interval,
             "eval_n_games": eval_n_games,

@@ -1,0 +1,25 @@
+{
+  "description": "Small engineering benchmark of weight updates on game-payoff training. The source takes an immediate win, blocks a win, takes the center, then a corner, then any legal move. At each priority it uses the lowest cell number. The opponent selects legal cells with equal probability.",
+  "methods": {
+    "adamw": "AdamW uses running gradient and squared-gradient averages and separate weight shrinkage for every parameter.",
+    "muon": "Use PyTorch Muon on the hidden input matrix, with AdamW on its bias and the entire output layer. Muon applies momentum and five iterative matrix transformations, with PyTorch's match_rms_adamw step scaling."
+  },
+  "networks": {
+    "policy": "From the board and side to move, predict the source move. Choose the highest legal score, ties by lowest cell.",
+    "value": "Predict X's game points from the resulting board. X maximizes and O minimizes, ties by lowest cell.",
+    "q": "Predict X's points from the board and proposed move. Use the same move and tie rules as value."
+  },
+  "population": "Sorted Task 61 game graph and archived split. Draw 64 training decision boards without replacement for policy and all their legal moves for Q. Independently draw 64 eligible board-value inputs after excluding successors of withheld decisions. Use one completed source-vs-source game per payoff label, with X win/draw/loss worth +1/0/-1. The 780 test boards each receive equal weight.",
+  "data_seed": 2600, "fit_seeds": [2611, 2612, 2613, 2614],
+  "boards_per_training_draw": 64, "hidden_dim": 16, "epochs": 6, "learning_rate": 0.003,
+  "weight_decay": 0.01, "beta1": 0.9, "beta2": 0.999, "epsilon": 1e-8,
+  "muon_momentum": 0.95, "muon_steps": 5, "muon_epsilon": 1e-7,
+  "execution": "One CPU thread, float32, deterministic algorithms, one update per example, equal training passes and learning rate. Use both optimizers with the same seed and shuffle. Alternate which runs first across seeds. Warm both on one separate example first.",
+  "measurements": {
+    "losses": "Per pass, mean pre-update loss across training examples. Policy uses minus the natural logarithm of the observed legal move probability, floored at 1e-12 for reporting. The regressors use squared game points per example. Lower is closer to the label.",
+    "seconds": "Elapsed seconds for the public fit including setup and training, excluding label generation and evaluation.",
+    "matches": "Number of the equally weighted withheld boards on which the highest-ranked legal move matches the source.",
+    "win_draw_loss": "Win, draw and loss probabilities enumerated from the opening against the uniform opponent, averaged equally over X and O.",
+    "differences": "Within-seed Muon minus AdamW. Means and standard errors use the four paired fits. The standard error is the sample standard deviation divided by two. No games are sampled."
+  }
+}

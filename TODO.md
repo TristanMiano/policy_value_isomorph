@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 25.** Add configurable AdamW, a training rule that adapts the size of each weight update and controls weight shrinkage separately. The three trainers now run in PyTorch, a library for training neural networks. Their current update subtracts each example's loss gradient times a fixed learning rate. [Frozen moves and game outcomes compared across implementations](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
+**Next is Task 30**, the written statement of the project's research position. Checkpoint A is complete. [Review findings and public interfaces](CHECKPOINT_A.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -245,35 +245,43 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Verify forward behavior and small deterministic training fixtures within declared tolerances. Replay the Task 61 frozen inputs and checkpoints to compare legal choices, ties, value signs, and resulting matchup scores across backends.
   - Completed 2026-11-20. The public trainers and prediction functions now use the shared model. For each of the three network types, the highest-scoring legal move for the player to act matched on 22,600/22,600 archived player–board cases. The maximum absolute win, draw or loss probability difference over 900 matchup rows was 2.22 × 10⁻¹⁶. A separate four-example training comparison measured a largest absolute weight change between implementations of 5.55 × 10⁻¹⁷ across 170 weights and biases. All 82 tests passed with `pytest -q`, including saved-weight replay and continuation from old and new checkpoints. The installed training command and `python scripts/demo_tictactoe.py` also ran. [Implementation, definitions and quantitative comparisons](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks) · [Saved replay](experiments/tictactoe_pilot/torch_replay.json)
 
-- [ ] **25. Add configurable AdamW training through `torch.optim.AdamW`.**
+- [x] **25. Add configurable AdamW training through `torch.optim.AdamW`.**
   - Add device selection, dtype, seeding, and deterministic settings where available.
   - Expose optimizer parameters through existing CLI paths.
   - **Done when:** all three training paths run end to end and baseline commands are documented.
+  - Completed 2026-11-20. All three trainers accept the same device, precision, seed, repeatability and optimizer settings. Their adaptive updates and losses were checked against PyTorch's own AdamW on three passes for each network. The command-line training example exercised all three paths. All 85 tests and the tic-tac-toe demo ran. [Configuration](src/policy_value_isomorph/training_config.py) · [Numerical tests](tests/test_adamw.py) · [Baseline command](README.md#pytorch-first-migration-decision-task-22)
 
-- [ ] **26. Evaluate Muon only after AdamW parity is complete.**
+- [x] **26. Evaluate Muon only after AdamW parity is complete.**
   - Keep this optional and config-gated; do not fork the training stack.
   - Compare maintenance burden, convergence, wall time, and final behavior on a frozen small benchmark.
   - **Done when:** retain or reject Muon with a recorded result; rejection completes the task.
+  - Completed 2026-11-20. Compared AdamW with Muon on the hidden matrix in 24 CPU fits. Over four paired initializations, Muon changed average move agreement by +1.57, +2.08 and −2.88 percentage points for the move, board and board-and-move networks on 780 withheld boards. Retained the opt-in comparison. The report gives uncertainty, all losses, times and game outcomes. All 85 tests and the demo ran. [Benchmark, results and repeat command](experiments/optimizer_comparison/README.md)
 
-- [ ] **27. Migrate checkpoint/resume to PyTorch model and optimizer state.**
+- [x] **27. Migrate checkpoint/resume to PyTorch model and optimizer state.**
   - Version the artifact schema and provide a clear legacy policy.
   - Preserve latest/specified checkpoint behavior and telemetry continuation.
   - **Done when:** round-trip and interrupted-run tests pass for policy, `V`, and `Q`.
+  - Completed 2026-11-20. Version 2 saves native PyTorch model and optimizer state, example order, random state, dataset identity and elapsed time. The interrupted and uninterrupted AdamW fits produced identical final weights, optimizer memory and subsequent losses for each of the three networks using both latest and named files. Historical JSON continuation also ran. All 92 tests and the demo passed. [Checkpoint implementation](src/policy_value_isomorph/checkpointing.py) · [Continuation tests](tests/test_training_resume.py) · [Resume commands](REPRODUCIBILITY.md#continuing-a-training-run)
 
-- [ ] **28. Expand tests and smoke demos for the PyTorch stack.**
+- [x] **28. Expand tests and smoke demos for the PyTorch stack.**
   - Add CPU end-to-end tests for policy training, rollout labeling, `V`, `Q`, evaluation, and resume.
   - Verify telemetry paths on Windows and POSIX when porting the checkpoint stack.
   - Mark any GPU-only checks separately.
   - **Done when:** `pytest -q` and a documented smoke command pass from a fresh editable install.
+  - Completed 2026-11-20. A short end-to-end program freezes a trained player, generates rollout labels with it, fits and resumes both payoff networks, and plays both seats. Tests read all three trainers’ checkpoints and both log formats through native paths. With fresh editable installations, Windows passed 93 tests and skipped the GPU check on its CPU-only PyTorch build. Ubuntu passed all 94, including the separately marked NVIDIA GPU check. The short program and the three-board demo ran on both platforms. [Runnable check](scripts/smoke_torch_training.py) · [Cross-platform tests](tests/test_torch_smoke.py)
 
-- [ ] **29. Update dependencies, README, reproducibility docs, and examples for the PyTorch-first stack.**
+- [x] **29. Update dependencies, README, reproducibility docs, and examples for the PyTorch-first stack.**
   - Replace stale “no neural nets/no dependencies” language in `AGENTS.md`, `DESIGN.md`, `REFERENCES.md`, and package metadata.
   - Document optional dependency groups planned for control, sequence, LLM, and visualization work.
   - **Done when:** a new contributor can reproduce the current baseline without relying on historical Task 1 instructions.
+  - Completed 2026-11-20. Updated package metadata, contributor instructions, design, references, installation and reproduction examples. The guide identifies installed extras and future dependency groups separately. In a fresh Windows environment the documented editable installation, dependency check, train, evaluation, checkpoint/resume, short workflow and demo commands ran. The suite passed 93 tests with the one GPU-only check skipped. Ubuntu passed all 94 tests, including that check, during Task 28. [Quickstart](README.md#run-the-current-baseline) · [Reproduction guide and planned groups](REPRODUCIBILITY.md#dependencies-and-optional-groups)
 
 ## Checkpoint A — Backend and scope readiness
 
-- [ ] Audit Tasks 23–29, run the full suite, and freeze the package interfaces that the research phases may rely on. Confirm that the new philosophical stance does not require changing existing value-sign conventions before the formalism is written.
+- [x] Audit Tasks 23–29, run the full suite, and freeze the package interfaces that the research phases may rely on. Confirm that the new philosophical stance does not require changing existing value-sign conventions before the formalism is written.
+  - Completed 2026-11-20. Later experiments can rely on the documented calls for board representation, generating game-payoff labels, training and freezing players, selecting moves, evaluating games and continuing saved fits. Freezing now copies the player's weights. Connect Four now lets the caller identify whose win has a positive payoff, with X as the default. [Frozen interfaces and regression tests](CHECKPOINT_A.md)
+  - Retain +1 for a win, 0 for a draw and −1 for a loss from one named player's viewpoint. For the tic-tac-toe rule that wins immediately, blocks a win, takes the center, takes a corner or takes any legal move, in that order with lowest-cell ties, changing that viewpoint and reversing the direction of selection changed 0 of 4,520 decisions. Playing forward and working backward from terminal boards gave identical payoffs on all 16,167 legal board–move pairs for each viewpoint. A move's observed share of visits measures how often the mover chose it. The checkpoint provides an implementation check for the payoff calculation. [Exact calculation](tests/test_pilot_exact.py)
+  - Windows passed 96 software tests and skipped the one graphics-processor test on a central-processor-only installation. Ubuntu passed all 97, including that test. The three-board demo and short training workflow ran. Task 30 is next.
 
 ---
 

@@ -1,19 +1,41 @@
 # Reproducibility Guide
 
-This document records experiment settings for the current minimal pipeline and provides a stable way to rerun comparable results.
+The short baseline fits three tic-tac-toe networks using PyTorch, the library that computes predictions and changes weights during training. Use Python 3.10 or newer. The package version is 0.1.0. For a new checkout, create a virtual environment with `python -m venv .venv`. Activate it with `.venv\Scripts\Activate.ps1` in PowerShell or `source .venv/bin/activate` in a POSIX shell, then run the install and verification commands below.
 
-## Version and environment
+For the public training and evaluation calls, which player's payoff each score measures, and what is saved when freezing or resuming a model, see the [Checkpoint A interface reference](CHECKPOINT_A.md#what-later-experiments-can-rely-on).
 
-- Package version: `policy-value-isomorph==0.1.0`.
-- Python requirement: `>=3.10`.
-- Runtime dependencies: none beyond Python stdlib.
-- Dev dependency for tests: `pytest>=8.0`.
+## Dependencies and optional groups
 
-Source of truth for these constraints is `pyproject.toml`.
+An **extra** installs dependencies for an additional feature with `python -m pip install -e ".[name]"`. The base package requires PyTorch 2.0 or later. For a graphics-processor installation, select a compatible build of PyTorch for the installed driver. The source package runs on a central processor by default. [Package configuration](pyproject.toml)
+
+| Group | Availability and purpose |
+| --- | --- |
+| `dev` | Installs pytest to run the test suite and NumPy for the array-based experiment tests. |
+| `neural-control` | Installs NumPy for the existing tic-tac-toe neural training and visit-count experiments. |
+| `muon` | Requests PyTorch 2.9 or later for the optional matrix-update benchmark. |
+| Control | Planned for continuous-state environments and numerical integration once an experiment specifies them. |
+| Sequence | Planned for datasets and tools for time-series or token-sequence models. |
+| Large language models | Planned for tokenizers and pretrained text-model loading. |
+| Visualization | Planned for optional interactive displays. Current training and gameplay plots write scalable vector graphics using the standard library. |
+
+Only the first three rows are installable extras. Record the code revision, Python and PyTorch versions, device, numerical precision and seed alongside an experiment. The cross-platform workflow was exercised on Windows with Python 3.13 and PyTorch 2.8.0 (CPU), and on Ubuntu with Python 3.12 and PyTorch 2.11.0 (CPU and NVIDIA GPU). For deterministic NVIDIA training set the CUDA matrix-library workspace before starting Python, e.g. `$env:CUBLAS_WORKSPACE_CONFIG = ":4096:8"` in PowerShell or `export CUBLAS_WORKSPACE_CONFIG=:4096:8` in a POSIX shell.
 
 ## Determinism and seeds
 
-A **seed** is an integer used to repeat the same sequence of random choices. Use `seed` in `generate_off_policy_dataset` to reproduce positions from games in which both players draw uniformly among legal moves at every turn. For networks trained to copy moves or predict payoffs, use it in `train_policy_mlp` or `train_value_mlp`. The command-line programs accept `--seed` for data generation, training and evaluation. The baseline examples use `0`.
+A **seed** is an integer used to repeat the same sequence of random choices. Use `seed` in `generate_off_policy_dataset` to reproduce positions from games in which both players draw uniformly among legal moves at every turn. For networks trained to copy moves or predict payoffs, use it in `train_policy_mlp`, `train_value_mlp` or `train_q_mlp`. The command-line programs accept `--seed` for data generation, training and evaluation. The training and evaluation recipes use seed 13. The short end-to-end check uses seed 28.
+
+## Continuing a training run
+
+A **checkpoint** stores a fit at the end of a completed pass through its training examples. New files use PyTorch format version 2 at `<directory>/<policy|value|q>/step_000002.pt` (here, two completed passes). A temporary file is replaced atomically after the complete snapshot has been written. The snapshot contains the model parameters, the optimizer's accumulated updates, precision and training settings, the order of examples, random-generator states, and elapsed training time. A digest of the ordered inputs, targets and legal-move masks identifies the training batch.
+
+For example, these commands run two passes, then continue the same three fits to four total passes. The second command restores the original learning rate, optimizer, architecture and seed from each file. Each training log reports the newly completed steps and cumulative elapsed fit time.
+
+```sh
+policy-value-cli train --episodes 2 --optimizer adamw --learning-rate 0.001 --seed 13 --policy-epochs 2 --value-epochs 2 --q-epochs 2 --policy-checkpoint-dir artifacts/resume --value-checkpoint-dir artifacts/resume --q-checkpoint-dir artifacts/resume --telemetry-root-dir artifacts/logs
+policy-value-cli train --episodes 2 --policy-epochs 4 --value-epochs 4 --q-epochs 4 --policy-checkpoint-dir artifacts/resume --value-checkpoint-dir artifacts/resume --q-checkpoint-dir artifacts/resume --policy-resume-latest --value-resume-latest --q-resume-latest --telemetry-root-dir artifacts/logs
+```
+
+Each trainer also accepts an explicit file through its `--policy-resume-checkpoint`, `--value-resume-checkpoint` or `--q-resume-checkpoint` option. Latest selects the highest numbered complete file for that model and prefers the native file when both formats represent the same step. Historical JSON files supply the saved model and shuffle state for continuing the original stochastic gradient descent rule. Older JSON files that omit the previous example order follow the original fresh-index-list convention. JSON files contain no AdamW update history. The frozen pilot weights remain readable by the prediction functions. [Checkpoint implementation](src/policy_value_isomorph/checkpointing.py)
 
 ## Dataset splits
 
@@ -30,10 +52,13 @@ Run from repository root.
 ### 1) Install and verify
 
 ```bash
-pip install -e .[dev]
-pytest -q
+python -m pip install -e ".[dev]"
+python -m pytest -q
 python scripts/demo_tictactoe.py
+python scripts/smoke_torch_training.py
 ```
+
+The short training check fits and freezes a move-selecting network, plays games with copies of it to label the two payoff networks, resumes all three trainers after the first pass, and plays each finished model from both seats. It uses temporary storage by default. Add `--output-dir artifacts/smoke` to inspect a fresh run's checkpoint files and per-pass training logs. The default device is the CPU. Use `python -m pytest -m gpu -q` for the separately marked graphics-processor check.
 
 ### 2) Dataset summary runs
 
@@ -42,32 +67,16 @@ policy-value-cli data --mode on --episodes 120 --seed 0
 policy-value-cli data --mode off --episodes 120 --seed 0
 ```
 
-### 3) Baseline train run
+### 3) Train and evaluate the payoff baseline
 
-```bash
-policy-value-cli train \
-  --episodes 120 \
-  --policy-hidden 24 \
-  --value-hidden 24 \
-  --policy-epochs 60 \
-  --value-epochs 60 \
-  --learning-rate 0.03 \
-  --rollouts 1 \
-  --seed 0
+The reference player takes an immediate win, blocks an immediate loss, takes the center, takes a corner or takes any legal square, in that order with lowest-square ties. The training command fits a move network to its actions. It fits two payoff networks to games continued by that reference player, with +1 for X winning, 0 for a draw and −1 for X losing. Giving `--q-epochs` a positive value enables the network that scores a board and a move. `--episodes` counts games and `--rollouts` counts continuations per payoff label. The evaluation command fits a fresh move network and board network, compares moves with the reference player and plays both seat assignments.
+
+```sh
+policy-value-cli train --optimizer adamw --learning-rate 0.001 --seed 13 --device cpu --dtype float64 --deterministic --episodes 4 --policy-epochs 3 --value-epochs 3 --q-epochs 3 --rollouts 1
+policy-value-cli eval --optimizer adamw --learning-rate 0.001 --seed 13 --device cpu --dtype float64 --deterministic --episodes 4 --epochs 3 --games 2 --rollouts 1
 ```
 
-### 4) Baseline eval run
-
-```bash
-policy-value-cli eval \
-  --episodes 90 \
-  --policy-hidden 24 \
-  --value-hidden 24 \
-  --epochs 40 \
-  --games 30 \
-  --rollouts 1 \
-  --seed 0
-```
+The independent frozen-weight replay uses `python scripts/replay_torch_pilot.py`. The primary visit-count experiment has separate commands, archived settings and reports. [Visit-count training](NEURAL_TICTACTOE_CONTROL.md) · [Rare-board sampling](TICTACTOE_SAMPLING.md) · [Withheld-board experiments](TICTACTOE_CHOICE_TRAINING.md)
 
 ## Reporting template
 

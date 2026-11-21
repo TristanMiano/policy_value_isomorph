@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "policy-value-isomorph"
 version = "0.1.0"
-description = "Minimal tic-tac-toe policy-to-value reconstruction demo"
+description = "PyTorch training and rollout-based reconstruction of game policies"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["torch>=2.0"]
@@ -16,8 +16,10 @@ policy-value-cli = "policy_value_isomorph.cli:main"
 
 [project.optional-dependencies]
 neural-control = ["numpy>=1.24"]
+muon = ["torch>=2.9"]
 dev = [
   "pytest>=8.0",
+  "numpy>=1.24",
 ]
 
 [tool.setuptools]
@@ -29,3 +31,4 @@ where = ["src"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
+markers = ["gpu: requires a CUDA-enabled PyTorch installation and an available NVIDIA GPU"]

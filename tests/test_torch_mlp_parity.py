@@ -47,9 +47,10 @@ def test_archived_training_and_resume(name, tmp_path):
     assert resumed.model == uninterrupted.model
     assert resumed.training_log.losses == uninterrupted.training_log.losses[1:]
     # Original files saved the random generator state but started with a fresh index list.
-    legacy = json.loads((tmp_path / name / "step_000003.json").read_text())
-    legacy["model"] = expected["weights"]
-    del legacy["metadata"]["order"]
+    saved = torch.load(tmp_path / name / "step_000003.pt", weights_only=True)
+    legacy = dict(run_type=name, step=3, model=expected["weights"],
+                  metadata=dict(seed=options["seed"], learning_rate=options["learning_rate"],
+                                rng_state=repr(saved["metadata"]["rng_state"])))
     path = tmp_path / "legacy.json"
     path.write_text(json.dumps(legacy))
     continued = train(data, **{**options, "epochs": 4}, resume_checkpoint_path=path)

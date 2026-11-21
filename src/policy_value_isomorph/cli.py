@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 
+from .q_mlp import generate_q_targets, train_q_mlp
+from .training_config import TrainingConfig
 from .evaluation import action_agreement_rate, win_draw_loss_rate
 from .gameplay_plots import write_gameplay_eval_report_from_jsonl, write_gameplay_score_plot_from_jsonl
 from .policy import heuristic_policy_action
@@ -12,6 +14,28 @@ from .telemetry_io import append_gameplay_eval_jsonl, append_telemetry_csv, appe
 from .training_plots import write_loss_plots_from_csv
 from .value_mlp import train_value_mlp, value_mlp_predict
 from .crash_logging import CrashLoggerConfig, enable_crash_logging
+
+
+def _training_options(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--optimizer", choices=("sgd", "adamw"), default=None)
+    parser.add_argument("--device", default=None, help="cpu, cuda or a CUDA device such as cuda:0")
+    parser.add_argument("--dtype", choices=("float32", "float64"), default=None)
+    parser.add_argument("--deterministic", action=argparse.BooleanOptionalAction, default=None)
+    parser.add_argument("--weight-decay", type=float, default=None)
+    parser.add_argument("--beta1", type=float, default=None)
+    parser.add_argument("--beta2", type=float, default=None)
+    parser.add_argument("--epsilon", type=float, default=None)
+
+
+def _config(args: argparse.Namespace) -> TrainingConfig | None:
+    values = {k: getattr(args, k) for k in TrainingConfig.__dataclass_fields__ if getattr(args, k) is not None}
+    return TrainingConfig(**values) if values else None
+
+
+def _rate(args: argparse.Namespace, kind: str) -> float | None:
+    if getattr(args, f"{kind}_resume_checkpoint") or getattr(args, f"{kind}_resume_latest"):
+        return args.learning_rate
+    return args.learning_rate if args.learning_rate is not None else 0.03
 
 
 def _cmd_data(args: argparse.Namespace) -> None:
@@ -27,10 +51,11 @@ def _cmd_data(args: argparse.Namespace) -> None:
 
 def _cmd_train(args: argparse.Namespace) -> None:
     dataset = generate_on_policy_dataset(heuristic_policy_action, n_episodes=args.episodes)
+    config = _config(args)
     trained_policy = train_policy_mlp(
         dataset,
         hidden_dim=args.policy_hidden,
-        learning_rate=args.learning_rate,
+        learning_rate=_rate(args, "policy"), config=config,
         epochs=args.policy_epochs,
         seed=args.seed,
         eval_interval=args.eval_interval,
@@ -48,7 +73,7 @@ def _cmd_train(args: argparse.Namespace) -> None:
     trained_value = train_value_mlp(
         value_targets,
         hidden_dim=args.value_hidden,
-        learning_rate=args.learning_rate,
+        learning_rate=_rate(args, "value"), config=config,
         epochs=args.value_epochs,
         seed=args.seed,
         checkpoint_interval=args.value_checkpoint_interval,
@@ -57,9 +82,17 @@ def _cmd_train(args: argparse.Namespace) -> None:
         resume_latest=args.value_resume_latest,
     )
 
+    trained_q = None
+    if args.q_epochs:
+        targets = generate_q_targets(states, heuristic_policy_action, root_player=1, rollout_budgets=[args.rollouts])
+        trained_q = train_q_mlp(targets, hidden_dim=args.q_hidden, learning_rate=_rate(args, "q"),
+                                config=config, epochs=args.q_epochs, seed=args.seed,
+                                checkpoint_dir=args.q_checkpoint_dir, checkpoint_interval=args.q_checkpoint_interval,
+                                resume_checkpoint_path=args.q_resume_checkpoint, resume_latest=args.q_resume_latest)
+
     if args.telemetry_root_dir:
-        policy_run_dir = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="policy", seed=args.seed)
-        value_run_dir = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="value", seed=args.seed)
+        policy_run_dir = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="policy", seed=trained_policy.training_log.telemetry.seed)
+        value_run_dir = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="value", seed=trained_value.training_log.telemetry.seed)
 
         append_telemetry_csv(policy_run_dir / "training_telemetry.csv", trained_policy.training_log.telemetry)
         append_telemetry_jsonl(policy_run_dir / "training_telemetry.jsonl", trained_policy.training_log.telemetry)
@@ -69,15 +102,21 @@ def _cmd_train(args: argparse.Namespace) -> None:
         append_telemetry_csv(value_run_dir / "training_telemetry.csv", trained_value.training_log.telemetry)
         append_telemetry_jsonl(value_run_dir / "training_telemetry.jsonl", trained_value.training_log.telemetry)
 
-    print(f"policy_loss_initial={trained_policy.training_log.losses[0]:.6f}")
-    print(f"policy_loss_final={trained_policy.training_log.losses[-1]:.6f}")
-    print(f"value_loss_initial={trained_value.training_log.losses[0]:.6f}")
-    print(f"value_loss_final={trained_value.training_log.losses[-1]:.6f}")
+        if trained_q:
+            directory = telemetry_run_dir(args.telemetry_root_dir, game="tic_tac_toe", run_type="q", seed=trained_q.training_log.telemetry.seed)
+            append_telemetry_csv(directory / "training_telemetry.csv", trained_q.training_log.telemetry)
+            append_telemetry_jsonl(directory / "training_telemetry.jsonl", trained_q.training_log.telemetry)
+
+    for name, fit in (("policy", trained_policy), ("value", trained_value), ("q", trained_q)):
+        if fit and fit.training_log.losses:
+            print(f"{name}_loss_initial={fit.training_log.losses[0]:.6f}")
+            print(f"{name}_loss_final={fit.training_log.losses[-1]:.6f}")
 
 
 def _cmd_eval(args: argparse.Namespace) -> None:
     dataset = generate_on_policy_dataset(heuristic_policy_action, n_episodes=args.episodes)
-    trained_policy = train_policy_mlp(dataset, hidden_dim=args.policy_hidden, epochs=args.epochs, seed=args.seed)
+    trained_policy = train_policy_mlp(dataset, hidden_dim=args.policy_hidden, epochs=args.epochs, seed=args.seed,
+                                      learning_rate=args.learning_rate, config=_config(args))
 
     states = [sample.state for sample in dataset]
     agree = action_agreement_rate(
@@ -92,7 +131,8 @@ def _cmd_eval(args: argparse.Namespace) -> None:
     )
 
     value_targets = generate_value_targets(states, heuristic_policy_action, root_player=1, rollout_budgets=[args.rollouts])
-    trained_value = train_value_mlp(value_targets, hidden_dim=args.value_hidden, epochs=args.epochs, seed=args.seed)
+    trained_value = train_value_mlp(value_targets, hidden_dim=args.value_hidden, epochs=args.epochs, seed=args.seed,
+                                      learning_rate=args.learning_rate, config=_config(args))
     first_pred = value_mlp_predict(states[0], trained_value.model)
 
     print(f"action_agreement={agree:.6f}")
@@ -123,12 +163,19 @@ def build_parser() -> argparse.ArgumentParser:
     p_data.set_defaults(func=_cmd_data)
 
     p_train = sub.add_parser("train", help="Train policy and value MLPs and report losses.")
+    _training_options(p_train)
+    p_train.add_argument("--q-hidden", type=int, default=24)
+    p_train.add_argument("--q-epochs", type=int, default=0, help="Train the board-and-move network for this many passes")
+    p_train.add_argument("--q-checkpoint-dir")
+    p_train.add_argument("--q-checkpoint-interval", type=int, default=0)
+    p_train.add_argument("--q-resume-checkpoint")
+    p_train.add_argument("--q-resume-latest", action="store_true")
     p_train.add_argument("--episodes", type=int, default=120)
     p_train.add_argument("--policy-hidden", type=int, default=24)
     p_train.add_argument("--value-hidden", type=int, default=24)
     p_train.add_argument("--policy-epochs", type=int, default=60)
     p_train.add_argument("--value-epochs", type=int, default=60)
-    p_train.add_argument("--learning-rate", type=float, default=0.03)
+    p_train.add_argument("--learning-rate", type=float, default=None)
     p_train.add_argument("--rollouts", type=int, default=1)
     p_train.add_argument("--seed", type=int, default=0)
     p_train.add_argument("--eval-interval", type=int, default=0)
@@ -149,6 +196,8 @@ def build_parser() -> argparse.ArgumentParser:
     p_train.set_defaults(func=_cmd_train)
 
     p_eval = sub.add_parser("eval", help="Train a quick policy and report evaluation metrics.")
+    _training_options(p_eval)
+    p_eval.add_argument("--learning-rate", type=float, default=0.05)
     p_eval.add_argument("--episodes", type=int, default=90)
     p_eval.add_argument("--policy-hidden", type=int, default=24)
     p_eval.add_argument("--value-hidden", type=int, default=24)

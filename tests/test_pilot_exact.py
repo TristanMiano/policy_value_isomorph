@@ -5,6 +5,9 @@ import pytest
 from policy_value_isomorph.pilot_exact import decode_behavior, evaluate_source, play_match
 from policy_value_isomorph.pilot_protocol import GameGraph, State, minimax_action, minimax_value, uniform_policy
 from policy_value_isomorph.pilot_recovery import training_inputs
+from policy_value_isomorph.policy import heuristic_policy_action
+from policy_value_isomorph.q_mlp import estimate_q_pi
+from policy_value_isomorph.rollout_value import estimate_v_pi, recovered_action_from_v
 from policy_value_isomorph.tictactoe import state_from_rows
 
 
@@ -20,6 +23,21 @@ def test_minimax_source_recovers_every_fixed_tie_choice(graph: GameGraph) -> Non
     assert all(exact.best[s][0] == next(iter(law)) for s, law in policy.items())
     assert exact.best[State.initial()] == tuple(range(9))
     assert play_match(graph, policy, policy) == (0, 1, 0)
+
+
+def test_rollout_interfaces_under_both_payoff_perspectives(graph: GameGraph) -> None:
+    moves = {s: heuristic_policy_action(s) for s in graph.states if graph.children[s]}
+    exact = evaluate_source(graph, {s: {a: Fraction(1)} for s, a in moves.items()})
+    assert len(graph.states) == 5478 and len(moves) == 4520
+    assert sum(map(len, graph.children.values())) == 16167
+    for root in (1, -1):
+        for state in graph.states:
+            assert estimate_v_pi(state, moves.__getitem__, root) == root * exact.value[state]
+            for action, child in graph.children[state].items():
+                q = estimate_q_pi(state, action, moves.__getitem__, root_player=root)
+                assert q == root * exact.action_value[state][action] == root * exact.value[child]
+            if state in moves:
+                assert recovered_action_from_v(state, moves.__getitem__, root) == exact.best[state][0]
 
 
 def test_rational_continuation_and_full_game_seats(graph: GameGraph) -> None:

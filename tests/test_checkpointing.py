@@ -1,4 +1,4 @@
-import json
+import torch
 
 from policy_value_isomorph.policy import heuristic_policy_action
 from policy_value_isomorph.policy_mlp import train_policy_mlp
@@ -19,11 +19,12 @@ def test_periodic_checkpoints_for_policy_value_and_q(tmp_path):
     train_q_mlp(q_targets, epochs=4, seed=3, checkpoint_interval=2, checkpoint_dir=tmp_path)
 
     for run_type in ("policy", "value", "q"):
-        step2 = tmp_path / run_type / "step_000002.json"
-        step4 = tmp_path / run_type / "step_000004.json"
+        step2 = tmp_path / run_type / "step_000002.pt"
+        step4 = tmp_path / run_type / "step_000004.pt"
         assert step2.exists()
         assert step4.exists()
-        payload = json.loads(step4.read_text(encoding="utf-8"))
+        payload = torch.load(step4, weights_only=True)
+        assert payload["schema_version"] == 2
         assert payload["run_type"] == run_type
         assert payload["step"] == 4
         assert payload["metadata"]["epoch"] == 4
