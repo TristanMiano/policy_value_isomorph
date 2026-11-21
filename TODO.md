@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 58**, repeatable recovery runs.
+**Next is Task 59**, inspecting recovered choices.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -466,10 +466,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Retain within-state rank correlations and top-k overlap, aligned cardinal error, local geometry, return calibration, and counterfactual prediction scores. Each metric declares its population, invariances, access requirements, and units.
   - Completed 2026-11-20. Combined source-relative imitation and game outcomes with checkpoint errors, ranking, geometry, calibration and changed-choice measures. [Implementation](src/policy_value_isomorph/comparison_suite.py) · [Checks](tests/test_comparison_suite.py). Full Windows suite: 121 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **58. Build the repeated-recovery experiment orchestrator.**
+- [x] **58. Build the repeated-recovery experiment orchestrator.**
   - Factor seeds for data, rollouts, initialization, optimizer order, architecture, and candidate generation.
   - Store manifests and pairwise/barycenter comparison tables.
   - **Done when:** a small matrix resumes safely and detects accidental seed reuse.
+  - Completed 2026-11-20. Stored independently factored seeds, resumable run manifests and pairwise and mean-distribution comparisons. [Implementation](src/policy_value_isomorph/recovery_matrix.py) · [Checks](tests/test_recovery_matrix.py). Full Windows suite: 122 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **59. Build the first `ValueAtlas` reporting API.**
   - Emit per-context action tables, value gaps, uncertainty across recoveries, local state/action neighborhoods, and source-policy comparison.
