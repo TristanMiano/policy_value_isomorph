@@ -1,0 +1,15 @@
+# Exploring a thesis and preserving its aim
+
+These protocols apply to study design, mathematical arguments, code, literature searches, reports and handoffs. **Exploration** develops plausible explanations and ways to distinguish them. **Consolidation** fixes assumptions and checks a selected claim by proof or a specified measurement. Use exploration for open interpretations and consolidation for a named claim when its assumptions and evidence are ready. The two can alternate within the roadmap. The project's rules for quantitative comparisons and first-use definitions apply in both. [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
+
+## Exploration
+
+Record the motivating question, a proposed relationship that could explain it, and a concrete case that can distinguish readings. For example, scores might explain choices, an ordering might remain stable when moves disappear, and one can query the same board with its first choice removed. Give each open reading an observation, calculation or proof that would sharpen it. Keep a short list in the claim ledger with scope, evidence and next action.
+
+When a case exposes a weakness, retain the example and the assumption it challenges. Try a neighboring explanation and a broader reformulation. When a case works, vary a consequential assumption and identify where the result changes. Useful variations include adding a missing observation, changing the representation or horizon, taking a limiting case and checking the closest established result. End at the requested checkpoint, an explicit budget, a documented obstruction to the whole family, or when further variants repeat the same distinctions. Carry the unresolved candidates forward. During consolidation, give a verification procedure for a theorem and a numerical comparison for an empirical question. [Adapted from Exploration Mode](https://github.com/TristanMiano/value_logic/blob/77174ec6a36f56efb9b8376afa8d8368e7c4c893/v4/EXPLORATION_MODE.md)
+
+## Preserving the research aim
+
+Start from what the author's proposed relationship would explain. Compare readings by how much of that aim they preserve and what evidence could support them. Pursue the most faithful reading with a credible research path. Record any change in assumptions, which cases it loses and what the narrower result still explains. At each instruction to look for an obstruction, also look for a construction and its scope. Apply the same controls and standards to both. Record measured differences with their uncertainty and give informative conditional results. Conclusions follow the evidence without a quota for either direction.
+
+At the end of a task, self-review the actual choices. Name a construction and its limiting case, a plausible bias in the framing, how it was addressed, and the obligation that remains. Distinguish an illustrative example, a proof over a class, and measured prevalence in a population. A later reviewer should be able to trace each back to its evidence. [Adapted from Aim Balance](https://github.com/TristanMiano/value_logic/blob/77174ec6a36f56efb9b8376afa8d8368e7c4c893/v4/AIM_BALANCE.md)

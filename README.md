@@ -8,7 +8,7 @@ This repo is meant to be a concrete, economical implementation of a claim inspir
 
 The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
 
-Two protocols apply throughout this project. Keep quantitative questions and answers numerical, including magnitudes and differences. Never turn a measurable comparison into a yes/no verdict. Define every new term before using it in a design, report, progress update, or chat summary. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
+The research protocols keep quantitative questions numerical, require definitions at first use, preserve plausible readings of the thesis and give constructive examples and limitations comparable scrutiny. [Research stance](RESEARCH_STANCE.md) · [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
 
 ---
 

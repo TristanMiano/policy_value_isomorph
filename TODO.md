@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 30**, the written statement of the project's research position. Checkpoint A is complete. [Review findings and public interfaces](CHECKPOINT_A.md)
+**Next is Task 31**, the record of research claims and their evidence.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -140,7 +140,7 @@ For temperature sampling use `p(a|s) ∝ μ(a|s) exp(S(s,a)/T)` on legal moves, 
 
 ## Work and evidence protocol
 
-Two rules govern every experiment, saved comparison, report, progress update, and chat summary. Keep each measurable question quantitative from design through reporting. Give counts, rates, magnitudes, differences and applicable uncertainty without adding a success cutoff or a yes/no research verdict. Define every new term at first use in each standalone communication, including every named player's move rule and how each measure is calculated. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
+Keep each measurable question quantitative from design through reporting. Give counts, magnitudes, differences and applicable uncertainty, and define terms before use. Explore several readings of an open thesis. Pair the search for constructions with the search for limitations, and record a self-review of what the evidence establishes. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols) · [How to apply the two adapted protocols](RESEARCH_PROTOCOLS.md)
 
 For each numbered task:
 
@@ -287,10 +287,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 # Phase I — Freeze the research constitution and literature boundary
 
-- [ ] **30. Create `RESEARCH_STANCE.md`.**
+- [x] **30. Create `RESEARCH_STANCE.md`.**
   - State the value-first position, semantic ladder, bounded-interval affine collapse, loss/value duality, exact Boolean/readout recovery from real-valued computation, four levels of value form, and the distinction between existence, usefulness, identifiability, and mechanism.
   - Cross-link the companion `value_logic` project without making it a code dependency.
   - **Done when:** the document makes clear that reward nonuniqueness narrows a claim rather than refuting the base representation thesis.
+  - Completed 2026-11-20. Defined the four interpretations of a score, the bounded-interval change of coordinates and the scope of behavioral existence. Adapted exploration and aim preservation for this project and linked the mandatory protocols from the contributor guide and README. [Research stance](RESEARCH_STANCE.md) · [Protocols](RESEARCH_PROTOCOLS.md)
 
 - [ ] **31. Create `CLAIM_LEDGER.md`.**
   - Give PV-H1–PV-H7 stable identifiers, scoped statements, dependencies and project impact. For mathematical claims state the proof obligation or counterexample. For empirical claims specify the measurements, their expected direction and magnitude, and how the estimates and their uncertainty bear on the claim.
