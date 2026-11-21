@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 39**, actions with a distance.
+**Next is Task 40**, sharing scores across histories.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -353,9 +353,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** softmax recovery and invariance properties are proved and tested.
   - Completed 2026-11-20. Derived the score family for a fixed temperature and base measure, including zero support and a finite-score approximation with explicit probability error. [Statement and checks](formalism/38_random_choices.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **39. Extend exact representation to deterministic metric-action policies.**
+- [x] **39. Extend exact representation to deterministic metric-action policies.**
   - Use a score equal to negative distance or an energy equal to positive distance and state assumptions for unique decoding, measurability, and candidate restriction.
   - **Done when:** finite-dimensional continuous-action examples and edge cases are explicit.
+  - Completed 2026-11-20. Proved unique distance decoding and quantified the error from restricting the candidate set, including absent maxima and measurability conditions. [Statement and checks](formalism/39_metric_actions.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **40. Prove action-value to state-value lifting.**
   - Show how `Q(h,a)` can be represented as state value on an action-augmented history or successor object.
