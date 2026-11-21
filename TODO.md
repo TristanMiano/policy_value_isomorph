@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 37**, the finite deterministic representation theorem. Checkpoint B is complete. [Review, proof plan and minimum experiments](CHECKPOINT_B.md)
+**Next is Task 38**, discrete random choices.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -341,10 +341,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 # Phase II — Prove the value-form and equivalence results
 
-- [ ] **37. Prove finite deterministic policy-to-score representation.**
+- [x] **37. Prove finite deterministic policy-to-score representation.**
   - For finite feasible action sets and deterministic `P`, construct an exact real action-score representation with fixed tie-breaking.
   - Characterize the encoder image and inverse decoder.
   - **Done when:** theorem, proof, examples, and executable finite tests agree.
+  - Completed 2026-11-20. Characterized the canonical indicator tables, their inverse and every score tie that preserves a chosen move. [Statement and checks](formalism/37_finite_choices.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **38. Prove discrete stochastic policy-to-log-score representation.**
   - Represent a stochastic policy by logits/energies up to state-dependent additive constants; handle zero support with extended reals or a declared approximation.
