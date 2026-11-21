@@ -1,5 +1,7 @@
 # Policy Reconstruction versus Expected-Utility Factorization
 
+For common definitions of histories, scores and whole-play utility, see the [notation and recovery contract](../formalism/00_notation.md).
+
 ## The question
 
 A **policy** `P` is the original rule for choosing an action or assigning probabilities to the available actions. A **score** is a number attached to an action or its consequences. A **decoder** turns scores into actions or action probabilities. The project asks how closely a score and decoder together can reproduce a policy's choices.

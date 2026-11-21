@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 34**, the shared notation and recovery contract.
+**Next is Task 35**, the numerical comparisons for imitation, game performance and interpretation.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -40,7 +40,7 @@ The first level should exist very broadly. The later levels are stronger empiric
 
 ## Core research objects
 
-Use the following general form unless a task deliberately narrows it:
+The [notation and recovery contract](formalism/00_notation.md) defines these symbols and the record each experiment returns. Later formal files link to that reference and state any local specialization.
 
 ```text
 h in H                     state, context, or full history
@@ -312,10 +312,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** each load-bearing concept in PV-H1–PV-H7 has a verified source or an explicit original-proof obligation.
   - Completed 2026-11-20. Audited primary work on decisions, imitation, reward ambiguity, explanation, neural representations and logic. Each of the seven claim families has a source boundary and a project-specific proof or measurement to pursue. [Annotated literature audit](REFERENCES.md)
 
-- [ ] **34. Freeze notation and the recovery contract.**
+- [x] **34. Freeze notation and the recovery contract.**
   - Create `formalism/00_notation.md` defining histories, candidate sets, policies, value forms, decoders, recovery procedures, equivalence, normalization, and `ValueArtifact`.
   - Include discrete, continuous, and sequence examples.
   - **Done when:** later formal files link to one authoritative notation source.
+  - Completed 2026-11-20. Fixed terminology for histories, measures, decoders, menu-relative equivalence and utility. Specified the recovery record and worked through discrete, continuous and sequence inputs. Linked the existing formal notes to the authoritative notation. [Notation and recovery contract](formalism/00_notation.md)
 
 - [ ] **35. Define numerical comparisons for imitation, playing strength and interpretability.**
   - In `docs/evaluation_contract.md` define three decisions in advance. For **fidelity**, use held-out action agreement for deterministic sources and mean total variation distance between legal action distributions for stochastic sources. Also report ties, action gaps, cross-entropy and support violations where applicable.
