@@ -1,0 +1,2646 @@
+{
+  "fixture": "tic-tac-toe-pilot-v1",
+  "source_definitions": {
+    "heuristic": "The priority-rule player wins immediately if possible, otherwise blocks an immediate win, takes the center, takes a corner, or takes any legal cell, in that order. Among eligible cells at the first applicable priority it picks the lowest number.",
+    "minimax": "The perfect-play player considers all legal continuations, assumes the opponent always makes its best reply, and picks the lowest-numbered move with the best guaranteed payoff.",
+    "miss_win": "The missed-win player takes the lowest-numbered move that does not win immediately whenever an immediate win and such an alternative both exist. In all other positions it follows the win/block/center/corner priority rule.",
+    "trained_net": "The trained neural player is a network fitted to the priority-rule player's choices on 528 distinct training boards. Its ten inputs encode the nine cells and the player to move. Sixteen intermediate units produce nine move scores. The saved weights are fixed and the player chooses the highest-scoring legal cell, breaking ties by lowest cell number.",
+    "stochastic_heuristic": "The randomized priority player independently follows the win/block/center/corner priority rule with probability 3/4 at each turn and otherwise chooses uniformly among legal cells. The random draw can also select the priority move.",
+    "optimal_net": "Frozen neural player choosing the lowest cell with the best outcome guaranteed against perfect replies on all 4,520 decision boards."
+  },
+  "opponent_definitions": {
+    "uniform": "Choose among legal cells with equal probability on every turn.",
+    "random_net": "Five untrained neural players of the same shape as the trained source. A seed is an integer that reproduces a random initialization. Each seed fixes one set of weights. Each network consistently plays its highest-scoring legal cell, breaking ties by lowest cell number.",
+    "heuristic": "Use the priority-rule player defined above as the opponent.",
+    "minimax": "Use the perfect-play player defined above as the opponent."
+  },
+  "method_definitions": {
+    "pilot": {
+      "source": "Play the original fixed rule for this row's source.",
+      "behavior_exact": "Use the source's own move probabilities as the reference. Taking their logarithms as scores and converting them back to probabilities reproduces the original distribution, including zero probabilities.",
+      "return_exact": "For each legal move calculate the average final payoff when both players then follow the source. Choose the best value for the mover, with the lowest-numbered cell breaking exact ties.",
+      "policy_mlp": "A newly fitted network learns directly from source moves. For a source with a fixed move on each board it chooses the highest-scoring legal move. For a randomized source it converts each legal score to its exponential and divides by the sum of those exponentials to get move probabilities.",
+      "value_mlp": "A newly fitted network called V predicts the final payoff from a board. Score each move using its resulting board and choose the best score for the mover.",
+      "q_mlp": "A newly fitted network called Q predicts the final payoff for a board and a proposed move together. Choose the best legal move score for the mover."
+    },
+    "visit_networks": {
+      "source": "The frozen optimal neural player, optimal_net.",
+      "value_mlp": "Score the resulting board with the fitted frequency of the move reaching it.",
+      "q_mlp": "Score the board and candidate move together with their fitted move frequency.",
+      "direct": "Choose the legal move with the highest fitted frequency, breaking ties by lowest cell number.",
+      "VNM": "Von Neumann\u2013Morgenstern selection chooses the best expected whole-game utility after each candidate. Count fitted frequencies positively on X moves and negatively on O moves. X maximizes and O minimizes, with lowest-cell ties.",
+      "vnm_terminal": "VNM with the signed fitted frequency of the last move of the game.",
+      "vnm_sum": "VNM with the sum of signed fitted frequencies from the candidate to game end.",
+      "vnm_decay": "VNM with the same sum, weighting the candidate by one and each next move by 0.9 times the previous weight.",
+      "_copies": "Both players use the fitted network's direct rule to complete each trial game. Without this suffix both use the frozen original player."
+    }
+  },
+  "table_fields": {
+    "held_out": "One equal vote per withheld decision board for imitation. Game probabilities enumerate full games from the empty opening, with half weight per seat and one quarter per opponent family.",
+    "agreement": "Fraction of boards reproducing the fixed original move. Null for a randomized source.",
+    "tv": "Mean total variation distance, the minimum move probability mass that must be reassigned at a board to reproduce the source. Smaller means closer.",
+    "win, draw, loss, points": "Probabilities of each result and mean points per game, with a win worth +1 and a loss -1. Delta subtracts the original player's result on the same opponent panel.",
+    "artifact_id": "Content identifier of the score reference and its selection rules. The method field is the original archive key.",
+    "VNM maximum": "Choose the best expected utility of a complete play for the mover. Continuation names both players used after forcing a move. Null rollout count denotes exact enumeration.",
+    "training": "Final mean squared error per legal training candidate, in squared move-frequency units, evaluated at the saved training pass. Seed identifies the fit.",
+    "paired_fits": "Mean across three equally weighted fits. Change subtracts direct selection using the same weights. Standard error is the sample standard deviation of the three paired changes divided by the square root of three, all in fractions. Each selection rule and continuation is defined on its held_out row.",
+    "example_predictions": "Per-cell predictions multiplied by the observed visits to the withheld board, in the listed legal cell order. Observed gives actual source counts at the same denominator.",
+    "largest_difference": "Maximum absolute replay minus archived difference across the listed checks, in each field's own units.",
+    "interfaces": "Small software checks. Each restricted menu records the cells offered and the answer of the known perfect-reply rule. Each draw-value pair gives the game points assigned to a draw and the number of matching choices on one randomized priority opening. Alignment error compares score differences from cell zero. The two opening fits report mean negative natural log probability per source move, weighted by its true probability; pair distance is the move probability mass reassigned between the two fits."
+  },
+  "pilot": {
+    "fidelity_rows_checked": 240,
+    "game_rows_checked": 900,
+    "largest_difference": {
+      "calibration_prediction": 2.220446049250313e-16,
+      "calibration_target": 1.1102230246251565e-16,
+      "calibration_mse": 1.1102230246251565e-16,
+      "boards": 0.0,
+      "positive_weight_boards": 0.0,
+      "weight_sum": 0.0,
+      "agreement": 1.1102230246251565e-16,
+      "tv": 1.1102230246251565e-16,
+      "win": 2.220446049250313e-16,
+      "draw": 2.220446049250313e-16,
+      "loss": 2.220446049250313e-16,
+      "points": 2.220446049250313e-16,
+      "delta_win": 2.220446049250313e-16,
+      "delta_draw": 2.220446049250313e-16,
+      "delta_loss": 2.220446049250313e-16,
+      "delta_points": 2.220446049250313e-16
+    },
+    "held_out": [
+      {
+        "source": "minimax",
+        "method": "source",
+        "artifact_id": "755a0220ee4af9a244bbd62a60ab01c606138c693570f5708897f30a07c52dc1",
+        "decoder": "source policy",
+        "continuation": null,
+        "deployment_access": "original player",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.4251426091269841,
+        "draw": 0.5748573908730159,
+        "loss": 0.0,
+        "points": 0.4251426091269841,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "minimax",
+        "method": "behavior_exact",
+        "artifact_id": "547bb5d229495c64654f7ef1b63bb2f8cdd9ad9445af3411a49b0aefdfca791e",
+        "decoder": "temperature sampling",
+        "continuation": null,
+        "deployment_access": "complete lookup",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.4251426091269841,
+        "draw": 0.5748573908730159,
+        "loss": 0.0,
+        "points": 0.4251426091269841,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "minimax",
+        "method": "return_exact",
+        "artifact_id": "f7863354cffa0d407482d18e0e9fb9a7673ae0d990e01d997b9526d50d903851",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "minimax",
+          "second_seat": "minimax",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "rules and source for both seats",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.4251426091269841,
+        "draw": 0.5748573908730159,
+        "loss": 0.0,
+        "points": 0.4251426091269841,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "minimax",
+        "method": "policy_mlp",
+        "artifact_id": "9db3ce14d8e87b52fcb08712dd18f9438fecb2ce2ebcbe580c5962a98e7ddffa",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.7653846153846153,
+        "tv": 0.23461538461538461,
+        "win": 0.4386656746031746,
+        "draw": 0.1728629298941799,
+        "loss": 0.3884713955026455,
+        "points": 0.05019427910052915,
+        "delta_win": 0.013523065476190532,
+        "delta_draw": -0.401994460978836,
+        "delta_loss": 0.3884713955026455,
+        "delta_points": -0.37494833002645495
+      },
+      {
+        "source": "minimax",
+        "method": "value_mlp",
+        "artifact_id": "cdf8656322032371b813675984b7dfca64c3fb769cb6a27003889ded6fd6217f",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "minimax",
+          "second_seat": "minimax",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.5692307692307692,
+        "tv": 0.4307692307692308,
+        "win": 0.4506634424603175,
+        "draw": 0.2838603670634921,
+        "loss": 0.2654761904761905,
+        "points": 0.185187251984127,
+        "delta_win": 0.02552083333333338,
+        "delta_draw": -0.2909970238095238,
+        "delta_loss": 0.2654761904761905,
+        "delta_points": -0.2399553571428571
+      },
+      {
+        "source": "minimax",
+        "method": "q_mlp",
+        "artifact_id": "35ca161a2fedfde94e8e7a59c820b34ea5e04a7fe7aaef299ab59a18b06a3e08",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "minimax",
+          "second_seat": "minimax",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.4935897435897436,
+        "tv": 0.5064102564102564,
+        "win": 0.3889012896825397,
+        "draw": 0.007721560846560846,
+        "loss": 0.6033771494708995,
+        "points": -0.2144758597883598,
+        "delta_win": -0.03624131944444442,
+        "delta_draw": -0.5671358300264551,
+        "delta_loss": 0.6033771494708995,
+        "delta_points": -0.6396184689153439
+      },
+      {
+        "source": "miss_win",
+        "method": "source",
+        "artifact_id": "5cff678a573f5f751a8979b1415bfa77334fbe1725c55e50b72da37c980e888e",
+        "decoder": "source policy",
+        "continuation": null,
+        "deployment_access": "original player",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.18678695436507936,
+        "draw": 0.6825541501322752,
+        "loss": 0.1306588955026455,
+        "points": 0.056128058862433855,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "miss_win",
+        "method": "behavior_exact",
+        "artifact_id": "1e2ae233c7431c26dbc401733c97e91732882a10f7a869a0bf271e3c7c9711d6",
+        "decoder": "temperature sampling",
+        "continuation": null,
+        "deployment_access": "complete lookup",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.18678695436507936,
+        "draw": 0.6825541501322752,
+        "loss": 0.1306588955026455,
+        "points": 0.056128058862433855,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "miss_win",
+        "method": "return_exact",
+        "artifact_id": "f5abbff78d34c30eecd737c03605fd2b38733d5e05ad5c92bcea6a2220a17c11",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "miss_win",
+          "second_seat": "miss_win",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "rules and source for both seats",
+        "boards": 780,
+        "agreement": 0.38461538461538464,
+        "tv": 0.6153846153846154,
+        "win": 0.3238250248015873,
+        "draw": 0.04705894510582011,
+        "loss": 0.6291160300925926,
+        "points": -0.30529100529100534,
+        "delta_win": 0.13703807043650795,
+        "delta_draw": -0.6354952050264551,
+        "delta_loss": 0.4984571345899471,
+        "delta_points": -0.36141906415343916
+      },
+      {
+        "source": "miss_win",
+        "method": "policy_mlp",
+        "artifact_id": "15dd51b59665aa47a4fa2c8dccca6d204bdf728d3802f9f861f13792d1105dd3",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.7076923076923077,
+        "tv": 0.2923076923076923,
+        "win": 0.14790013227513227,
+        "draw": 0.49117063492063495,
+        "loss": 0.3609292328042328,
+        "points": -0.2130291005291005,
+        "delta_win": -0.03888682208994709,
+        "delta_draw": -0.1913835152116402,
+        "delta_loss": 0.23027033730158727,
+        "delta_points": -0.2691571593915344
+      },
+      {
+        "source": "miss_win",
+        "method": "value_mlp",
+        "artifact_id": "ace1705b0258df13580ccee284729770d1bcfe1589a39d48311705f8be1b7bb9",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "miss_win",
+          "second_seat": "miss_win",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.3384615384615385,
+        "tv": 0.6615384615384615,
+        "win": 0.29744233630952377,
+        "draw": 0.03505187665343915,
+        "loss": 0.6675057870370371,
+        "points": -0.37006345072751334,
+        "delta_win": 0.11065538194444441,
+        "delta_draw": -0.647502273478836,
+        "delta_loss": 0.5368468915343916,
+        "delta_points": -0.4261915095899472
+      },
+      {
+        "source": "miss_win",
+        "method": "q_mlp",
+        "artifact_id": "5ba33a00ead079b812be0bae623ff9ee0d1c7f5462d63335152282e435f990f4",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "miss_win",
+          "second_seat": "miss_win",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.3384615384615385,
+        "tv": 0.6615384615384615,
+        "win": 0.18310701884920635,
+        "draw": 0.11744688326719577,
+        "loss": 0.6994460978835979,
+        "points": -0.5163390790343916,
+        "delta_win": -0.0036799355158730063,
+        "delta_draw": -0.5651072668650794,
+        "delta_loss": 0.5687872023809524,
+        "delta_points": -0.5724671378968255
+      },
+      {
+        "source": "heuristic",
+        "method": "source",
+        "artifact_id": "6449036dd7edf581380f5a0bbc797306ef1069c92587643d6d6ea9a4b73004cf",
+        "decoder": "source policy",
+        "continuation": null,
+        "deployment_access": "original player",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.45205646494708995,
+        "draw": 0.5463562334656085,
+        "loss": 0.001587301587301587,
+        "points": 0.45046916335978837,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "heuristic",
+        "method": "behavior_exact",
+        "artifact_id": "f14a6616d0ef3102180be4cc8ade2fc2ea69b0ab98bd349489ec91df337e12ae",
+        "decoder": "temperature sampling",
+        "continuation": null,
+        "deployment_access": "complete lookup",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.45205646494708995,
+        "draw": 0.5463562334656085,
+        "loss": 0.001587301587301587,
+        "points": 0.45046916335978837,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "heuristic",
+        "method": "return_exact",
+        "artifact_id": "ebdb29ccb69638a4ccc296b03cee37542f4837b80bf9e23e4f2005af30220eb7",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "heuristic",
+          "second_seat": "heuristic",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "rules and source for both seats",
+        "boards": 780,
+        "agreement": 0.791025641025641,
+        "tv": 0.20897435897435898,
+        "win": 0.5199156746031746,
+        "draw": 0.33669808201058204,
+        "loss": 0.1433862433862434,
+        "points": 0.37652943121693117,
+        "delta_win": 0.06785920965608461,
+        "delta_draw": -0.20965815145502642,
+        "delta_loss": 0.1417989417989418,
+        "delta_points": -0.0739397321428572
+      },
+      {
+        "source": "heuristic",
+        "method": "policy_mlp",
+        "artifact_id": "2403cb486f0092ca862c72878198cba70cfdee8a16d98e3bd29181b6654e65a2",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.8538461538461538,
+        "tv": 0.14615384615384616,
+        "win": 0.4687634341931217,
+        "draw": 0.5275431960978836,
+        "loss": 0.003693369708994708,
+        "points": 0.465070064484127,
+        "delta_win": 0.016706969246031766,
+        "delta_draw": -0.018813037367724883,
+        "delta_loss": 0.002106068121693121,
+        "delta_points": 0.01460090112433865
+      },
+      {
+        "source": "heuristic",
+        "method": "value_mlp",
+        "artifact_id": "33dd4ef0cbb1d8208402956547bdf9a837e9b3d2584547ceb46834166b50962e",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "heuristic",
+          "second_seat": "heuristic",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.6269230769230769,
+        "tv": 0.3730769230769231,
+        "win": 0.4273726851851852,
+        "draw": 0.27977017195767195,
+        "loss": 0.29285714285714287,
+        "points": 0.1345155423280423,
+        "delta_win": -0.02468377976190478,
+        "delta_draw": -0.2665860615079365,
+        "delta_loss": 0.2912698412698413,
+        "delta_points": -0.31595362103174607
+      },
+      {
+        "source": "heuristic",
+        "method": "q_mlp",
+        "artifact_id": "dd68083d74e97a49d0ba48bc8045434cd041446a0d80a3cbb89be2e800ba0af7",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "heuristic",
+          "second_seat": "heuristic",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.48205128205128206,
+        "tv": 0.517948717948718,
+        "win": 0.33682622354497355,
+        "draw": 0.03951822916666667,
+        "loss": 0.6236555472883598,
+        "points": -0.28682932374338627,
+        "delta_win": -0.1152302414021164,
+        "delta_draw": -0.5068380042989418,
+        "delta_loss": 0.6220682457010582,
+        "delta_points": -0.7372984871031747
+      },
+      {
+        "source": "trained_net",
+        "method": "source",
+        "artifact_id": "64bddf500dada1ba31f5b4b17cf7bb946b3ed64d785d27062a7a2506d49a661c",
+        "decoder": "source policy",
+        "continuation": null,
+        "deployment_access": "original player",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.3888919890873016,
+        "draw": 0.4383081183862434,
+        "loss": 0.17279989252645503,
+        "points": 0.21609209656084657,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "trained_net",
+        "method": "behavior_exact",
+        "artifact_id": "0ca14304ee7a94b1fc6ee9a2baacf0a6af4489ee4ebbc12c2a2a8c5b36fe42f5",
+        "decoder": "temperature sampling",
+        "continuation": null,
+        "deployment_access": "complete lookup",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.3888919890873016,
+        "draw": 0.4383081183862434,
+        "loss": 0.17279989252645503,
+        "points": 0.21609209656084657,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "trained_net",
+        "method": "return_exact",
+        "artifact_id": "f298c076f5335d4f9c83688c7092684ded60703ddf1f8f715ee53d4272920b1b",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "trained_net",
+          "second_seat": "trained_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "rules and source for both seats",
+        "boards": 780,
+        "agreement": 0.5692307692307692,
+        "tv": 0.4307692307692308,
+        "win": 0.4030784970238095,
+        "draw": 0.042468584656084656,
+        "loss": 0.5544529183201059,
+        "points": -0.1513744212962964,
+        "delta_win": 0.014186507936507886,
+        "delta_draw": -0.39583953373015873,
+        "delta_loss": 0.3816530257936509,
+        "delta_points": -0.367466517857143
+      },
+      {
+        "source": "trained_net",
+        "method": "policy_mlp",
+        "artifact_id": "9fce78e667171036d752b040e858d68197dd07cb5f31e3843551b6c5194fc568",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.908974358974359,
+        "tv": 0.09102564102564102,
+        "win": 0.3855654761904762,
+        "draw": 0.3159422536375661,
+        "loss": 0.2984922701719577,
+        "points": 0.08707320601851853,
+        "delta_win": -0.0033265128968253954,
+        "delta_draw": -0.12236586474867728,
+        "delta_loss": 0.12569237764550265,
+        "delta_points": -0.12901889054232804
+      },
+      {
+        "source": "trained_net",
+        "method": "value_mlp",
+        "artifact_id": "3615c3ccc6aec40479ec7a6d76500efce117c5f013ff61aec0f7d999bd68f924",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "trained_net",
+          "second_seat": "trained_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.5051282051282051,
+        "tv": 0.4948717948717949,
+        "win": 0.3667824074074074,
+        "draw": 0.07868096891534392,
+        "loss": 0.5545366236772487,
+        "points": -0.18775421626984123,
+        "delta_win": -0.022109581679894186,
+        "delta_draw": -0.35962714947089947,
+        "delta_loss": 0.38173673115079365,
+        "delta_points": -0.40384631283068784
+      },
+      {
+        "source": "trained_net",
+        "method": "q_mlp",
+        "artifact_id": "85881aa95fe566c013054028d4e2d7b83bbd7b968c2bb1cf3f5673b69725d20e",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "trained_net",
+          "second_seat": "trained_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.5307692307692308,
+        "tv": 0.46923076923076923,
+        "win": 0.33725611772486774,
+        "draw": 0.3249255952380953,
+        "loss": 0.33781828703703703,
+        "points": -0.0005621693121692917,
+        "delta_win": -0.05163587136243386,
+        "delta_draw": -0.11338252314814812,
+        "delta_loss": 0.165018394510582,
+        "delta_points": -0.21665426587301587
+      },
+      {
+        "source": "stochastic_heuristic",
+        "method": "source",
+        "artifact_id": "2a8d67689b0b8ee5316262f385a8d285e6704e9a465c99070fdc275592bdb542",
+        "decoder": "source policy",
+        "continuation": null,
+        "deployment_access": "original player",
+        "boards": 780,
+        "agreement": null,
+        "tv": 0.0,
+        "win": 0.41670383675388556,
+        "draw": 0.3738858565073164,
+        "loss": 0.20941030673879796,
+        "points": 0.2072935300150876,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "stochastic_heuristic",
+        "method": "behavior_exact",
+        "artifact_id": "a1661c9ef52c01d5812b86b3bc4d1b095e4ee90841fecad0e3a50a34906df691",
+        "decoder": "temperature sampling",
+        "continuation": null,
+        "deployment_access": "complete lookup",
+        "boards": 780,
+        "agreement": null,
+        "tv": 0.0,
+        "win": 0.41670383675388556,
+        "draw": 0.3738858565073164,
+        "loss": 0.20941030673879796,
+        "points": 0.2072935300150876,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "stochastic_heuristic",
+        "method": "return_exact",
+        "artifact_id": "3527e28f8eb3e3f8d57c76c706bd109e709b8da10cc976bd63f151b0700ed5d8",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "stochastic_heuristic",
+          "second_seat": "stochastic_heuristic",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "rules and source for both seats",
+        "boards": 780,
+        "agreement": null,
+        "tv": 0.2539658374033374,
+        "win": 0.5604704034391534,
+        "draw": 0.3121486441798942,
+        "loss": 0.12738095238095237,
+        "points": 0.43308945105820107,
+        "delta_win": 0.14376656668526788,
+        "delta_draw": -0.06173721232742224,
+        "delta_loss": -0.08202935435784559,
+        "delta_points": 0.22579592104311347
+      },
+      {
+        "source": "stochastic_heuristic",
+        "method": "policy_mlp",
+        "artifact_id": "3e1b37033685acd68d7e1638080382acdbf3ec125feb2ba8aa8940d2feef2172",
+        "decoder": "temperature sampling",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": null,
+        "tv": 0.18469376742056454,
+        "win": 0.4016201518724556,
+        "draw": 0.3171395208853288,
+        "loss": 0.2812403272422156,
+        "points": 0.12037982463024,
+        "delta_win": -0.01508368488142997,
+        "delta_draw": -0.05674633562198761,
+        "delta_loss": 0.07183002050341764,
+        "delta_points": -0.0869137053848476
+      },
+      {
+        "source": "stochastic_heuristic",
+        "method": "value_mlp",
+        "artifact_id": "86b986c59f3b1053ac372369fe620f04d99d9a1ec825a4b63b55a7635d128d23",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "stochastic_heuristic",
+          "second_seat": "stochastic_heuristic",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": null,
+        "tv": 0.43761968355718356,
+        "win": 0.3924313822751323,
+        "draw": 0.295796130952381,
+        "loss": 0.31177248677248676,
+        "points": 0.08065889550264554,
+        "delta_win": -0.024272454478753258,
+        "delta_draw": -0.07808972555493543,
+        "delta_loss": 0.1023621800336888,
+        "delta_points": -0.12663463451244206
+      },
+      {
+        "source": "stochastic_heuristic",
+        "method": "q_mlp",
+        "artifact_id": "ff97fbe951e86fddcdf581079636bbd40edd3c43783c5971d8d68984e89e6987",
+        "decoder": "direct maximum",
+        "continuation": {
+          "utility": "terminal game points +1, 0, -1 for X",
+          "environment": "tic-tac-toe",
+          "first_seat": "stochastic_heuristic",
+          "second_seat": "stochastic_heuristic",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": null
+        },
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": null,
+        "tv": 0.6145427604802605,
+        "win": 0.2814422123015873,
+        "draw": 0.2674995866402116,
+        "loss": 0.45105820105820105,
+        "points": -0.16961598875661377,
+        "delta_win": -0.13526162445229828,
+        "delta_draw": -0.10638626986710481,
+        "delta_loss": 0.2416478943194031,
+        "delta_points": -0.37690951877170137
+      }
+    ],
+    "calibration_rows_checked": 90,
+    "max_imitation_probability_error_by_source": {
+      "minimax": 0.0,
+      "miss_win": 0.0,
+      "heuristic": 0.0,
+      "trained_net": 0.0,
+      "stochastic_heuristic": 9.992007221626409e-16
+    },
+    "random_source_fixed_subset": {
+      "boards_with_one_possible_choice": 32,
+      "agreement_on_those_boards": 1.0,
+      "all_withheld_boards": 780,
+      "mean_probability_distance_on_all_boards": 0.2539658374033374
+    },
+    "source_board_cases": 22600,
+    "source_move_cases": 80835
+  },
+  "visit_networks": {
+    "fidelity_rows_checked": 172,
+    "game_rows_checked": 1290,
+    "largest_difference": {
+      "boards": 0.0,
+      "positive_weight_boards": 0.0,
+      "weight_sum": 0.0,
+      "agreement": 1.1102230246251565e-16,
+      "tv": 0.0,
+      "win": 0.0,
+      "draw": 0.0,
+      "loss": 0.0,
+      "points": 0.0,
+      "delta_win": 0.0,
+      "delta_draw": 0.0,
+      "delta_loss": 0.0,
+      "delta_points": 0.0
+    },
+    "held_out": [
+      {
+        "source": "optimal_net",
+        "method": "source",
+        "artifact_id": "7e06ffd5b0c3d05928d0a1af1514505e9f8a330f6cb57cb8f8fb117ece0cd3d5",
+        "decoder": "source policy",
+        "continuation": null,
+        "deployment_access": "original player",
+        "boards": 780,
+        "agreement": 1.0,
+        "tv": 0.0,
+        "win": 0.4251426091269841,
+        "draw": 0.5748573908730159,
+        "loss": 0.0,
+        "points": 0.4251426091269841,
+        "delta_win": 0.0,
+        "delta_draw": 0.0,
+        "delta_loss": 0.0,
+        "delta_points": 0.0
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/direct",
+        "artifact_id": "7f20d3f6a1a381798c089067437dba9f0b088079e4e36cb67c8a1519aa8f5032",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.7102564102564103,
+        "tv": 0.28974358974358977,
+        "win": 0.4282872437169312,
+        "draw": 0.5624638310185185,
+        "loss": 0.009248925264550263,
+        "points": 0.41903831845238093,
+        "delta_win": 0.003144634589947126,
+        "delta_draw": -0.012393559854497416,
+        "delta_loss": 0.009248925264550263,
+        "delta_points": -0.006104290674603163
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/vnm_sum",
+        "artifact_id": "510ea7324031dcb7dd65798fb75b9bcd2775f90381bcefc8b4101ab3f4c1868d",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7397435897435898,
+        "tv": 0.2602564102564103,
+        "win": 0.40080398478835977,
+        "draw": 0.5991960152116402,
+        "loss": 0.0,
+        "points": 0.40080398478835977,
+        "delta_win": -0.024338624338624326,
+        "delta_draw": 0.024338624338624326,
+        "delta_loss": 0.0,
+        "delta_points": -0.024338624338624326
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/vnm_decay",
+        "artifact_id": "05e62ba0932f54fc8b92a04940e720eae45fc49509a72f8d3174a252bec6b3e8",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7487179487179487,
+        "tv": 0.2512820512820513,
+        "win": 0.4262008101851852,
+        "draw": 0.5737991898148148,
+        "loss": 0.0,
+        "points": 0.4262008101851852,
+        "delta_win": 0.0010582010582010914,
+        "delta_draw": -0.0010582010582010914,
+        "delta_loss": 0.0,
+        "delta_points": 0.0010582010582010914
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/vnm_terminal",
+        "artifact_id": "2f4f45fcd10aa84f74d48b67e5c61b78b487bf6358a62c1b906f7592c1581b78",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7807692307692308,
+        "tv": 0.21923076923076923,
+        "win": 0.47003554894179894,
+        "draw": 0.5278480489417989,
+        "loss": 0.002116402116402116,
+        "points": 0.4679191468253968,
+        "delta_win": 0.04489293981481485,
+        "delta_draw": -0.047009341931216975,
+        "delta_loss": 0.002116402116402116,
+        "delta_points": 0.04277653769841272
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/vnm_sum_copies",
+        "artifact_id": "9010a5dac73a5aacc7f6ef4d0f4ea38fa2f3b60006dc3881a414628289024884",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7201/direct",
+          "second_seat": "value_mlp/held_out/7201/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7201/direct",
+        "boards": 780,
+        "agreement": 0.717948717948718,
+        "tv": 0.28205128205128205,
+        "win": 0.5059048445767196,
+        "draw": 0.2306351273148148,
+        "loss": 0.2634600281084656,
+        "points": 0.242444816468254,
+        "delta_win": 0.08076223544973549,
+        "delta_draw": -0.34422226355820107,
+        "delta_loss": 0.2634600281084656,
+        "delta_points": -0.1826977926587301
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/vnm_decay_copies",
+        "artifact_id": "f982a92aa4ceaf69afca4fc32e8dffc884c8d395c10f98457f048957d5d5d97f",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7201/direct",
+          "second_seat": "value_mlp/held_out/7201/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7201/direct",
+        "boards": 780,
+        "agreement": 0.7282051282051282,
+        "tv": 0.2717948717948718,
+        "win": 0.39069010416666666,
+        "draw": 0.478957919973545,
+        "loss": 0.13035197585978836,
+        "points": 0.2603381283068783,
+        "delta_win": -0.03445250496031743,
+        "delta_draw": -0.09589947089947093,
+        "delta_loss": 0.13035197585978836,
+        "delta_points": -0.1648044808201058
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7201/vnm_terminal_copies",
+        "artifact_id": "371241c3b1e07e3df4a15b6e52b0825fc9819efec112b7c8e312db29eb04e8f6",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7201/direct",
+          "second_seat": "value_mlp/held_out/7201/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7201/direct",
+        "boards": 780,
+        "agreement": 0.7192307692307692,
+        "tv": 0.28076923076923077,
+        "win": 0.4198960400132275,
+        "draw": 0.4309813161375662,
+        "loss": 0.14912264384920634,
+        "points": 0.2707733961640212,
+        "delta_win": -0.005246569113756594,
+        "delta_draw": -0.14387607473544972,
+        "delta_loss": 0.14912264384920634,
+        "delta_points": -0.1543692129629629
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/direct",
+        "artifact_id": "7ce350f6fa72122398aff4aba0c4db22ed402dffd19870fd2b409a8b55ad9382",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.7102564102564103,
+        "tv": 0.28974358974358977,
+        "win": 0.39638826884920636,
+        "draw": 0.21256613756613757,
+        "loss": 0.39104559358465607,
+        "points": 0.0053426752645502895,
+        "delta_win": -0.028754340277777735,
+        "delta_draw": -0.36229125330687834,
+        "delta_loss": 0.39104559358465607,
+        "delta_points": -0.4197999338624338
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/vnm_sum",
+        "artifact_id": "111852dc47452d8b61792dbe824aeeebd56536df6b0a865519d3c33b31666fe2",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7192307692307692,
+        "tv": 0.28076923076923077,
+        "win": 0.3646928736772487,
+        "draw": 0.6347780257936508,
+        "loss": 0.000529100529100529,
+        "points": 0.36416377314814813,
+        "delta_win": -0.06044973544973542,
+        "delta_draw": 0.05992063492063493,
+        "delta_loss": 0.000529100529100529,
+        "delta_points": -0.060978835978835966
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/vnm_decay",
+        "artifact_id": "970c7bd29caf5ffee63dea7a386ec0ff9dd3263803226b41e9e2f75f0cfe7b4e",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7307692307692307,
+        "tv": 0.2692307692307692,
+        "win": 0.3646928736772487,
+        "draw": 0.6337198247354497,
+        "loss": 0.001587301587301587,
+        "points": 0.3631055720899471,
+        "delta_win": -0.06044973544973542,
+        "delta_draw": 0.05886243386243384,
+        "delta_loss": 0.001587301587301587,
+        "delta_points": -0.062037037037037
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/vnm_terminal",
+        "artifact_id": "1ae120eaccad916d197ea91325a15d92e1136de2ad2526235f5adde2d2bd9d71",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7884615384615384,
+        "tv": 0.21153846153846154,
+        "win": 0.44171937003968254,
+        "draw": 0.556825603505291,
+        "loss": 0.0014550264550264548,
+        "points": 0.4402643435846561,
+        "delta_win": 0.01657676091269844,
+        "delta_draw": -0.018031787367724927,
+        "delta_loss": 0.0014550264550264548,
+        "delta_points": 0.01512173445767201
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/vnm_sum_copies",
+        "artifact_id": "2f6aa91c9907219a20dfef8ec98238c121b81266f8aacad40f6acedf53990735",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7202/direct",
+          "second_seat": "value_mlp/held_out/7202/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7202/direct",
+        "boards": 780,
+        "agreement": 0.7038461538461539,
+        "tv": 0.29615384615384616,
+        "win": 0.4145306299603175,
+        "draw": 0.45243158895502644,
+        "loss": 0.13303778108465608,
+        "points": 0.2814928488756614,
+        "delta_win": -0.010611979166666619,
+        "delta_draw": -0.12242580191798946,
+        "delta_loss": 0.13303778108465608,
+        "delta_points": -0.1436497602513227
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/vnm_decay_copies",
+        "artifact_id": "a95d35773c56560fee850bac9a7a8639b56b23c0787bba04c1b2a87dbe8b7765",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7202/direct",
+          "second_seat": "value_mlp/held_out/7202/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7202/direct",
+        "boards": 780,
+        "agreement": 0.7166666666666667,
+        "tv": 0.2833333333333333,
+        "win": 0.4436104910714286,
+        "draw": 0.42663793816137563,
+        "loss": 0.12975157076719576,
+        "points": 0.3138589203042328,
+        "delta_win": 0.018467881944444486,
+        "delta_draw": -0.14821945271164028,
+        "delta_loss": 0.12975157076719576,
+        "delta_points": -0.1112836888227513
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7202/vnm_terminal_copies",
+        "artifact_id": "856966946711dbde9f9fc02c7549af4bdd2195b65a701abbf26602f9825321b3",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7202/direct",
+          "second_seat": "value_mlp/held_out/7202/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7202/direct",
+        "boards": 780,
+        "agreement": 0.7141025641025641,
+        "tv": 0.2858974358974359,
+        "win": 0.4384837962962963,
+        "draw": 0.2934771825396825,
+        "loss": 0.2680390211640212,
+        "points": 0.17044477513227513,
+        "delta_win": 0.013341187169312207,
+        "delta_draw": -0.2813802083333334,
+        "delta_loss": 0.2680390211640212,
+        "delta_points": -0.25469783399470897
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/direct",
+        "artifact_id": "be352856c38cebc69b705bde6d5ec814cf3ed373dc95136a9eb20dc5ec1143f5",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.7128205128205128,
+        "tv": 0.28717948717948716,
+        "win": 0.3685391865079365,
+        "draw": 0.4634817294973545,
+        "loss": 0.16797908399470898,
+        "points": 0.2005601025132275,
+        "delta_win": -0.056603422619047605,
+        "delta_draw": -0.1113756613756614,
+        "delta_loss": 0.16797908399470898,
+        "delta_points": -0.2245825066137566
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/vnm_sum",
+        "artifact_id": "5a76796a341b6ae03b532e3c6354b3ea46513d7cd96012dd113aeec43c5f62f4",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.75,
+        "tv": 0.25,
+        "win": 0.3924809854497355,
+        "draw": 0.35673569775132274,
+        "loss": 0.25078331679894184,
+        "points": 0.14169766865079364,
+        "delta_win": -0.03266162367724862,
+        "delta_draw": -0.21812169312169316,
+        "delta_loss": 0.25078331679894184,
+        "delta_points": -0.28344494047619045
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/vnm_decay",
+        "artifact_id": "5c80dff0545b6f909bfbc0d5431d29816ff3a8aeec031dbe8315d91977664347",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.764102564102564,
+        "tv": 0.2358974358974359,
+        "win": 0.41940414186507935,
+        "draw": 0.5798022073412699,
+        "loss": 0.0007936507936507935,
+        "points": 0.41861049107142856,
+        "delta_win": -0.005738467261904745,
+        "delta_draw": 0.004944816468253954,
+        "delta_loss": 0.0007936507936507935,
+        "delta_points": -0.006532118055555536
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/vnm_terminal",
+        "artifact_id": "c6b9aaa6b54c945ecf47cda240ab2e5de08516f057e0a1cb65c711dbc8a4f56e",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.8012820512820513,
+        "tv": 0.1987179487179487,
+        "win": 0.4166377314814815,
+        "draw": 0.5799231150793651,
+        "loss": 0.003439153439153439,
+        "points": 0.413198578042328,
+        "delta_win": -0.008504877645502618,
+        "delta_draw": 0.005065724206349209,
+        "delta_loss": 0.003439153439153439,
+        "delta_points": -0.011944031084656082
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/vnm_sum_copies",
+        "artifact_id": "d50f022b7691af6a0ccb88484c4e102878a94a0ab8e163d8092a61eea27bba9c",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7203/direct",
+          "second_seat": "value_mlp/held_out/7203/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7203/direct",
+        "boards": 780,
+        "agreement": 0.7243589743589743,
+        "tv": 0.27564102564102566,
+        "win": 0.3923084077380952,
+        "draw": 0.6002438822751323,
+        "loss": 0.007447709986772485,
+        "points": 0.38486069775132276,
+        "delta_win": -0.03283420138888887,
+        "delta_draw": 0.02538649140211635,
+        "delta_loss": 0.007447709986772485,
+        "delta_points": -0.04028191137566134
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/vnm_decay_copies",
+        "artifact_id": "93223469eb53ff1689c2183aadc4c6a55fcb4bb180755e0b6de33749a07f3134",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7203/direct",
+          "second_seat": "value_mlp/held_out/7203/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7203/direct",
+        "boards": 780,
+        "agreement": 0.732051282051282,
+        "tv": 0.26794871794871794,
+        "win": 0.3953300677910053,
+        "draw": 0.5986565806878307,
+        "loss": 0.00601335152116402,
+        "points": 0.3893167162698413,
+        "delta_win": -0.02981254133597877,
+        "delta_draw": 0.02379918981481477,
+        "delta_loss": 0.00601335152116402,
+        "delta_points": -0.03582589285714277
+      },
+      {
+        "source": "optimal_net",
+        "method": "value_mlp/held_out/7203/vnm_terminal_copies",
+        "artifact_id": "8ed92f7be3fd1de485b66ba84b9cd7ac0cc0715a45e6085c61cb1633701afcf6",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "value_mlp/held_out/7203/direct",
+          "second_seat": "value_mlp/held_out/7203/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and value_mlp/held_out/7203/direct",
+        "boards": 780,
+        "agreement": 0.7243589743589743,
+        "tv": 0.27564102564102566,
+        "win": 0.4042255704365079,
+        "draw": 0.4281529017857143,
+        "loss": 0.16762152777777778,
+        "points": 0.23660404265873014,
+        "delta_win": -0.020917038690476175,
+        "delta_draw": -0.1467044890873016,
+        "delta_loss": 0.16762152777777778,
+        "delta_points": -0.18853856646825395
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/direct",
+        "artifact_id": "605a31a196b9e3a82e91c93aed2c6a7e01058d752da6c0daf2fde1ee7379481c",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.8397435897435898,
+        "tv": 0.16025641025641027,
+        "win": 0.4449539103835979,
+        "draw": 0.3918185763888889,
+        "loss": 0.16322751322751322,
+        "points": 0.28172639715608466,
+        "delta_win": 0.01981130125661379,
+        "delta_draw": -0.183038814484127,
+        "delta_loss": 0.16322751322751322,
+        "delta_points": -0.14341621197089943
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/vnm_sum",
+        "artifact_id": "6812ff34b3f1a64253ffafc123c73f614296bc5da4a89553a79dfd25ea257e5a",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.841025641025641,
+        "tv": 0.15897435897435896,
+        "win": 0.46985160383597885,
+        "draw": 0.2690372850529101,
+        "loss": 0.2611111111111111,
+        "points": 0.20874049272486772,
+        "delta_win": 0.044708994708994754,
+        "delta_draw": -0.3058201058201058,
+        "delta_loss": 0.2611111111111111,
+        "delta_points": -0.21640211640211637
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/vnm_decay",
+        "artifact_id": "2b6c6c8e98ef0a329c3a3026f6d233e5d0ceb407add8608adaaf619d54be09d3",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.85,
+        "tv": 0.15,
+        "win": 0.44577752976190477,
+        "draw": 0.41930183531746035,
+        "loss": 0.1349206349206349,
+        "points": 0.3108568948412699,
+        "delta_win": 0.020634920634920673,
+        "delta_draw": -0.15555555555555556,
+        "delta_loss": 0.1349206349206349,
+        "delta_points": -0.11428571428571421
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/vnm_terminal",
+        "artifact_id": "68860c65de1c6f89397c220ceafaceb977131fd9bd4ad8cf6ecbcd3492c41d74",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7756410256410257,
+        "tv": 0.22435897435897437,
+        "win": 0.42448433366402116,
+        "draw": 0.538743179563492,
+        "loss": 0.036772486772486776,
+        "points": 0.3877118468915344,
+        "delta_win": -0.0006582754629629317,
+        "delta_draw": -0.03611421130952386,
+        "delta_loss": 0.036772486772486776,
+        "delta_points": -0.03743076223544972
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/vnm_sum_copies",
+        "artifact_id": "4b7ff2037a5c0cf4da4ed624c60b0fb232723da76322fa9677f90cf6f80ac9ad",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7201/direct",
+          "second_seat": "q_mlp/held_out/7201/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7201/direct",
+        "boards": 780,
+        "agreement": 0.8346153846153846,
+        "tv": 0.16538461538461538,
+        "win": 0.4704830109126984,
+        "draw": 0.26847718253968256,
+        "loss": 0.26103980654761905,
+        "points": 0.20944320436507935,
+        "delta_win": 0.0453404017857143,
+        "delta_draw": -0.30638020833333335,
+        "delta_loss": 0.26103980654761905,
+        "delta_points": -0.21569940476190474
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/vnm_decay_copies",
+        "artifact_id": "585cca32d2e2d9152975877c7b915e358f2e4753049a0fd998eeaa1c29275d71",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7201/direct",
+          "second_seat": "q_mlp/held_out/7201/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7201/direct",
+        "boards": 780,
+        "agreement": 0.8487179487179487,
+        "tv": 0.15128205128205127,
+        "win": 0.4747767857142857,
+        "draw": 0.2673580109126984,
+        "loss": 0.2578652033730158,
+        "points": 0.2169115823412699,
+        "delta_win": 0.049634176587301626,
+        "delta_draw": -0.3074993799603175,
+        "delta_loss": 0.2578652033730158,
+        "delta_points": -0.2082310267857142
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7201/vnm_terminal_copies",
+        "artifact_id": "d8a0716fc954963c83a44806e62565b395c648308fc92ee38e751a305e76e72f",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7201/direct",
+          "second_seat": "q_mlp/held_out/7201/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7201/direct",
+        "boards": 780,
+        "agreement": 0.7525641025641026,
+        "tv": 0.24743589743589745,
+        "win": 0.3728370949074074,
+        "draw": 0.45148292824074077,
+        "loss": 0.17567997685185185,
+        "points": 0.19715711805555555,
+        "delta_win": -0.05230551421957669,
+        "delta_draw": -0.12337446263227514,
+        "delta_loss": 0.17567997685185185,
+        "delta_points": -0.22798549107142854
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/direct",
+        "artifact_id": "08b532e98333c0ebbe2eba4dd80483da077f4f63f0981a324db7f40a512ebe6d",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.841025641025641,
+        "tv": 0.15897435897435896,
+        "win": 0.42214161706349207,
+        "draw": 0.16294229497354498,
+        "loss": 0.414916087962963,
+        "points": 0.007225529100529093,
+        "delta_win": -0.003000992063492025,
+        "delta_draw": -0.41191509589947095,
+        "delta_loss": 0.414916087962963,
+        "delta_points": -0.417917080026455
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/vnm_sum",
+        "artifact_id": "b82dc9fa2735a434eb0e88fe20e78d9db98a1d3d2845c1443d19ce56b9e58575",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.8423076923076923,
+        "tv": 0.1576923076923077,
+        "win": 0.37627314814814816,
+        "draw": 0.4316736937830688,
+        "loss": 0.19205315806878306,
+        "points": 0.1842199900793651,
+        "delta_win": -0.04886946097883593,
+        "delta_draw": -0.1431836970899471,
+        "delta_loss": 0.19205315806878306,
+        "delta_points": -0.240922619047619
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/vnm_decay",
+        "artifact_id": "23c64e20d1ce75c8f9adf6a7dfa54c3ab6a89baddb82e82a1fb2bcecca411581",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.8448717948717949,
+        "tv": 0.15512820512820513,
+        "win": 0.38118696263227514,
+        "draw": 0.4551886987433862,
+        "loss": 0.16362433862433862,
+        "points": 0.21756262400793652,
+        "delta_win": -0.043955646494708955,
+        "delta_draw": -0.11966869212962972,
+        "delta_loss": 0.16362433862433862,
+        "delta_points": -0.20757998511904757
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/vnm_terminal",
+        "artifact_id": "e95cc3b4f047fc4a6a8965ef4365bb9fc67f4efac610012c21c2e41c4a042dc4",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7653846153846153,
+        "tv": 0.23461538461538461,
+        "win": 0.40808118386243386,
+        "draw": 0.5312045304232804,
+        "loss": 0.060714285714285714,
+        "points": 0.34736689814814814,
+        "delta_win": -0.017061425264550234,
+        "delta_draw": -0.04365286044973549,
+        "delta_loss": 0.060714285714285714,
+        "delta_points": -0.07777571097883595
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/vnm_sum_copies",
+        "artifact_id": "1edd2da5ee03e28e46dc2fa295d471b680a185d4f35ea751987deafb1cc193ff",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7202/direct",
+          "second_seat": "q_mlp/held_out/7202/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7202/direct",
+        "boards": 780,
+        "agreement": 0.841025641025641,
+        "tv": 0.15897435897435896,
+        "win": 0.40497685185185184,
+        "draw": 0.4026951058201058,
+        "loss": 0.19232804232804232,
+        "points": 0.21264880952380952,
+        "delta_win": -0.020165757275132257,
+        "delta_draw": -0.1721622850529101,
+        "delta_loss": 0.19232804232804232,
+        "delta_points": -0.21249379960317458
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/vnm_decay_copies",
+        "artifact_id": "feb95c7a83ff33ea7b10a893efd4e01ee867961a610d3dd183b4e70d6e9f4156",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7202/direct",
+          "second_seat": "q_mlp/held_out/7202/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7202/direct",
+        "boards": 780,
+        "agreement": 0.8461538461538461,
+        "tv": 0.15384615384615385,
+        "win": 0.40458002645502644,
+        "draw": 0.40295965608465606,
+        "loss": 0.19246031746031747,
+        "points": 0.21211970899470897,
+        "delta_win": -0.020562582671957652,
+        "delta_draw": -0.17189773478835985,
+        "delta_loss": 0.19246031746031747,
+        "delta_points": -0.21302290013227512
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7202/vnm_terminal_copies",
+        "artifact_id": "506cd196f033af0a7484cd596bbda4bb89df4839aaae29501d03940d384c090b",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7202/direct",
+          "second_seat": "q_mlp/held_out/7202/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7202/direct",
+        "boards": 780,
+        "agreement": 0.7538461538461538,
+        "tv": 0.24615384615384617,
+        "win": 0.401140873015873,
+        "draw": 0.5297505373677249,
+        "loss": 0.06910858961640211,
+        "points": 0.3320322833994709,
+        "delta_win": -0.024001736111111116,
+        "delta_draw": -0.04510685350529098,
+        "delta_loss": 0.06910858961640211,
+        "delta_points": -0.09311032572751321
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/direct",
+        "artifact_id": "bef4c39f3faf08ad38239cb0e6e04890538767ad450cce389af69d7bee56be5d",
+        "decoder": "direct maximum",
+        "continuation": null,
+        "deployment_access": "fitted weights",
+        "boards": 780,
+        "agreement": 0.8307692307692308,
+        "tv": 0.16923076923076924,
+        "win": 0.4454726769179894,
+        "draw": 0.39103525958994706,
+        "loss": 0.1634920634920635,
+        "points": 0.28198061342592595,
+        "delta_win": 0.020330067791005324,
+        "delta_draw": -0.18382213128306885,
+        "delta_loss": 0.1634920634920635,
+        "delta_points": -0.14316199570105814
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/vnm_sum",
+        "artifact_id": "5465e79230d579534ef8448901a634f16c7ae6865829464bb27a7f90813cb2ff",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.8487179487179487,
+        "tv": 0.15128205128205127,
+        "win": 0.44234974371693125,
+        "draw": 0.4266978753306878,
+        "loss": 0.13095238095238096,
+        "points": 0.3113973627645503,
+        "delta_win": 0.01720713458994716,
+        "delta_draw": -0.1481595155423281,
+        "delta_loss": 0.13095238095238096,
+        "delta_points": -0.11374524636243377
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/vnm_decay",
+        "artifact_id": "8b7fafe4ad31d256caffaa8e59ccccd5cc7439edcd571a8958b730474124b5df",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.8538461538461538,
+        "tv": 0.14615384615384616,
+        "win": 0.4201161541005291,
+        "draw": 0.4203600363756614,
+        "loss": 0.1595238095238095,
+        "points": 0.2605923445767196,
+        "delta_win": -0.00502645502645499,
+        "delta_draw": -0.15449735449735452,
+        "delta_loss": 0.1595238095238095,
+        "delta_points": -0.1645502645502645
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/vnm_terminal",
+        "artifact_id": "bc106bbc08a8fdb856246c7da14228da2530889ef0e1c400a34c67951683c3e8",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "optimal_net",
+          "second_seat": "optimal_net",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and optimal_net",
+        "boards": 780,
+        "agreement": 0.7871794871794872,
+        "tv": 0.2128205128205128,
+        "win": 0.45692170965608464,
+        "draw": 0.5320994543650793,
+        "loss": 0.010978835978835979,
+        "points": 0.44594287367724866,
+        "delta_win": 0.031779100529100546,
+        "delta_draw": -0.04275793650793658,
+        "delta_loss": 0.010978835978835979,
+        "delta_points": 0.02080026455026457
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/vnm_sum_copies",
+        "artifact_id": "af73d3ef5ddcc707de2a4a75dbfe304b1782b8aca18b525b3dc68bc2a8061940",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7203/direct",
+          "second_seat": "q_mlp/held_out/7203/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7203/direct",
+        "boards": 780,
+        "agreement": 0.8461538461538461,
+        "tv": 0.15384615384615385,
+        "win": 0.4663928158068783,
+        "draw": 0.39432146990740746,
+        "loss": 0.1392857142857143,
+        "points": 0.327107101521164,
+        "delta_win": 0.04125020667989421,
+        "delta_draw": -0.18053592096560844,
+        "delta_loss": 0.1392857142857143,
+        "delta_points": -0.09803550760582008
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/vnm_decay_copies",
+        "artifact_id": "b5e04efa77a08121eac9aa3f10915b278803701cb9e1478b26fdbcf9db31d314",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "discounted sum of signed fitted frequencies",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7203/direct",
+          "second_seat": "q_mlp/held_out/7203/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 0.9,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7203/direct",
+        "boards": 780,
+        "agreement": 0.8435897435897436,
+        "tv": 0.1564102564102564,
+        "win": 0.46612826554232806,
+        "draw": 0.39392464451058207,
+        "loss": 0.13994708994708993,
+        "points": 0.3261811755952381,
+        "delta_win": 0.04098565641534396,
+        "delta_draw": -0.18093274636243384,
+        "delta_loss": 0.13994708994708993,
+        "delta_points": -0.09896143353174597
+      },
+      {
+        "source": "optimal_net",
+        "method": "q_mlp/held_out/7203/vnm_terminal_copies",
+        "artifact_id": "e27f0d1df85e870112ba73d1ad99453051d2e008db009d7013f9b4c8dc452d7a",
+        "decoder": "VNM maximum",
+        "continuation": {
+          "utility": "signed fitted frequency on last move",
+          "environment": "tic-tac-toe",
+          "first_seat": "q_mlp/held_out/7203/direct",
+          "second_seat": "q_mlp/held_out/7203/direct",
+          "horizon": "first terminal position",
+          "perspective": "X positive, O negative, prefer mover's score",
+          "discount": 1,
+          "rollouts": 1
+        },
+        "deployment_access": "rules and q_mlp/held_out/7203/direct",
+        "boards": 780,
+        "agreement": 0.75,
+        "tv": 0.25,
+        "win": 0.39191468253968254,
+        "draw": 0.30246052414021163,
+        "loss": 0.30562479332010584,
+        "points": 0.0862898892195767,
+        "delta_win": -0.03322792658730156,
+        "delta_draw": -0.2723968667328043,
+        "delta_loss": 0.30562479332010584,
+        "delta_points": -0.3388527199074074
+      }
+    ],
+    "source_certificate": {
+      "boards": 4520,
+      "optimal_moves": 4520,
+      "mean_payoff_forgone": 0.0,
+      "worst_payoff_forgone": 0,
+      "same_minimax_move": 4520
+    },
+    "visits": 243488,
+    "training": [
+      {
+        "model": "value_mlp",
+        "seed": 7201,
+        "pass_number": 120,
+        "legal_moves": 4980,
+        "loss": 0.09844466837655311,
+        "archived_loss": 0.09844466298818588
+      },
+      {
+        "model": "value_mlp",
+        "seed": 7202,
+        "pass_number": 90,
+        "legal_moves": 4980,
+        "loss": 0.10111962655032207,
+        "archived_loss": 0.10111961513757706
+      },
+      {
+        "model": "value_mlp",
+        "seed": 7203,
+        "pass_number": 60,
+        "legal_moves": 4980,
+        "loss": 0.10479061001712447,
+        "archived_loss": 0.10479062050580978
+      },
+      {
+        "model": "q_mlp",
+        "seed": 7201,
+        "pass_number": 30,
+        "legal_moves": 10864,
+        "loss": 0.04615293793086995,
+        "archived_loss": 0.04615293815732002
+      },
+      {
+        "model": "q_mlp",
+        "seed": 7202,
+        "pass_number": 30,
+        "legal_moves": 10864,
+        "loss": 0.04034762041721059,
+        "archived_loss": 0.040347620844841
+      },
+      {
+        "model": "q_mlp",
+        "seed": 7203,
+        "pass_number": 40,
+        "legal_moves": 10864,
+        "loss": 0.03596597176327822,
+        "archived_loss": 0.035965971648693085
+      }
+    ],
+    "example_predictions": [
+      {
+        "model": "value_mlp",
+        "seed": 7201,
+        "board": ".......OX",
+        "split": "test",
+        "moves": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "observed": [
+          0,
+          0,
+          32,
+          0,
+          0,
+          0,
+          0
+        ],
+        "predictions": [
+          10.759319305419922,
+          0.2890002429485321,
+          0.6743203997612,
+          0.04897486791014671,
+          1.88059663772583,
+          0.0048486762680113316,
+          0.0732555165886879
+        ],
+        "visits": 32
+      },
+      {
+        "model": "value_mlp",
+        "seed": 7201,
+        "board": ".....O..X",
+        "split": "test",
+        "moves": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          7
+        ],
+        "observed": [
+          0,
+          0,
+          0,
+          0,
+          32,
+          0,
+          0
+        ],
+        "predictions": [
+          7.816577911376953,
+          0.09367140382528305,
+          0.024786198511719704,
+          0.1662190556526184,
+          1.968806505203247,
+          0.46373239159584045,
+          0.1308450698852539
+        ],
+        "visits": 32
+      },
+      {
+        "model": "q_mlp",
+        "seed": 7201,
+        "board": ".......OX",
+        "split": "test",
+        "moves": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "observed": [
+          0,
+          0,
+          32,
+          0,
+          0,
+          0,
+          0
+        ],
+        "predictions": [
+          18.519596099853516,
+          0.29067614674568176,
+          1.6961207389831543,
+          0.0010933817829936743,
+          0.1547463834285736,
+          0.00014933920465409756,
+          1.4595140783058014e-05
+        ],
+        "visits": 32
+      },
+      {
+        "model": "q_mlp",
+        "seed": 7201,
+        "board": ".....O..X",
+        "split": "test",
+        "moves": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          7
+        ],
+        "observed": [
+          0,
+          0,
+          0,
+          0,
+          32,
+          0,
+          0
+        ],
+        "predictions": [
+          22.527151107788086,
+          0.6430857181549072,
+          0.039910200983285904,
+          0.17836788296699524,
+          4.137839317321777,
+          0.004061149898916483,
+          4.5823995606042445e-05
+        ],
+        "visits": 32
+      }
+    ],
+    "paired_fits": [
+      {
+        "model": "value_mlp",
+        "selection_rule": "direct",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7111111111111111,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          },
+          "win": {
+            "mean": 0.39773823302469136,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          },
+          "draw": {
+            "mean": 0.4128372326940035,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          },
+          "loss": {
+            "mean": 0.1894245342813051,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          }
+        }
+      },
+      {
+        "model": "value_mlp",
+        "selection_rule": "vnm_sum",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7363247863247864,
+            "change_from_direct": 0.025213675213675197,
+            "standard_error_of_change": 0.008417827181022318
+          },
+          "win": {
+            "mean": 0.385992614638448,
+            "change_from_direct": -0.011745618386243384,
+            "standard_error_of_change": 0.01788509006214027
+          },
+          "draw": {
+            "mean": 0.5302365795855379,
+            "change_from_direct": 0.11739934689153442,
+            "standard_error_of_change": 0.15793407235198276
+          },
+          "loss": {
+            "mean": 0.08377080577601412,
+            "change_from_direct": -0.10565372850529098,
+            "standard_error_of_change": 0.14488908625568697
+          }
+        }
+      },
+      {
+        "model": "value_mlp",
+        "selection_rule": "vnm_decay",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7478632478632479,
+            "change_from_direct": 0.0367521367521367,
+            "standard_error_of_change": 0.008923338896504747
+          },
+          "win": {
+            "mean": 0.40343260857583774,
+            "change_from_direct": 0.00569437555114638,
+            "standard_error_of_change": 0.024148558358352744
+          },
+          "draw": {
+            "mean": 0.5957737406305115,
+            "change_from_direct": 0.18293650793650795,
+            "standard_error_of_change": 0.12290380678479974
+          },
+          "loss": {
+            "mean": 0.0007936507936507935,
+            "change_from_direct": -0.1886308834876543,
+            "standard_error_of_change": 0.11027952536068843
+          }
+        }
+      },
+      {
+        "model": "value_mlp",
+        "selection_rule": "vnm_terminal",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7901709401709401,
+            "change_from_direct": 0.07905982905982904,
+            "standard_error_of_change": 0.005198942333588237
+          },
+          "win": {
+            "mean": 0.442797550154321,
+            "change_from_direct": 0.04505931712962963,
+            "standard_error_of_change": 0.0018381862571765191
+          },
+          "draw": {
+            "mean": 0.554865589175485,
+            "change_from_direct": 0.1420283564814815,
+            "standard_error_of_change": 0.11011756323679721
+          },
+          "loss": {
+            "mean": 0.0023368606701940032,
+            "change_from_direct": -0.18708767361111112,
+            "standard_error_of_change": 0.11098023756388602
+          }
+        }
+      },
+      {
+        "model": "value_mlp",
+        "selection_rule": "vnm_sum_copies",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7153846153846154,
+            "change_from_direct": 0.004273504273504258,
+            "standard_error_of_change": 0.005456045014873359
+          },
+          "win": {
+            "mean": 0.43758129409171076,
+            "change_from_direct": 0.0398430610670194,
+            "standard_error_of_change": 0.018956988870567376
+          },
+          "draw": {
+            "mean": 0.4277701995149912,
+            "change_from_direct": 0.014932966820987659,
+            "standard_error_of_change": 0.17591694503839866
+          },
+          "loss": {
+            "mean": 0.13464850639329806,
+            "change_from_direct": -0.05477602788800706,
+            "standard_error_of_change": 0.15703523939308847
+          }
+        }
+      },
+      {
+        "model": "value_mlp",
+        "selection_rule": "vnm_decay_copies",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7256410256410256,
+            "change_from_direct": 0.014529914529914478,
+            "standard_error_of_change": 0.004076663253918557
+          },
+          "win": {
+            "mean": 0.4098768876763669,
+            "change_from_direct": 0.012138654651675499,
+            "standard_error_of_change": 0.025557757086099985
+          },
+          "draw": {
+            "mean": 0.5014174796075838,
+            "change_from_direct": 0.08858024691358024,
+            "standard_error_of_change": 0.08900639766714644
+          },
+          "loss": {
+            "mean": 0.08870563271604938,
+            "change_from_direct": -0.10071890156525572,
+            "standard_error_of_change": 0.11455749816995917
+          }
+        }
+      },
+      {
+        "model": "value_mlp",
+        "selection_rule": "vnm_terminal_copies",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7192307692307692,
+            "change_from_direct": 0.00811965811965809,
+            "standard_error_of_change": 0.0022613259068928046
+          },
+          "win": {
+            "mean": 0.4208684689153439,
+            "change_from_direct": 0.02313023589065255,
+            "standard_error_of_change": 0.015868943944444134
+          },
+          "draw": {
+            "mean": 0.384203800154321,
+            "change_from_direct": -0.028633432539682518,
+            "standard_error_of_change": 0.061404064209404426
+          },
+          "loss": {
+            "mean": 0.1949277309303351,
+            "change_from_direct": 0.005503196649029994,
+            "standard_error_of_change": 0.07594356055184123
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "direct",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.8371794871794872,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          },
+          "win": {
+            "mean": 0.4375227347883598,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          },
+          "draw": {
+            "mean": 0.315265376984127,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          },
+          "loss": {
+            "mean": 0.24721188822751322,
+            "change_from_direct": 0.0,
+            "standard_error_of_change": 0.0
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "vnm_sum",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.844017094017094,
+            "change_from_direct": 0.006837606837606813,
+            "standard_error_of_change": 0.005555555555555536
+          },
+          "win": {
+            "mean": 0.4294914985670194,
+            "change_from_direct": -0.008031236221340369,
+            "standard_error_of_change": 0.02057531703253507
+          },
+          "draw": {
+            "mean": 0.3758029513888889,
+            "change_from_direct": 0.06053757440476191,
+            "standard_error_of_change": 0.1137022710307416
+          },
+          "loss": {
+            "mean": 0.1947055500440917,
+            "change_from_direct": -0.052506338183421514,
+            "standard_error_of_change": 0.0931281988686777
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "vnm_decay",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.8495726495726496,
+            "change_from_direct": 0.01239316239316235,
+            "standard_error_of_change": 0.005653314767232011
+          },
+          "win": {
+            "mean": 0.41569354883156967,
+            "change_from_direct": -0.02182918595679012,
+            "standard_error_of_change": 0.012188623378959686
+          },
+          "draw": {
+            "mean": 0.4316168568121693,
+            "change_from_direct": 0.11635147982804234,
+            "standard_error_of_change": 0.08794906859156792
+          },
+          "loss": {
+            "mean": 0.152689594356261,
+            "change_from_direct": -0.09452229387125222,
+            "standard_error_of_change": 0.07869898090048869
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "vnm_terminal",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7760683760683761,
+            "change_from_direct": -0.06111111111111115,
+            "standard_error_of_change": 0.009372526580966366
+          },
+          "win": {
+            "mean": 0.4298290757275132,
+            "change_from_direct": -0.007693659060846569,
+            "standard_error_of_change": 0.009748525822608548
+          },
+          "draw": {
+            "mean": 0.5340157214506173,
+            "change_from_direct": 0.2187503444664903,
+            "standard_error_of_change": 0.0747750855470178
+          },
+          "loss": {
+            "mean": 0.036155202821869487,
+            "change_from_direct": -0.21105668540564373,
+            "standard_error_of_change": 0.07196677663478174
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "vnm_sum_copies",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.8405982905982906,
+            "change_from_direct": 0.0034188034188034067,
+            "standard_error_of_change": 0.006163335513613636
+          },
+          "win": {
+            "mean": 0.4472842261904762,
+            "change_from_direct": 0.009761491402116388,
+            "standard_error_of_change": 0.013528711484255005
+          },
+          "draw": {
+            "mean": 0.35516458608906526,
+            "change_from_direct": 0.0398992091049383,
+            "standard_error_of_change": 0.10640290430101335
+          },
+          "loss": {
+            "mean": 0.19755118772045854,
+            "change_from_direct": -0.04966070050705468,
+            "standard_error_of_change": 0.09336315708159681
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "vnm_decay_copies",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.8461538461538461,
+            "change_from_direct": 0.008974358974358942,
+            "standard_error_of_change": 0.00222057795842163
+          },
+          "win": {
+            "mean": 0.4484950259038801,
+            "change_from_direct": 0.010972291115520283,
+            "standard_error_of_change": 0.014510301984772916
+          },
+          "draw": {
+            "mean": 0.3547474371693122,
+            "change_from_direct": 0.03948206018518519,
+            "standard_error_of_change": 0.10679467473397604
+          },
+          "loss": {
+            "mean": 0.19675753692680775,
+            "change_from_direct": -0.05045435130070549,
+            "standard_error_of_change": 0.09252054124149076
+          }
+        }
+      },
+      {
+        "model": "q_mlp",
+        "selection_rule": "vnm_terminal_copies",
+        "fits": 3,
+        "metrics": {
+          "agreement": {
+            "mean": 0.7521367521367521,
+            "change_from_direct": -0.08504273504273507,
+            "standard_error_of_change": 0.002136752136752129
+          },
+          "win": {
+            "mean": 0.3886308834876543,
+            "change_from_direct": -0.04889185130070548,
+            "standard_error_of_change": 0.014939242037758461
+          },
+          "draw": {
+            "mean": 0.42789799658289246,
+            "change_from_direct": 0.11263261959876547,
+            "standard_error_of_change": 0.1340990208373145
+          },
+          "loss": {
+            "mean": 0.18347111992945325,
+            "change_from_direct": -0.06374076829805997,
+            "standard_error_of_change": 0.1459171831449336
+          }
+        }
+      }
+    ]
+  },
+  "interfaces": {
+    "fresh_menu_access": "unavailable from the Task 61 full-menu records",
+    "additional_perfect_reply_queries": [
+      {
+        "menu": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "response": 0
+      },
+      {
+        "menu": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "response": 1
+      },
+      {
+        "menu": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "response": 2
+      },
+      {
+        "menu": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "response": 3
+      },
+      {
+        "menu": [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "response": 4
+      },
+      {
+        "menu": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "response": 5
+      },
+      {
+        "menu": [
+          6,
+          7,
+          8
+        ],
+        "response": 6
+      },
+      {
+        "menu": [
+          7,
+          8
+        ],
+        "response": 7
+      }
+    ],
+    "training_choice": "most probable opening move of the randomized priority source",
+    "draw_values_and_matches": [
+      [
+        -1.0,
+        0
+      ],
+      [
+        0.0,
+        0
+      ],
+      [
+        1.0,
+        1
+      ]
+    ],
+    "alignment_squared_error": 0.0,
+    "initial_fits": 2,
+    "extra_fits_on_resume": 0,
+    "probability_distillation_loss_nats": [
+      2.4493162782744617,
+      2.183671638767234
+    ],
+    "pair_distance": 0.03358322184028764
+  }
+}

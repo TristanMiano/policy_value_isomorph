@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 49**, defining how the project queries a policy (the player's rule for choosing moves). Phase II and Checkpoint C are complete. [Proofs](formalism/48_finite_checks.md) · [Checkpoint findings](CHECKPOINT_C.md)
+**Next is Task 62**, which will fix the design for independent confirmation runs. Tasks 49–59 and Checkpoint D are complete. [Checkpoint D findings and reproduction](CHECKPOINT_D.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -419,56 +419,68 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 # Phase III — Build the generalized recovery and comparison framework
 
-- [ ] **49. Define the `PolicyAdapter` protocol.**
+- [x] **49. Define the `PolicyAdapter` protocol.**
   - Support history encoding, feasible/candidate actions, deterministic action, sampled action, optional probabilities/logits, optional constrained choice, optional transition/rollout, and optional internals.
   - **Done when:** tic-tac-toe and Connect Four satisfy the protocol without changing their game logic.
+  - Completed 2026-11-20. Both game adapters preserve the existing legal moves and transitions and distinguish observed source queries from derived choices. [Implementation](src/policy_value_isomorph/policy_adapter.py) · [Checks](tests/test_policy_adapter.py). Full Windows suite: 110 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **50. Define `RecoveryContract` and `ValueArtifact` dataclasses.**
+- [x] **50. Define `RecoveryContract` and `ValueArtifact` dataclasses.**
   - Record semantics level, access mode, query/state distribution, candidate generator, decoder, normalization, provenance, uncertainty, and supported scope.
   - For game artifacts link the frozen source, utility specification, continuation and opponent policies, tie or mixing rule, temperature, split, and opponent-panel manifest to the evaluation rows.
   - **Done when:** artifacts are serializable and reject semantically incomplete combinations.
+  - Completed 2026-11-20. Validated provenance, source access, score units, legal support, evaluation links and the rules for complete-play utility. [Implementation](src/policy_value_isomorph/recovery_contract.py) · [Checks](tests/test_recovery_contract.py). Full Windows suite: 111 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **51. Implement exact decoder-value encoders.**
+- [x] **51. Implement exact decoder-value encoders.**
   - Add deterministic indicator/gap scores, stochastic log scores, and positive-distance energies minimized over metric actions.
   - **Done when:** round-trip tests recover the source behavior exactly on supported domains.
+  - Completed 2026-11-20. Checked deterministic choices, exact zero probability under exponential sampling and minimum-distance actions. [Implementation](src/policy_value_isomorph/score_encoding.py) · [Checks](tests/test_score_encoding.py). Full Windows suite: 112 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **52. Implement policy-to-score distillation.**
+- [x] **52. Implement policy-to-score distillation.**
   - Train value/action-score networks directly from actions, probabilities, logits, or pairwise choices according to access level.
   - **Done when:** each supervision mode is a separate named recovery method with matched evaluation.
+  - Completed 2026-11-20. Added four named training objectives with common candidate and evaluation handling and final training losses. [Implementation](src/policy_value_isomorph/distillation.py) · [Checks](tests/test_distillation.py). Full Windows suite: 113 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **53. Implement return evaluation and fitting a compact trajectory utility.**
+- [x] **53. Implement return evaluation and fitting a compact trajectory utility.**
   - Reuse the exact tic-tac-toe reference and compare Monte Carlo and optional bootstrapped estimates under the same payoff and continuation. Expose the induced outcome lotteries so a new utility can be evaluated without summing continuation values along a trajectory.
   - Fit one nonconstant utility shared across boards to training choices under a declared decoder. Start with anchored win/draw/loss utilities and a small prespecified extension such as game length. Restrict inputs to consequences and publish the features, parameter count, scale anchors and policy-independent tie rule. Keep source actions and board identities out of the utility inputs.
   - Verify the implementation on a source with a known utility and on choices the restricted family cannot explain. Retain multiple compatible utilities or bounds when the observations admit them. Task 71 tests predictive value on held-out choices.
+  - Completed 2026-11-20. Exposed exact and sampled outcome-and-duration distributions and fitted anchored common utilities with explicit ambiguity. [Implementation](src/policy_value_isomorph/consequence_utility.py) · [Checks](tests/test_consequence_utility.py). Full Windows suite: 116 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **54. Implement constrained-choice and active preference probing.**
+- [x] **54. Implement constrained-choice and active preference probing.**
   - Recover action rankings from masked candidate sets; add deterministic consistency diagnostics and a stochastic pairwise model.
   - **Done when:** the probe budget and query history are part of the artifact.
+  - Completed 2026-11-20. Retained the query budget and every response, quantified ordering conflicts and estimated pairwise choice odds. [Implementation](src/policy_value_isomorph/preference_probes.py) · [Checks](tests/test_preference_probes.py). Full Windows suite: 117 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **55. Implement candidate and neighborhood generators.**
+- [x] **55. Implement candidate and neighborhood generators.**
   - Cover legal discrete actions, nearby reachable states, sampled continuous actions, and generated sequence candidates.
   - **Done when:** candidate-generation bias is measurable and reproducible.
+  - Completed 2026-11-20. Added reproducible legal, reachable, continuous and sequence candidates with omitted mass or distance diagnostics. [Implementation](src/policy_value_isomorph/candidate_sets.py) · [Checks](tests/test_candidate_sets.py). Full Windows suite: 118 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **56. Implement value alignment and canonicalization.**
+- [x] **56. Implement value alignment and canonicalization.**
   - Support anchor subtraction, standardized/robust scale, affine fit to shared anchors, isotonic/rank alignment, and temperature-aware alignment.
   - **Done when:** comparison refuses raw cardinal metrics across incompatible gauges.
+  - Completed 2026-11-20. Implemented shared anchors, scale, monotone and temperature transformations and enforced comparable units for numerical differences. [Implementation](src/policy_value_isomorph/score_alignment.py) · [Checks](tests/test_score_alignment.py). Full Windows suite: 119 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **57. Implement the multi-axis value comparison suite.**
+- [x] **57. Implement the multi-axis value comparison suite.**
   - Implement Task 35's fidelity and strength measures, including a source row, absolute rates and paired differences. For return models recompute residual error at each saved checkpoint on fixed training targets and error on held-out boards with exact targets. Log action disagreement, action gaps and matchup outcomes at the same checkpoint.
   - Retain within-state rank correlations and top-k overlap, aligned cardinal error, local geometry, return calibration, and counterfactual prediction scores. Each metric declares its population, invariances, access requirements, and units.
+  - Completed 2026-11-20. Combined source-relative imitation and game outcomes with checkpoint errors, ranking, geometry, calibration and changed-choice measures. [Implementation](src/policy_value_isomorph/comparison_suite.py) · [Checks](tests/test_comparison_suite.py). Full Windows suite: 121 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **58. Build the repeated-recovery experiment orchestrator.**
+- [x] **58. Build the repeated-recovery experiment orchestrator.**
   - Factor seeds for data, rollouts, initialization, optimizer order, architecture, and candidate generation.
   - Store manifests and pairwise/barycenter comparison tables.
   - **Done when:** a small matrix resumes safely and detects accidental seed reuse.
+  - Completed 2026-11-20. Stored independently factored seeds, resumable run manifests and pairwise and mean-distribution comparisons. [Implementation](src/policy_value_isomorph/recovery_matrix.py) · [Checks](tests/test_recovery_matrix.py). Full Windows suite: 122 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **59. Build the first `ValueAtlas` reporting API.**
+- [x] **59. Build the first `ValueAtlas` reporting API.**
   - Emit per-context action tables, value gaps, uncertainty across recoveries, local state/action neighborhoods, and source-policy comparison.
   - **Done when:** a deterministic policy yields more inspectable information than a single chosen action.
+  - Completed 2026-11-20. Added per-context move comparisons with gaps, across-fit variation, neighborhoods and probabilities from the original player. [Implementation](src/policy_value_isomorph/value_atlas.py) · [Checks](tests/test_value_atlas.py). Full Windows suite: 123 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 ## Checkpoint D — Infrastructure and experiment freeze
 
-- [ ] Validate Tasks 49–59 against the Task 61 fixtures. Verify that the source, direct decoder, and expected-utility variants can be evaluated in the same tables. Task 62 freezes the confirmation protocol before final runs.
+- [x] Validate Tasks 49–59 against the saved Task 61 study. Report copying the original player's moves and winning games in the same tables for the original player, the highest immediate score, and the move with the highest average whole-game score.
+  - Completed 2026-11-20. Replayed all 240 original move-comparison rows, 900 game rows and 90 payoff comparisons. For networks trained to predict observed move frequencies, replayed another 172 move and 1,290 game rows. Corrected the denominator for reporting a randomized player's forced moves and preserved raw fitted count estimates for diagnosing disagreements. [Review, results and reproduction](CHECKPOINT_D.md)
 
 ---
 

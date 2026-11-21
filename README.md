@@ -16,6 +16,10 @@ A worked tic-tac-toe board shows how two moves can both win yet imply different 
 
 ## Run the current baseline
 
+To inspect one player's choices, run `python scripts/demo_value_atlas.py` after installing the package. The example shows the source's counts, each network's predictions, its game outcomes, and what it chooses when its favorite move is removed. [Phase III results and framework](PHASE_III.md)
+
+For the full tic-tac-toe comparison, Checkpoint D puts move agreement alongside wins, draws and losses. It shows how the results change when the original player or copies of the fitted network finish hypothetical games. [Checkpoint D results and reproduction](CHECKPOINT_D.md)
+
 Use Python 3.10 or newer in a virtual environment. From the repository root, install the project and run the following commands. PyTorch trains the networks. The short training check fits a move-selecting policy, freezes it, and plays out games to train networks that score a board or a board and move. It saves and resumes all three fits.
 
 ```sh
