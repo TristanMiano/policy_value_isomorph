@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 71**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 72**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -549,10 +549,12 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Measured highest-score, equal-best and temperature-sampled moves for fixed and randomized original players, including fitted continuations, support restrictions, direct payoff prediction, outcome probabilities and a mixture of complete-game utilities. Saved point estimates by split and initialization.
 
-- [ ] **71. Measure how closely a compact utility predicts held-out choices over moves and lotteries.**
+- [x] **71. Measure how closely a compact utility predicts held-out choices over moves and lotteries.**
   - Compare direct scores, the supplied payoff, and the shared utility fitted in Task 53 at matched access and budgets. Measure the change in held-out fidelity and game performance from requiring scores to factor through expected utility. Report utility complexity and stability up to the allowed normalization.
   - Before querying the source, predict its response to action removal, controlled policy edits, and changed consequence lotteries, such as a sure draw versus a specified win/loss gamble. Define how the source can observe and choose between each offered alternative. Use explicit lottery-choice fixtures when an ordinary board policy lacks that interface. Report which comparisons the original source actually supports.
   - Compare predictions under changed conditions with direct scores and simple decision rules. Include policies generated from a known utility and deliberately incompatible choices. Measure errors in known utility trade-offs after aligning scale and offset. Record equivalent explanations and the change in prediction error when applying each fitted utility in a new setting.
+
+  - Completed 2026-11-20. Recorded predictions before fresh restricted-menu and edited-priority answers. On separate lottery players measured agreement after changed odds, changed presentation order and transfer to the other player. Saved per-case predictions and actual responses.
 
 - [ ] **72. Publish the finite-domain result report.**
   - Publish a machine-readable table by source, score, decoder, access, and budget. Link the opponent/seat results, error and action-gap curves, fidelity bounds, counterfactual predictions, representative atlases, and negative results to the claim ledger.
