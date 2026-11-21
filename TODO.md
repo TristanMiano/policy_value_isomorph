@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 42**, score units and temperature.
+**Next is Task 43**, recovering order from menus.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -371,9 +371,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** deterministic argmax, softmax with known temperature, and threshold consumers have separate examples.
   - Completed 2026-11-20. Identified the response quotient and the inverse on its attainable responses. Different consumers preserve different information. [Statement and checks](formalism/41_response_equivalence.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **42. Prove normalization and scale/temperature lemmas.**
+- [x] **42. Prove normalization and scale/temperature lemmas.**
   - Analyze additive anchors, positive affine transforms, rank/quantile normalization, and the equivalence between value scale and softmax temperature.
   - **Done when:** the project has a justified comparison protocol rather than raw-output RMSE between arbitrary gauges.
+  - Completed 2026-11-20. Proved the effects of offsets, scale, temperature and rank normalization on choices, probabilities and lotteries. [Statement and checks](formalism/42_score_units.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **43. Prove revealed ranking recovery from constrained choice sets.**
   - If a deterministic policy chooses the unique maximum of one stable ordering from every offered finite subset, prove that pairwise or elimination queries recover the total order.
