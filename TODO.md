@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 29.** Update package requirements and contributor instructions for the current PyTorch experiments.
+**Next is Checkpoint A — backend and scope readiness.** Tasks 25–29 are complete. The checkpoint review is pending. [Checkpoint A](#checkpoint-a--backend-and-scope-readiness)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -270,10 +270,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** `pytest -q` and a documented smoke command pass from a fresh editable install.
   - Completed 2026-11-20. A short end-to-end program freezes a trained player, generates rollout labels with it, fits and resumes both payoff networks, and plays both seats. Tests read all three trainers’ checkpoints and both log formats through native paths. With fresh editable installations, Windows passed 93 tests and skipped the GPU check on its CPU-only PyTorch build. Ubuntu passed all 94, including the separately marked NVIDIA GPU check. The short program and the three-board demo ran on both platforms. [Runnable check](scripts/smoke_torch_training.py) · [Cross-platform tests](tests/test_torch_smoke.py)
 
-- [ ] **29. Update dependencies, README, reproducibility docs, and examples for the PyTorch-first stack.**
+- [x] **29. Update dependencies, README, reproducibility docs, and examples for the PyTorch-first stack.**
   - Replace stale “no neural nets/no dependencies” language in `AGENTS.md`, `DESIGN.md`, `REFERENCES.md`, and package metadata.
   - Document optional dependency groups planned for control, sequence, LLM, and visualization work.
   - **Done when:** a new contributor can reproduce the current baseline without relying on historical Task 1 instructions.
+  - Completed 2026-11-20. Updated package metadata, contributor instructions, design, references, installation and reproduction examples. The guide identifies installed extras and future dependency groups separately. In a fresh Windows environment the documented editable installation, dependency check, train, evaluation, checkpoint/resume, short workflow and demo commands ran. The suite passed 93 tests with the one GPU-only check skipped. Ubuntu passed all 94 tests, including that check, during Task 28. [Quickstart](README.md#run-the-current-baseline) · [Reproduction guide and planned groups](REPRODUCIBILITY.md#dependencies-and-optional-groups)
 
 ## Checkpoint A — Backend and scope readiness
 

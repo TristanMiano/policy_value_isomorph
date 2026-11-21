@@ -1,3 +1,11 @@
+torch>=2.0
 
 [dev]
 pytest>=8.0
+numpy>=1.24
+
+[muon]
+torch>=2.9
+
+[neural-control]
+numpy>=1.24

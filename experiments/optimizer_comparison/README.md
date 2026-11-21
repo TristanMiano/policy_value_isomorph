@@ -8,8 +8,8 @@ The **policy** learns to copy the original player's action on 64 training boards
 
 | Network | Mean matches out of 780, AdamW → Muon | Agreement change, percentage points | Win / draw / loss %, AdamW → Muon | Win change, percentage points |
 | --- | ---: | ---: | --- | ---: |
-| Policy | 364.25 → 376.50 | +1.57 ± 0.18 | 43.24 / 17.82 / 38.95 → 44.22 / 17.87 / 37.92 | +0.98 ± 0.87 |
-| V | 373.00 → 389.25 | +2.08 ± 0.80 | 56.55 / 11.13 / 32.32 → 62.50 / 10.93 / 26.58 | +5.95 ± 5.01 |
+| Policy | 364.25 → 376.50 | +1.57 ± 0.18 | 43.24 / 17.82 / 38.95 → 44.21 / 17.87 / 37.92 | +0.98 ± 0.87 |
+| V | 373.00 → 389.25 | +2.08 ± 0.80 | 56.55 / 11.13 / 32.32 → 62.50 / 10.93 / 26.58 | +5.94 ± 5.01 |
 | Q | 308.50 → 286.00 | −2.88 ± 0.53 | 43.13 / 12.51 / 44.36 → 45.44 / 14.21 / 40.35 | +2.30 ± 4.48 |
 
 Training loss is the mean across equally weighted examples during a pass. For the policy it measures minus the natural logarithm of the observed move's probability. For V and Q it measures squared error in game points. Elapsed time includes model setup and all six training passes. The timings describe this machine and may vary with other processes.

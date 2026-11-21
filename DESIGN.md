@@ -1,14 +1,10 @@
-# DESIGN (Task 1 Vertical Slice)
+# Policy and value reconstruction design
 
-## Scope
+## Implemented game and training paths
 
-This first slice intentionally implements only a **tabular/deterministic tic-tac-toe demo**:
+A **policy** chooses a legal move from a position. A **rollout** plays the game forward under the specified players. The primary tic-tac-toe experiment freezes a trained policy, counts its moves and fits networks to each move's fraction of visits. A separate game-payoff experiment fits the final points from rollouts. The board network scores the position after a move. The board-and-move network also sees where the move started. The policy network learns to choose moves directly. All three general-purpose trainers use PyTorch and can resume from a saved training state. [Visit-count experiment](NEURAL_TICTACTOE_CONTROL.md) · [PyTorch training and checkpoint recipes](REPRODUCIBILITY.md)
 
-- a fixed baseline policy,
-- rollout-based recovery of `V^pi(s)`, and
-- action choice from rollout-trained successor-state values.
-
-No neural nets are included yet.
+Tic-tac-toe and Connect Four have local rules and a tabular rollout path. Four-by-four Reversi is scheduled as the third game. [Roadmap](TODO.md#resume-here)
 
 ## Value representation does not determine selection by itself
 

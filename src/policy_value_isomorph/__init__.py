@@ -1,4 +1,4 @@
-"""Policy-to-value reconstruction demo package (Task 1 tic-tac-toe vertical slice)."""
+"""Game policies, rollout-based value recovery and PyTorch training."""
 
 from .tictactoe import TicTacToeState, check_winner
 from .connect_four import ConnectFourState, check_winner as connect_four_check_winner

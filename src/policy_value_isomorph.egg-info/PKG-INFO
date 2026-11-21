@@ -1,56 +1,84 @@
 Metadata-Version: 2.4
 Name: policy-value-isomorph
 Version: 0.1.0
-Summary: Minimal tic-tac-toe policy-to-value reconstruction demo
+Summary: PyTorch training and rollout-based reconstruction of game policies
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
+Requires-Dist: torch>=2.0
+Provides-Extra: neural-control
+Requires-Dist: numpy>=1.24; extra == "neural-control"
+Provides-Extra: muon
+Requires-Dist: torch>=2.9; extra == "muon"
 Provides-Extra: dev
 Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: numpy>=1.24; extra == "dev"
 
 # Policy-to-Value Reconstruction Demo
 
 A small research/demo project exploring the following idea:
 
-> If we start from an agent's **policy**—a mapping from states to moves or next states—can we reconstruct a useful **value representation** from that policy alone, and then use that recovered value representation to choose moves by argmax?
+> A **policy** gives a move or probabilities for the legal moves in each position. A **value representation** assigns numerical scores to moves or their consequences. How closely can choices made from those scores reproduce the original policy, and how does playing strength change?
 
-This repo is meant to be a concrete, economical implementation of a claim inspired by Thoth-Hermes's post "Condensed response to 'hidden complexity of wishes'", especially the suggestion that there is an approximate correspondence between a policy-like representation and a utility/value-like representation over states.
+This repo is meant to be a concrete, economical implementation of a claim inspired by Thoth-Hermes's post "Condensed response to 'hidden complexity of wishes'", especially the suggestion that there is an approximate correspondence between a policy-like representation and a utility/value-like representation over states, actions, continuations, or trajectories.
 
-The immediate practical goal is **not** to settle the philosophical claim in full generality. The goal is narrower and empirical:
+The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
 
-1. Start with a known policy for a small discrete game.
-2. Freeze that policy.
-3. Use rollouts of the policy to estimate a value function induced by that policy.
-4. Train a value network on those estimates.
-5. Recover move choice by taking an argmax over successor-state values.
-6. Measure how closely the recovered value-guided agent matches the original policy.
+Two protocols apply throughout this project. Keep quantitative questions and answers numerical, including magnitudes and differences. Never turn a measurable comparison into a yes/no verdict. Define every new term before using it in a design, report, progress update, or chat summary. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
 
 ---
 
-## Core idea
+## Run the current baseline
 
-We begin with a policy-like object:
+Use Python 3.10 or newer in a virtual environment. From the repository root, install the project and run the following commands. PyTorch trains the networks. The short training check fits a move-selecting policy, freezes it, and plays out games to train networks that score a board or a board and move. It saves and resumes all three fits.
 
-- `P(s) -> a`, a deterministic move chooser, or
-- `P(s) -> pi(.|s)`, a distribution over legal actions.
+```sh
+python -m pip install -e ".[dev]"
+python scripts/smoke_torch_training.py
+python scripts/demo_tictactoe.py
+python -m pytest -q
+```
 
-In a deterministic board game, the chosen action `a` induces a next state `T(s, a)`.
+The demo prints three positions, payoffs and selected moves. The short training check reports move counts and two complete games per player. To reproduce the frozen study, use the experiment's own settings, board split and saved weights. [Reproduction commands and package options](REPRODUCIBILITY.md) · [Research roadmap](TODO.md#resume-here)
 
-What we want to recover is a value-like object:
+## Core idea: two nested claims
 
-- `V(s) -> real`, a scalar estimate of how good state `s` is, or
-- `Q(s, a) -> real`, a scalar estimate of how good it is to take action `a` in state `s`.
+The primary tic-tac-toe experiment first trains and freezes a neural player and checks its moves against every reachable decision board. It samples games, counts transitions from each board, and trains networks to predict the fraction of visits taking each move. For each fitted network it compares choosing the highest immediate score with choosing by the average learned utility of complete sampled games. [Architecture, training procedure and results](NEURAL_TICTACTOE_CONTROL.md)
 
-Once we have a value function, we can choose a move by comparing the values of successor states:
+A training follow-up separates exact reproduction on observed boards from predicting the player's moves on withheld boards. It compares losses, board geometry and rules for resolving tied move scores, and measures how often expected-utility planning corrects or introduces a disagreement. [Move agreement, game results and exact constructions](TICTACTOE_CHOICE_TRAINING.md)
 
-`a* = argmax_a V(T(s, a))`
+The project now separates two questions that should not be conflated.
 
-or, equivalently,
+### 1. Behavioral reconstruction
 
-`a* = argmax_a Q(s, a)`
+Write `P` for the original policy, `S_P` for scores constructed to represent its choices, and `D` for the decoder that turns those scores into choices. The aim is to recover scores such that
 
-when a `Q` function is available.
+```text
+P approximately equals D(S_P).
+```
 
-The main experiment in this repo is to see how much of the original policy can be reconstructed this way.
+A **deterministic** policy chooses one fixed move per position. Choosing the highest-scoring legal move (`argmax`) with a fixed rule for ties can reproduce it exactly. A **stochastic** policy specifies move probabilities. Taking their logarithms as scores and converting the scores back to probabilities gives an exact representation of the move distribution.
+
+### 2. Expected-utility factorization
+
+Measure how closely an action score that reproduces the policy can be expressed as the average utility of the outcomes of that action. Here `h` is the history, `a` a move, and `U(tau)` the numerical utility assigned to a complete course of play `tau`. The proposed form is
+
+```text
+S_P(h,a) approximately equals E[U(tau) | h, a, environment, continuation rule],
+```
+
+followed by an `argmax` over actions. The possible courses of play and their probabilities form a **lottery**. Maximizing the probability-weighted utility of its outcomes is the formulation associated with von Neumann–Morgenstern (VNM) expected utility.
+
+The **state value** `V^P` is the expected payoff from a position when play follows `P`. The **action value** `Q^P` is the expected payoff after a specified first move and then following `P`. Either can be estimated from rollouts. Choosing the move with the highest `Q^P` may change the original player's move, even with perfectly estimated payoffs. The experiment measures how often this changes the choice and by how many payoff points.
+
+The resulting conceptual spine is
+
+```text
+P  ->  behaviorally faithful score S_P  ->  possible trajectory utility U.
+```
+
+The first arrow is the broad policy-value representation claim. The second is a stronger utility-factorization hypothesis to test rather than assume.
+
+See [`docs/policy_reconstruction_vs_utility_factorization.md`](docs/policy_reconstruction_vs_utility_factorization.md) for the full argument and [`docs/selection_semantics.md`](docs/selection_semantics.md) for the operational contract governing scores, rollout values, lotteries, and double counting.
 
 ---
 
@@ -66,7 +94,7 @@ A **state-value** answers:
 
 In reinforcement-learning notation:
 
-`V^pi(s) = E[ return | s, then follow pi ]`
+`V^pi(s) = E[return | s, then follow pi]`
 
 This is a scalar attached to the state.
 
@@ -78,7 +106,7 @@ An **action-value** answers:
 
 In notation:
 
-`Q^pi(s, a) = E[ return | take action a in s, then follow pi ]`
+`Q^pi(s, a) = E[return | take action a in s, then follow pi]`
 
 This is a scalar attached to a state-action pair.
 
@@ -86,7 +114,7 @@ This is a scalar attached to a state-action pair.
 
 In a standard Markov setting:
 
-`V^pi(s) = E_{a ~ pi(.|s)} [ Q^pi(s, a) ]`
+`V^pi(s) = E_{a ~ pi(.|s)}[Q^pi(s, a)]`
 
 So the state-value is the policy-weighted average of the action-values.
 
@@ -127,13 +155,13 @@ Typical reasons:
 3. **Averaging over policy choices.** `V^pi(s)` averages across the actions selected by the policy, while `Q^pi(s, a)` conditions on one specific action.
 4. **History matters but is not fully encoded in the visible board.** In that case the true state is not just the board position.
 
-That last point matters a lot outside tiny toy games. Tic-tac-toe is effectively Markov if the board and side-to-move are included. Chess is more subtle because repetition status, castling rights, en passant rights, and move counters matter, so the true state is richer than "piece placement alone." AlphaZero-style systems therefore encode additional rule-state information rather than just the visible board.  
+That last point matters a lot outside tiny toy games. Tic-tac-toe is effectively Markov if the board and side-to-move are included. Chess is more subtle because repetition status, castling rights, en passant rights, and move counters matter, so the true state is richer than "piece placement alone." AlphaZero-style systems therefore encode additional rule-state information rather than just the visible board.
 
 ---
 
 ## A useful way to think about the "entire trajectory" question
 
-Yes: if `V(s)` and `Q(s, a)` do not cleanly line up on a coarse state representation, one remedy is to **lift the state space**.
+If `V(s)` and `Q(s, a)` do not cleanly line up on a coarse state representation, one remedy is to **lift the state space**.
 
 Instead of defining the state as only the current board, define it as something richer, such as:
 
@@ -144,11 +172,11 @@ Instead of defining the state as only the current board, define it as something 
 
 Then a state-value over this enlarged object is often perfectly well-defined:
 
-`V^pi(h_t) = E[ return | history h_t, then follow pi ]`
+`V^pi(h_t) = E[return | history h_t, then follow pi]`
 
 and the corresponding action-value is:
 
-`Q^pi(h_t, a) = E[ return | history h_t, take a, then follow pi ]`
+`Q^pi(h_t, a) = E[return | history h_t, take a, then follow pi]`
 
 In deterministic settings, these relate cleanly via the next history:
 
@@ -167,11 +195,42 @@ For tic-tac-toe, the simple board state is already rich enough. For larger games
 
 ## Project thesis for this repo
 
-We will test the following concrete claim:
+The broad thesis is:
 
-> Given a frozen policy `pi`, a value function induced by that policy can be estimated from rollouts, trained into a value network, and used to recover much of the original move behavior by argmax over successor-state values.
+> Given a sufficiently well-defined policy `P`, a value-like action or continuation score plus an appropriate declared decoder can reproduce its behavior exactly or approximately.
 
-This is intentionally narrower than "all policies and all utilities are equivalent." It is a tractable, empirical version of the broader idea.
+The stronger empirical thesis is:
+
+> Some behaviorally faithful scores can also be recovered or approximated as expected utility over trajectories under a compact, stable return contract.
+
+The primary game experiment uses the frozen player's move frequencies to train a score network. It compares immediate score maximization with maximization of expected learned utility over simulated games. A separate experiment trains on final game payoffs. Both report how closely the resulting moves match the source and how each recovered player performs over whole games.
+
+---
+
+## PyTorch-first migration decision (Task 22)
+
+For the current modernization phase, this project treats **PyTorch as the canonical training backend** for policy, state-value `V(s)`, and action-value `Q(s,a)` models.
+
+An editable install (`pip install -e .`) installs PyTorch. The shared one-hidden-layer network reads the original JSON weights directly. Prediction and the historical training configuration use 64-bit CPU arithmetic, the precision of the original Python weights.
+
+The three trainers and their prediction functions now use that network. Replaying the saved tic-tac-toe weights reproduced the top legal move in all 67,800 comparisons across five original players, 4,520 boards and three reconstruction methods. [Move comparisons, game outcomes and reproduction commands](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
+
+For the adaptive training baseline, **AdamW** updates each weight using running averages of its gradient and squared gradient, and shrinks weights separately. **Stochastic gradient descent (SGD)** applies each example's gradient times the learning rate and is the default for historical runs. A seed fixes initial weights and the order of examples. The following command trains the move policy, the board-payoff network and the board-and-move payoff network on the central processor (CPU) using 64-bit arithmetic.
+
+```sh
+policy-value-cli train --optimizer adamw --learning-rate 0.001 --weight-decay 0.01 --beta1 0.9 --beta2 0.999 --epsilon 1e-8 --device cpu --dtype float64 --deterministic --seed 13 --episodes 4 --policy-epochs 3 --value-epochs 3 --q-epochs 3
+```
+
+The two beta settings control how much previous gradient information carries forward. Epsilon stabilizes division by small values. Use `--dtype float32` for 32-bit training or `--device cuda:0` for the first available NVIDIA graphics processor. The public prediction functions read the exported weights on CPU in 64-bit precision. The `eval` command accepts the same optimizer settings. [PyTorch AdamW parameters](https://docs.pytorch.org/docs/2.8/generated/torch.optim.AdamW.html)
+
+Migration constraints:
+
+1. Keep tic-tac-toe rollout/value-recovery APIs and value-sign semantics stable.
+2. Keep existing CLI workflows and artifact conventions (checkpoints, telemetry, plots) stable unless explicitly versioned.
+3. Limit changes to model/training internals first (forward/backward/optimizer/checkpoint state), not environment/evaluation redesign.
+4. Preserve resume semantics and reproducibility hooks (seed plumbing and deterministic settings where feasible).
+
+Detailed migration boundaries and compatibility constraints are documented in `PYTORCH_MIGRATION_AUDIT.md`.
 
 ---
 
@@ -188,7 +247,7 @@ Advantages:
 - easy to compare against minimax ground truth
 - very fast training and rollout generation
 
-If the idea works there, we can move to Connect Four as the next step.
+Connect Four provides a larger board on which to compare the same measurements.
 
 ---
 
@@ -198,21 +257,23 @@ If the idea works there, we can move to Connect Four as the next step.
 
 Before using neural nets, do the simplest possible version.
 
-1. Implement tic-tac-toe environment.
+1. Implement the tic-tac-toe environment.
 2. Create a policy `pi`:
-   - either minimax,
+   - either minimax (choose the best guaranteed payoff against the opponent's best replies),
    - or a small trained policy,
    - or even a scripted suboptimal policy.
 3. Enumerate or sample many reachable states.
-4. For each state, run many rollouts under `pi` and estimate:
+4. Build a direct decoder-score baseline that reproduces deterministic actions by `argmax` and stochastic policies by normalized sampling.
+5. For each state, run many rollouts under `pi` and estimate:
    - `V^pi(s)` from terminal outcomes, and optionally
    - `Q^pi(s, a)` for each legal action.
-5. Reconstruct action choice using:
-   - `argmax_a V(T(s,a))`, or
-   - `argmax_a Q(s,a)`.
-6. Compare reconstructed decisions to the original policy.
+6. Construct the return-greedy policy using:
+   - `argmax_a V^pi(T(s,a))`, or
+   - `argmax_a Q^pi(s,a)`,
+   with the appropriate perspective/sign convention.
+7. Compare both recovered policies with the source and distinguish decoder approximation, return-estimation error, and genuine one-step policy improvement.
 
-This phase tells us whether the basic idea works at all.
+This phase separates the broad representation claim from the stronger expected-return factorization claim.
 
 ### Phase 1: policy network
 
@@ -224,47 +285,25 @@ Candidate forms:
 - tiny CNN with board planes
 - small AlphaZero-style network with policy head
 
-The network should output legal-action logits or probabilities.
+The network outputs scores or probabilities for legal moves. For the optimal neural tic-tac-toe comparison, first train on perfect-play move choices, check the guaranteed outcome of the trained move at every reachable decision board, then freeze the weights before collecting reconstruction data.
 
-### Phase 2: rollout-generated value labels
+### Phase 2 — Count observed transitions
 
-Freeze the policy network.
+Sample games from the frozen network to completion. For each observed board, divide the count of each outgoing transition by the total visits to that board. Record the starting positions, counts, denominators and coverage. In a small game the resulting table can drive move selection directly.
 
-For many sampled states `s`, generate Monte Carlo rollouts under the frozen policy and estimate:
+In tic-tac-toe the frozen optimal player reaches nine of the 4,520 decision boards playing against its own copy from empty. Starting one complete game at each training board recovers every training move frequency for this deterministic player in 7,082 source turns. When drawing starts from random legal play, keeping some empty starts and favoring boards with few prior observations increased the fraction of exact move matches on the 780 held-out boards. Count only turns taken by the player being reconstructed. For a player that randomizes its moves, measure both the number of distinct boards reached and error in the estimated move probabilities on those boards. [Sampling rules, game outcomes and uncertainty](TICTACTOE_SAMPLING.md)
 
-`target_value(s) = average terminal return from s under pi`
+### Phase 3 — Fit the visit scores
 
-For deterministic two-player zero-sum tic-tac-toe, use terminal labels in `{-1, 0, +1}` from a fixed player perspective.
+Use those observed fractions as training labels for a network scoring the current and resulting board, or the current board and candidate move. A network that sees only the resulting board provides a comparison when several moves share a successor. Report prediction error and distinguish fits on all positions from fits evaluated on omitted positions.
 
-### Phase 3: train value network
+### Phase 4 — Compare immediate scores and whole-game utilities
 
-Train a separate network:
-
-`V_phi(s) ~ target_value(s)`
-
-using MSE or another simple regression loss.
-
-Optionally also train:
-
-`Q_phi(s, a)`
-
-for direct action-value prediction.
-
-### Phase 4: recover policy from value
-
-Construct a recovered policy:
-
-`pi_V(s) = argmax_a V_phi(T(s, a))`
-
-or
-
-`pi_Q(s) = argmax_a Q_phi(s, a)`
-
-Then evaluate how closely these match the original policy `pi`.
+First take the move with the largest immediate score. Then, using the **same weights**, take each candidate move, sample complete continuations under a declared rule for both players, and select the move with greatest average learned utility. Define the utility of the complete play before comparison. Examples use the learned score at the final move or the sum of mover-signed scores, optionally reducing the weight of later moves. Measure move agreement and win, draw and loss rates for both selection rules. [Implemented study](NEURAL_TICTACTOE_CONTROL.md)
 
 ### Phase 5: expand to Connect Four
 
-If the tic-tac-toe demo works, repeat the same experiment on a slightly larger game.
+Repeat the measurements on a larger game and report how the results change.
 
 Why Connect Four:
 
@@ -279,27 +318,41 @@ An RTX 5070 should be more than enough for small-scale versions of this experime
 
 ## Metrics to report
 
-The repo should not just produce a cool picture; it should measure the reconstruction.
+1. **Direct decoder fidelity**
 
-Recommended metrics:
+   This measures how closely choices made directly from the recovered scores copy the original player. Report the fraction of matching moves for a fixed-move player and the differences between legal-move probabilities for a randomized player.
 
-1. **Action agreement**  
-   Percentage of states where the recovered value-guided policy chooses the same move as the original policy.
+2. **Action agreement**
 
-2. **Top-k agreement**  
-   Whether the recovered move lies in the original policy's top-k actions.
+   Percentage of states where the return-value-guided policy chooses the same move as the original policy.
 
-3. **KL divergence / cross-entropy**  
-   If the original policy is stochastic.
+3. **Top-k agreement**
 
-4. **Win rate / draw rate**  
-   Play the recovered policy against the original policy.
+   The fraction of positions where the reference move appears among the evaluated model's `k` highest-scoring legal moves. Give `k`, the count, and the denominator.
 
-5. **Calibration of value predictions**  
-   Compare `V_phi(s)` against empirical rollout returns.
+4. **Move-probability differences**
 
-6. **Comparison to ground-truth minimax value**  
-   Especially useful for tic-tac-toe.
+   Total variation distance is half the sum of absolute differences between the players' legal-move probabilities. Cross-entropy is the mean negative log probability the recovered model assigns to a move drawn from the source. Kullback–Leibler (KL) divergence subtracts the source's cross-entropy with itself to give the excess on that scale.
+
+5. **Win, draw and loss rates**
+
+   Give each player's probabilities of winning, drawing and losing whole games. Evaluate the original and every recovered player against the same opponents as both X and O. Give each rate and its difference from the original player's rate. Also report games against the original player separately.
+
+6. **Calibration of value predictions**
+
+   For positions with similar predicted payoffs, compare the average prediction with the average payoff observed or calculated exactly. Give the number of observations and the difference in payoff points.
+
+7. **Comparison with perfect play**
+
+   The **minimax value** is the payoff a player can guarantee against an opponent that always makes its best reply. In tic-tac-toe this can be calculated exactly. Give the difference between each estimated payoff and this reference when perfect play is the intended target.
+
+8. **Payoff forgone by a move**
+
+   Give the best expected payoff available minus the chosen move's expected payoff, from the acting player's perspective. Specify who plays the remaining turns. Report differences caused by estimation error and differences already present with exact payoffs.
+
+9. **Utility-factorization gap**
+
+   Measure how much behavioral fidelity is lost when a direct policy score is constrained to arise from a declared expected-trajectory model.
 
 ---
 
@@ -334,6 +387,18 @@ If value labels are collected only from states visited by the original policy, t
 
 For tic-tac-toe and Connect Four, symmetry reduction or augmentation may improve sample efficiency a lot.
 
+### 6. Value semantics and double counting
+
+Record whether a learned value is a decoder score, instantaneous utility, terminal utility, or expected continuation return. Do not average or sum continuation values as though they were instantaneous rewards when the rollout expectation is already included.
+
+### 7. Reconstruction versus optimization
+
+Do not infer exact policy recovery merely because `Q^pi` is accurately estimated. Greedy expected-return selection can differ from the policy whose rollouts generated the labels.
+
+### 8. Decoder matching
+
+Do not judge reconstruction of a stochastic policy only by the `argmax` action. The decoder must reproduce the policy distribution when distributional behavior is part of the target.
+
 ---
 
 ## Minimal repo structure
@@ -346,6 +411,8 @@ Suggested initial files:
 - `generate_rollouts.py` — create value targets from frozen policy
 - `train_value.py` — train the value network
 - `evaluate.py` — compare original and recovered policies
+- `docs/selection_semantics.md` — value meanings and selection mechanisms
+- `docs/policy_reconstruction_vs_utility_factorization.md` — full theoretical distinction between imitation and consequential factorization
 - `notebooks/` or `plots/` — visualizations and diagnostics
 
 ---
@@ -356,21 +423,23 @@ A good first milestone is:
 
 - build tic-tac-toe state encoding
 - implement a decent policy
+- construct an exact direct decoder-score baseline
 - estimate `V^pi(s)` for every reachable state or a very large fraction of them
 - train a small value net
-- show that `argmax_a V(T(s,a))` matches the original policy on a large share of states
+- show how often greedy expected-return selection via `V^pi(T(s,a))` matches the original policy
+- separate direct reconstruction error, value-estimation error, and genuine greedy-improvement differences
 
-If that works, the repo already demonstrates the core idea in a real, inspectable way.
+The resulting percentages and payoff differences quantify both forms of recovery on the same boards.
 
 ---
 
 ## Possible extensions
 
-1. **Compare `V` reconstruction to direct `Q` reconstruction.**  
-   This directly tests whether action-values are easier to recover than successor-state values.
+1. **Compare decoder-score, `V`, and direct `Q` reconstruction.**\
+   This separates behavioral imitation from successor-state and action-return recovery.
 
 2. **Use intentionally imperfect policies.**  
-   This can show that the method works for arbitrary policies, not only optimal ones.
+   This can show when greedy use of recovered return value reproduces a policy and when it improves or departs from it.
 
 3. **Measure how reconstruction quality changes with rollout budget.**  
    This connects directly to the "sample many trajectories" idea.
@@ -379,20 +448,21 @@ If that works, the repo already demonstrates the core idea in a real, inspectabl
    Instead of valuing only raw board states, value a latent representation induced by the policy net.
 
 5. **Move beyond perfect-information games.**  
-   This would force the repo to confront the trajectory/history issue more directly.
+   This would force the repo to confront the trajectory/history and lottery issues more directly.
+
+6. **Test lottery preferences explicitly.**\
+   Compare choices among induced trajectory distributions with the expectations predicted by a recovered cardinal value artifact.
+
+7. **Measure utility-factorization complexity.**\
+   Ask how simple, stable, and transferable a trajectory utility can remain while preserving the direct decoder's behavioral fidelity.
 
 ---
 
-## What success would look like
+## What the evidence measures
 
-This project is successful if it shows something like the following:
+The mathematical representation question calls for an explicit construction and proof under stated assumptions. For learned scores, report move agreement or move-probability distance, differences in action rankings, and variation across independent recoveries.
 
-- a policy can be learned or imported for a small discrete game
-- a value function induced by that policy can be estimated from rollouts
-- a value network can learn that induced value function reasonably well
-- a policy recovered from the value network reproduces a substantial fraction of the original policy's choices
-
-That would not prove a universal philosophical isomorphism. But it would provide a concrete working demonstration of a nontrivial bridge from policy-like behavior to value-like representation.
+For values learned from game outcomes, report prediction error, the frequency and payoff cost of deviations, and the change in win, draw, and loss probabilities. To compare an explanation based on consequences with direct imitation, give its size, prediction error on unseen choices, and the variation across fits. Record the population, weights, and units for each comparison.
 
 ---
 
@@ -409,43 +479,6 @@ That would not prove a universal philosophical isomorphism. But it would provide
 
 ---
 
-## Notes for Codex
+## Continuing the project
 
-If Codex is asked to continue from this README, it should begin with the smallest robust version of the project:
-
-1. implement tic-tac-toe
-2. define a clean state encoding and transition function
-3. choose a policy representation
-4. generate rollout-based value labels from a frozen policy
-5. train a value net
-6. reconstruct the policy by argmax over successor-state values
-7. evaluate agreement and visualize mistakes
-
-Prefer a simple, correct version over a flashy one. The first target is a reproducible tic-tac-toe demo, not a giant training stack.
-
----
-
-
-## Reproducibility
-
-For experiment settings (seeds, split protocol, baseline CLI commands, and reporting checklist), see `REPRODUCIBILITY.md`.
-
-## Task 1 status (implemented)
-
-The repository now contains a runnable minimal vertical slice for tic-tac-toe:
-
-- canonical tic-tac-toe state (`board` + `to_move`)
-- legal move generation, transition, terminal and winner detection
-- deterministic baseline policy (win/block/center/corners)
-- rollout-based `V^pi(s)` estimation from a fixed root-player perspective
-- recovered policy via successor-state value comparison (max for root turn, min for opponent turn)
-- pytest coverage for game logic, value sign behavior, and recovered action behavior
-- runnable demo script printing sample states, values, and chosen actions
-
-### Quickstart
-
-```bash
-pip install -e .[dev]
-pytest -q
-python scripts/demo_tictactoe.py
-```
+Use the current roadmap to resume work. The tic-tac-toe environment, tabular rollout comparisons, PyTorch trainers, checkpoint replay and independent training checks are implemented. The next research phases and their dependencies are recorded in the TODO. [Current work](TODO.md#resume-here) · [Verification and reporting rules](AGENTS.md)
