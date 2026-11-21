@@ -400,6 +400,33 @@ def score_rows(sampler, values):
     return rows
 
 
+def three_fit_inference(changes: list[float]) -> dict:
+    """Two-sided inference for this archive's three independent fits on one fixed split."""
+    if len(changes) != 3:
+        raise ValueError("this archived comparison requires three paired fits")
+    difference = mean(changes)
+    se = stdev(changes) / math.sqrt(3)
+    # For Student's t with two degrees of freedom, P(|T| <= x) = x / sqrt(2 + x²).
+    interval = p_value = None
+    if se > 0:
+        critical = 0.95 * math.sqrt(2 / (1 - 0.95**2))
+        interval = [difference - critical * se, difference + critical * se]
+        t = abs(difference) / se
+        length = math.hypot(t, math.sqrt(2))
+        p_value = 2 / (length * (length + t))
+    # Conditional on the number of nonzero differences, a fair sign is a coin toss.
+    positives = sum(value > 0 for value in changes)
+    negatives = sum(value < 0 for value in changes)
+    nonzero = positives + negatives
+    tail = sum(math.comb(nonzero, k) for k in range(min(positives, negatives) + 1))
+    return {
+        "paired_mean_ci95": interval,
+        "paired_t_p": p_value,
+        "sign_test_nonzero_pairs": nonzero,
+        "sign_test_p": min(1.0, 2 * tail / 2**nonzero) if nonzero else None,
+    }
+
+
 def summarize_fits(rows):
     """Average each rule across saved fits and pair it with direct selection of the same fit."""
     by_method = {}
@@ -409,19 +436,37 @@ def summarize_fits(rows):
         family, _, seed, rule = row["method"].split("/")
         by_method.setdefault((family, rule), {})[seed] = row
     summaries = []
+    comparisons = []
     for (family, rule), fits in by_method.items():
         direct = by_method[family, "direct"]
         if len(fits) != 3 or fits.keys() != direct.keys():
             raise AssertionError("incomplete set of paired visit fits")
         summary = {"model": family, "selection_rule": rule, "fits": len(fits), "metrics": {}}
-        for field in ("agreement", "win", "draw", "loss"):
+        for field in ("agreement", "win", "draw", "loss", "points"):
             changes = [row[field] - direct[seed][field] for seed, row in fits.items()]
-            summary["metrics"][field] = {
-                "mean": mean(row[field] for row in fits.values()),
+            values = [row[field] for row in fits.values()]
+            metric = {
+                "mean": mean(values),
+                "sample_sd": stdev(values),
+                "observed_range": [min(values), max(values)],
                 "change_from_direct": mean(changes),
                 "standard_error_of_change": stdev(changes) / math.sqrt(len(changes)),
             }
+            if rule != "direct":
+                metric.update(three_fit_inference(changes))
+                comparisons.append(metric)
+            summary["metrics"][field] = metric
         summaries.append(summary)
+    # Holm adjustment across the entire family, including correlated outcomes.
+    ordered = sorted(comparisons, key=lambda m: 1.0 if m["paired_t_p"] is None else m["paired_t_p"])
+    adjusted = 0.0
+    for rank, metric in enumerate(ordered):
+        p = metric["paired_t_p"]
+        if p is None:
+            metric["holm_p"] = None
+            continue
+        adjusted = max(adjusted, min(1.0, (len(ordered) - rank) * p))
+        metric["holm_p"] = adjusted
     return summaries
 
 
@@ -705,7 +750,12 @@ def review():
             "artifact_id": "Content identifier of the score reference and its selection rules. The method field is the original archive key.",
             "VNM maximum": "Choose the best expected utility of a complete play for the mover. Continuation names both players used after forcing a move. Null rollout count denotes exact enumeration.",
             "training": "Final mean squared error per legal training candidate, in squared move-frequency units, evaluated at the saved training pass. Seed identifies the fit.",
-            "paired_fits": "Mean across three equally weighted fits. Change subtracts direct selection using the same weights. Standard error is the sample standard deviation of the three paired changes divided by the square root of three, all in fractions. Each selection rule and continuation is defined on its held_out row.",
+            "paired_fits": "Three equally weighted initializations of each recovery network, one board split, frozen source and opponent panel. Each selection rule and continuation is defined on its held_out row. Agreement and outcome rates use fractions. Points are win probability minus loss probability, in points per game.",
+            "sample_sd, observed_range": "Sample standard deviation (spread across the three fits, using divisor two) and their actual minimum and maximum. The frozen original player is one exactly enumerated reference.",
+            "change_from_direct, standard_error_of_change": "Average difference from direct selection on the same weights and its standard error (sample standard deviation of paired differences divided by the square root of three).",
+            "paired_mean_ci95, paired_t_p": "Individual 95% confidence interval for the mean paired difference and two-sided p-value under zero mean difference using Student's t with two degrees of freedom. Assumes independent, normally distributed fit differences on this fixed source, split and panel. Null when the variance estimate is zero.",
+            "holm_p": "Two-sided paired t p-value adjusted by Holm's procedure across all 60 comparisons (two networks, six VNM rules, five outcomes). The intervals are individual, without multiplicity adjustment.",
+            "sign_test_nonzero_pairs, sign_test_p": "Count of nonzero fit differences and unadjusted two-sided exact probability of a sign imbalance at least as extreme if either direction is equally likely, conditional on that count. Null if all differences are zero. This tests direction rather than the mean.",
             "example_predictions": "Per-cell predictions multiplied by the observed visits to the withheld board, in the listed legal cell order. Observed gives actual source counts at the same denominator.",
             "largest_difference": "Maximum absolute replay minus archived difference across the listed checks, in each field's own units.",
             "interfaces": "Small software checks. Each restricted menu records the cells offered and the answer of the known perfect-reply rule. Each draw-value pair gives the game points assigned to a draw and the number of matching choices on one randomized priority opening. Alignment error compares score differences from cell zero. The two opening fits report mean negative natural log probability per source move, weighted by its true probability; pair distance is the move probability mass reassigned between the two fits.",

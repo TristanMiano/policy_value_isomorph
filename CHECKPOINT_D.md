@@ -12,19 +12,33 @@ In the table, the utility is the fitted frequency of the **last move** of the ga
 
 **Move agreement** is the fraction of 780 equally weighted boards withheld from network fitting on which the chosen move matches the source. **Wins, draws and losses** are probabilities for complete games from the empty board, calculated through every possible continuation. The evaluated rule plays every one of its own turns. Each seat receives half the weight. The four equally weighted opponent groups are a player choosing uniformly among legal moves, five equally weighted untrained networks each choosing its highest-scoring legal move, a player prioritizing an immediate win then a block then center then corner then any move, and the player choosing the best guaranteed outcome against perfect replies. All fixed rules break ties by lowest cell number. Each network row averages three fits with different starting weights and training orders, all using the same boards.
 
-| Move-selection rule | Who finishes each trial game? | Move agreement | Wins | Draws | Losses |
+For each fitted network the entries below give the **mean ± sample standard deviation** across its three training runs, in percent. The standard deviation measures how much the individual fits vary. The original player's row gives exact percentages for that fixed player, board population and opponent panel.
+
+| Move-selection rule | Who finishes each trial game? | Move agreement (%) | Wins (%) | Draws (%) | Losses (%) |
 | --- | --- | ---: | ---: | ---: | ---: |
-| Original neural player | — | 100.00% | 42.51% | 57.49% | 0.00% |
-| V direct | — | 71.11% | 39.77% | 41.28% | 18.94% |
-| V VNM, final move | Source copies | 79.02% | 44.28% | 55.49% | 0.23% |
-| V VNM, final move | Fitted copies | 71.92% | 42.09% | 38.42% | 19.49% |
-| Q direct | — | 83.72% | 43.75% | 31.53% | 24.72% |
-| Q VNM, final move | Source copies | 77.61% | 42.98% | 53.40% | 3.62% |
-| Q VNM, final move | Fitted copies | 75.21% | 38.86% | 42.79% | 18.35% |
+| Original neural player (exact, rounded) | — | 100.00 | 42.51 | 57.49 | 0.00 |
+| V direct | — | 71.11 ± 0.15 | 39.77 ± 2.99 | 41.28 ± 18.04 | 18.94 ± 19.18 |
+| V VNM, final move | Source copies | 79.02 ± 1.04 | 44.28 ± 2.67 | 55.49 ± 2.61 | 0.23 ± 0.10 |
+| V VNM, final move | Fitted copies | 71.92 ± 0.51 | 42.09 ± 1.71 | 38.42 ± 7.86 | 19.49 ± 6.40 |
+| Q direct | — | 83.72 ± 0.56 | 43.75 ± 1.33 | 31.53 ± 13.19 | 24.72 ± 14.52 |
+| Q VNM, final move | Source copies | 77.61 ± 1.09 | 42.98 ± 2.49 | 53.40 ± 0.41 | 3.62 ± 2.49 |
+| Q VNM, final move | Fitted copies | 75.21 ± 0.20 | 38.86 ± 1.44 | 42.79 ± 11.55 | 18.35 ± 11.85 |
 
-For the board network, looking ahead with the source raised agreement by **7.91 ± 0.52 percentage points** and wins by **4.51 ± 0.18 points** compared with direct selection. For the board-and-move network, the same change lowered agreement by **6.11 ± 0.94 points** and wins by **0.77 ± 0.97 points**. Its losses fell from **24.72% to 3.62%** as more games ended in draws. Each ± gives one *standard error*, calculated by dividing the sample standard deviation of the three paired fit differences by the square root of three. These numbers describe variation across fits on one shared set of boards and opponents.
+To compare rules, subtract direct selection from VNM **within each fit**, preserving the pairing. Below, the change and its interval are in percentage points. The **95% confidence interval** estimates the mean change across repeated training on this fixed split. The **two-sided p-value** gives the probability, under a model with zero mean change, of a test statistic at least as extreme in either direction. We used the paired Student's t procedure, which assumes independent, normally distributed fit differences. Three observations give little information about the shape of that distribution. [NIST guide to paired comparisons](https://www.itl.nist.gov/div898/handbook/prc/section3/prc311.htm)
 
-The choice of utility also matters. The review included the sum of fitted move frequencies across the game, positive for X's moves and negative for O's, and a version in which the candidate move has weight 1 and each following move receives 0.9 times the previous weight. With the latter utility and source copies, Q agreed on **84.96%** of withheld boards and won **41.57%** of games. Against Q direct, the paired changes were **+1.24 ± 0.57** points in agreement and **−2.18 ± 1.22** points in wins. The results file gives each fit, all three utilities, both continuation rules and their paired comparisons. [Per-fit measurements and averages](experiments/checkpoint_d.json)
+The intervals apply to each comparison individually. The last column applies **Holm's adjustment**, which accounts for examining the full set of 60 comparisons together, including the other utilities. The set is two network types × six VNM rules × five measures (agreement, wins, draws, losses and mean game points). This is an exploratory reanalysis of saved results. [Holm's multiple-comparison procedure](https://www.jstor.org/stable/4615733)
+
+| Final-move VNM minus direct | Who finishes? | Measure | Mean change | Individual 95% interval | Raw p | Adjusted p |
+| --- | --- | --- | ---: | ---: | ---: | ---: |
+| V | Source copies | Agreement | +7.91 | +5.67 to +10.14 | 0.00430 | 0.2492 |
+| V | Source copies | Wins | +4.51 | +3.72 to +5.30 | 0.00166 | 0.0979 |
+| Q | Source copies | Agreement | −6.11 | −10.14 to −2.08 | 0.02272 | 1.0000 |
+| Q | Source copies | Wins | −0.77 | −4.96 to +3.43 | 0.51269 | 1.0000 |
+| Q | Fitted copies | Agreement | −8.50 | −9.42 to −7.58 | 0.00063 | 0.0378 |
+
+The last row has the smallest adjusted p-value across the 60 comparisons. An additional check asks only how often the differences point in the same direction. If either direction is equally likely on each independent fit, all three can agree in either direction with probability **2/8 = 0.25**. This is the smallest possible two-sided p-value from that direction-only check on three fits. The stronger numerical evidence for the mean in the last row depends on the similar sizes of the three decreases and on the distribution assumed for them. The archive has **one source, one board split and one opponent panel**. Variation across freshly trained sources, randomized holdouts and new opponent panels remains unmeasured. [All 60 differences, intervals, raw and adjusted p-values, and direction-only checks](experiments/checkpoint_d.json)
+
+The review also summed fitted move frequencies across the game, positive for X's moves and negative for O's, and tried a version in which the candidate move has weight 1 and each following move receives 0.9 times the previous weight. With the latter utility and source copies, Q agreed on **84.96 ± 0.45%** of withheld boards and won **41.57 ± 3.25%** of games (mean ± sample standard deviation of three fits). Against Q direct, the paired change in agreement was **+1.24 points** (individual 95% interval −1.19 to +3.67) and in wins **−2.18 points** (−7.43 to +3.06). [Per-fit measurements and comparisons](experiments/checkpoint_d.json)
 
 ## What the review corrected
 
@@ -48,10 +62,10 @@ Two copies of the frozen source played complete games. An initial collection use
 
 Both recovery networks used two layers of 128 units as above, then one output mapped to the interval from 0 to 1. V takes ten inputs from the resulting board. Q takes the current board and side plus nine indicators for the candidate cell, for 19 inputs. Each fit minimized the **mean squared difference** between the fitted frequency and the observed fraction, weighting each eligible training move equally. V excluded resulting-board inputs shared with the withheld groups. Both used Adam, batches of 256, an initial step of 0.003 reduced by a factor of 0.35 after pass 100, and up to 120 passes. The saved weights were those with the smallest error on the 760 boards reserved for choosing training duration. A **seed** is a number that fixes random choices such as starting weights and training order. Each cell below gives the recomputed training loss in squared move-frequency units and the saved pass number. [Visit collection and fit settings](NEURAL_TICTACTOE_CONTROL.md) · [Saved training curves](experiments/neural_tictactoe_control/training.json)
 
-| Network | Equally weighted legal training moves | Seed 7201 | Seed 7202 | Seed 7203 |
-| --- | ---: | ---: | ---: | ---: |
-| V | 4,980 | 0.098445 at pass 120 | 0.101120 at pass 90 | 0.104791 at pass 60 |
-| Q | 10,864 | 0.046153 at pass 30 | 0.040348 at pass 30 | 0.035966 at pass 40 |
+| Network | Equally weighted legal training moves | Seed 7201 | Seed 7202 | Seed 7203 | Loss, mean ± sample standard deviation |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| V | 4,980 | 0.098445 at pass 120 | 0.101120 at pass 90 | 0.104791 at pass 60 | 0.101452 ± 0.003186 |
+| Q | 10,864 | 0.046153 at pass 30 | 0.040348 at pass 30 | 0.035966 at pass 40 | 0.040822 ± 0.005110 |
 
 ## What each Phase III tool was checked against
 
