@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 31**, the record of research claims and their evidence.
+**Next is Task 32**, the classification of what a recovery procedure can observe and what its scores mean.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -293,11 +293,12 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** the document makes clear that reward nonuniqueness narrows a claim rather than refuting the base representation thesis.
   - Completed 2026-11-20. Defined the four interpretations of a score, the bounded-interval change of coordinates and the scope of behavioral existence. Adapted exploration and aim preservation for this project and linked the mandatory protocols from the contributor guide and README. [Research stance](RESEARCH_STANCE.md) · [Protocols](RESEARCH_PROTOCOLS.md)
 
-- [ ] **31. Create `CLAIM_LEDGER.md`.**
+- [x] **31. Create `CLAIM_LEDGER.md`.**
   - Give PV-H1–PV-H7 stable identifiers, scoped statements, dependencies and project impact. For mathematical claims state the proof obligation or counterexample. For empirical claims specify the measurements, their expected direction and magnitude, and how the estimates and their uncertainty bear on the claim.
   - Split broad theses into approximately 20 atomic claims.
   - Track exact behavioral representation, recovery from the supplied payoff, and recovery of a compact utility from choices as separately testable claims. Link each to its population, evidence, and possible negative result.
   - **Done when:** each empirical entry states its planned measurement or gives the measured size, uncertainty and scope of an observed effect.
+  - Completed 2026-11-20. Recorded 21 scoped claims in seven families, with assumptions, dependencies, proof obligations and quantitative predictions. Linked the pilot and Checkpoint A and distinguished full-table imitation, supplied payoff and compact learned utility. [Claim ledger](CLAIM_LEDGER.md)
 
 - [ ] **32. Define the policy-access and value-semantics taxonomy.**
   - Create `docs/policy_value_taxonomy.md` covering deterministic action access, samples, probabilities/logits, constrained-choice access, rollout access, environment access, and white-box internals.
