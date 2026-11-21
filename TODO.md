@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 32**, the classification of what a recovery procedure can observe and what its scores mean.
+**Next is Task 33**, the audit of primary literature.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -300,10 +300,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** each empirical entry states its planned measurement or gives the measured size, uncertainty and scope of an observed effect.
   - Completed 2026-11-20. Recorded 21 scoped claims in seven families, with assumptions, dependencies, proof obligations and quantitative predictions. Linked the pilot and Checkpoint A and distinguished full-table imitation, supplied payoff and compact learned utility. [Claim ledger](CLAIM_LEDGER.md)
 
-- [ ] **32. Define the policy-access and value-semantics taxonomy.**
+- [x] **32. Define the policy-access and value-semantics taxonomy.**
   - Create `docs/policy_value_taxonomy.md` covering deterministic action access, samples, probabilities/logits, constrained-choice access, rollout access, environment access, and white-box internals.
   - Define decoder, revealed, return, and mechanistic value artifacts.
   - **Done when:** every later adapter can declare capabilities without overloading “value function.”
+  - Completed 2026-11-20. Defined seven forms of access and four score meanings. Documented how to declare what each procedure sees during fitting and deployed play, including controls for changed menus and source-assisted continuations. [Access and value taxonomy](docs/policy_value_taxonomy.md)
 
 - [ ] **33. Audit the primary literature and expand `REFERENCES.md`.**
   - Cover policy evaluation/improvement, policy distillation, inverse decision/reward modeling, maximum-entropy control, reward invariances, revealed preference/choice, value equivalence, imitation distribution shift, representation similarity, explainable RL, many-valued/fuzzy neural interpretations, and the historical activation/loss story.
