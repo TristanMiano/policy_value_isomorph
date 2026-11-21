@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 40**, sharing scores across histories.
+**Next is Task 41**, equivalence under queries.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -358,11 +358,12 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** finite-dimensional continuous-action examples and edge cases are explicit.
   - Completed 2026-11-20. Proved unique distance decoding and quantified the error from restricting the candidate set, including absent maxima and measurability conditions. [Statement and checks](formalism/39_metric_actions.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **40. Prove action-value to state-value lifting.**
+- [x] **40. Prove action-value to state-value lifting.**
   - Show how `Q(h,a)` can be represented as state value on an action-augmented history or successor object.
   - State when an ordinary `V(h)` plus a transition/action harness is sufficient.
   - Characterize when one score per resulting board can reproduce every source choice under a fixed rule for ties. Give an exact example and a counterexample with conflicting move orders. In the counterexample, give the highest attainable fraction of reproduced moves or bounds on it. Compare with scores that also take the action as input.
   - **Done when:** the theorem covers the current deterministic game convention and a general history-based form.
+  - Completed 2026-11-20. Separated exact score lifting from recovering the same choice. Characterized finite successor feasibility with strict and weak comparisons and bounded a conflicting example exactly. [Statement and checks](formalism/40_successor_scores.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **41. Define decoder-relative value equivalence and prove the quotient result.**
   - Two values are equivalent when every declared decoder/query consumer sees the same result.
