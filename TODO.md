@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 57**, matched recovery comparisons.
+**Next is Task 58**, repeatable recovery runs.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -461,9 +461,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** comparison refuses raw cardinal metrics across incompatible gauges.
   - Completed 2026-11-20. Implemented shared anchors, scale, monotone and temperature transformations and enforced comparable units for numerical differences. [Implementation](src/policy_value_isomorph/score_alignment.py) · [Checks](tests/test_score_alignment.py). Full Windows suite: 119 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **57. Implement the multi-axis value comparison suite.**
+- [x] **57. Implement the multi-axis value comparison suite.**
   - Implement Task 35's fidelity and strength measures, including a source row, absolute rates and paired differences. For return models recompute residual error at each saved checkpoint on fixed training targets and error on held-out boards with exact targets. Log action disagreement, action gaps and matchup outcomes at the same checkpoint.
   - Retain within-state rank correlations and top-k overlap, aligned cardinal error, local geometry, return calibration, and counterfactual prediction scores. Each metric declares its population, invariances, access requirements, and units.
+  - Completed 2026-11-20. Combined source-relative imitation and game outcomes with checkpoint errors, ranking, geometry, calibration and changed-choice measures. [Implementation](src/policy_value_isomorph/comparison_suite.py) · [Checks](tests/test_comparison_suite.py). Full Windows suite: 121 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **58. Build the repeated-recovery experiment orchestrator.**
   - Factor seeds for data, rollouts, initialization, optimizer order, architecture, and candidate generation.
