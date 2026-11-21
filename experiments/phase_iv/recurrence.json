@@ -1,0 +1,332 @@
+[
+  {
+    "network": "V",
+    "metric": "agreement",
+    "direction": "positive",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "agreement",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "agreement",
+    "direction": "negative",
+    "blocks": 32,
+    "fraction": 1.0,
+    "ci95": [
+      0.8911188393205571,
+      1.0
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "win",
+    "direction": "positive",
+    "blocks": 26,
+    "fraction": 0.8125,
+    "ci95": [
+      0.6356076901359081,
+      0.9279238345416714
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "win",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "win",
+    "direction": "negative",
+    "blocks": 6,
+    "fraction": 0.1875,
+    "ci95": [
+      0.0720761654583286,
+      0.3643923098640918
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "draw",
+    "direction": "positive",
+    "blocks": 11,
+    "fraction": 0.34375,
+    "ci95": [
+      0.18571909171656248,
+      0.5319310362802689
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "draw",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "draw",
+    "direction": "negative",
+    "blocks": 21,
+    "fraction": 0.65625,
+    "ci95": [
+      0.468068963719731,
+      0.8142809082834375
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "loss",
+    "direction": "positive",
+    "blocks": 19,
+    "fraction": 0.59375,
+    "ci95": [
+      0.40644924657647485,
+      0.7630158994481753
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "loss",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "loss",
+    "direction": "negative",
+    "blocks": 13,
+    "fraction": 0.40625,
+    "ci95": [
+      0.2369841005518247,
+      0.5935507534235251
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "points",
+    "direction": "positive",
+    "blocks": 23,
+    "fraction": 0.71875,
+    "ci95": [
+      0.5325289003570655,
+      0.862543096704499
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "points",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "V",
+    "metric": "points",
+    "direction": "negative",
+    "blocks": 9,
+    "fraction": 0.28125,
+    "ci95": [
+      0.13745690329550092,
+      0.4674710996429345
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "agreement",
+    "direction": "positive",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "agreement",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "agreement",
+    "direction": "negative",
+    "blocks": 32,
+    "fraction": 1.0,
+    "ci95": [
+      0.8911188393205571,
+      1.0
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "win",
+    "direction": "positive",
+    "blocks": 8,
+    "fraction": 0.25,
+    "ci95": [
+      0.11461600510260381,
+      0.43404937492227846
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "win",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "win",
+    "direction": "negative",
+    "blocks": 24,
+    "fraction": 0.75,
+    "ci95": [
+      0.5659506250777215,
+      0.8853839948973963
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "draw",
+    "direction": "positive",
+    "blocks": 11,
+    "fraction": 0.34375,
+    "ci95": [
+      0.18571909171656248,
+      0.5319310362802689
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "draw",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "draw",
+    "direction": "negative",
+    "blocks": 21,
+    "fraction": 0.65625,
+    "ci95": [
+      0.468068963719731,
+      0.8142809082834375
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "loss",
+    "direction": "positive",
+    "blocks": 26,
+    "fraction": 0.8125,
+    "ci95": [
+      0.6356076901359081,
+      0.9279238345416714
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "loss",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "loss",
+    "direction": "negative",
+    "blocks": 6,
+    "fraction": 0.1875,
+    "ci95": [
+      0.0720761654583286,
+      0.3643923098640918
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "points",
+    "direction": "positive",
+    "blocks": 5,
+    "fraction": 0.15625,
+    "ci95": [
+      0.052750564402132175,
+      0.32787876568204183
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "points",
+    "direction": "equal",
+    "blocks": 0,
+    "fraction": 0.0,
+    "ci95": [
+      0.0,
+      0.10888116067944287
+    ]
+  },
+  {
+    "network": "Q",
+    "metric": "points",
+    "direction": "negative",
+    "blocks": 27,
+    "fraction": 0.84375,
+    "ci95": [
+      0.6721212343179582,
+      0.9472494355978678
+    ]
+  }
+]

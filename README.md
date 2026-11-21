@@ -8,6 +8,8 @@ This repo is meant to be a concrete, economical implementation of a claim inspir
 
 The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
 
+The repeated tic-tac-toe experiment trained 32 optimal players with different preferences among equally good moves. It measures how closely a move reconstructed from observed frequencies copies each player, how often it wins, and how its predictions change when a move is removed. The checkpoint review shows why the choice of positions changes which method best copies a player and selects methods for Connect Four and 4×4 Reversi. [Phase IV results](PHASE_IV.md) · [Checkpoint E review](CHECKPOINT_E.md) · [Explore all 4,520 decision boards](experiments/phase_iv/atlas.html)
+
 The research protocols keep quantitative questions numerical, require definitions at first use, preserve plausible readings of the thesis and give constructive examples and limitations comparable scrutiny. [Research stance](RESEARCH_STANCE.md) · [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
 
 A worked tic-tac-toe board shows how two moves can both win yet imply different conclusions about what the player prefers. The evaluation contract specifies how to rank a reconstruction for copying choices, winning games or predicting choices after the available moves change. [Worked example](docs/hand_worked_atlas.md) · [Evaluation contract](docs/evaluation_contract.md) · [Claim ledger](CLAIM_LEDGER.md)

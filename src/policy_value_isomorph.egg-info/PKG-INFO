@@ -5,6 +5,10 @@ Summary: PyTorch training and rollout-based reconstruction of game policies
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 Requires-Dist: torch>=2.0
+Provides-Extra: phase-iv
+Requires-Dist: numpy>=1.24; extra == "phase-iv"
+Requires-Dist: scipy>=1.10; extra == "phase-iv"
+Requires-Dist: matplotlib>=3.7; extra == "phase-iv"
 Provides-Extra: neural-control
 Requires-Dist: numpy>=1.24; extra == "neural-control"
 Provides-Extra: muon
@@ -23,11 +27,19 @@ This repo is meant to be a concrete, economical implementation of a claim inspir
 
 The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
 
-Two protocols apply throughout this project. Keep quantitative questions and answers numerical, including magnitudes and differences. Never turn a measurable comparison into a yes/no verdict. Define every new term before using it in a design, report, progress update, or chat summary. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
+The repeated tic-tac-toe experiment trained 32 optimal players with different preferences among equally good moves. It measures how closely a move reconstructed from observed frequencies copies each player, how often it wins, and how its predictions change when a move is removed. [Phase IV results](PHASE_IV.md) · [Explore all 4,520 decision boards](experiments/phase_iv/atlas.html)
+
+The research protocols keep quantitative questions numerical, require definitions at first use, preserve plausible readings of the thesis and give constructive examples and limitations comparable scrutiny. [Research stance](RESEARCH_STANCE.md) · [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
+
+A worked tic-tac-toe board shows how two moves can both win yet imply different conclusions about what the player prefers. The evaluation contract specifies how to rank a reconstruction for copying choices, winning games or predicting choices after the available moves change. [Worked example](docs/hand_worked_atlas.md) · [Evaluation contract](docs/evaluation_contract.md) · [Claim ledger](CLAIM_LEDGER.md)
 
 ---
 
 ## Run the current baseline
+
+To inspect one player's choices, run `python scripts/demo_value_atlas.py` after installing the package. The example shows the source's counts, each network's predictions, its game outcomes, and what it chooses when its favorite move is removed. [Phase III results and framework](PHASE_III.md)
+
+For the full tic-tac-toe comparison, Checkpoint D puts move agreement alongside wins, draws and losses. It shows how the results change when the original player or copies of the fitted network finish hypothetical games. [Checkpoint D results and reproduction](CHECKPOINT_D.md)
 
 Use Python 3.10 or newer in a virtual environment. From the repository root, install the project and run the following commands. PyTorch trains the networks. The short training check fits a move-selecting policy, freezes it, and plays out games to train networks that score a board or a board and move. It saves and resumes all three fits.
 
@@ -76,7 +88,7 @@ The resulting conceptual spine is
 P  ->  behaviorally faithful score S_P  ->  possible trajectory utility U.
 ```
 
-The first arrow is the broad policy-value representation claim. The second is a stronger utility-factorization hypothesis to test rather than assume.
+The first arrow asks how closely scores can reproduce choices. The second asks how much a shared utility of consequences can explain under a declared continuation. The review fixes the three-game comparison and reports an example where increasing win probability reduced expected points. [Checkpoint B review](CHECKPOINT_B.md)
 
 See [`docs/policy_reconstruction_vs_utility_factorization.md`](docs/policy_reconstruction_vs_utility_factorization.md) for the full argument and [`docs/selection_semantics.md`](docs/selection_semantics.md) for the operational contract governing scores, rollout values, lotteries, and double counting.
 
