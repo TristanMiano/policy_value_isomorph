@@ -8,7 +8,9 @@ This repo is meant to be a concrete, economical implementation of a claim inspir
 
 The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
 
-Two protocols apply throughout this project. Keep quantitative questions and answers numerical, including magnitudes and differences. Never turn a measurable comparison into a yes/no verdict. Define every new term before using it in a design, report, progress update, or chat summary. [Mandatory research protocols](AGENTS.md#mandatory-research-protocols)
+The research protocols keep quantitative questions numerical, require definitions at first use, preserve plausible readings of the thesis and give constructive examples and limitations comparable scrutiny. [Research stance](RESEARCH_STANCE.md) · [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
+
+A worked tic-tac-toe board shows how two moves can both win yet imply different conclusions about what the player prefers. The evaluation contract specifies how to rank a reconstruction for copying choices, winning games or predicting choices after the available moves change. [Worked example](docs/hand_worked_atlas.md) · [Evaluation contract](docs/evaluation_contract.md) · [Claim ledger](CLAIM_LEDGER.md)
 
 ---
 
@@ -61,7 +63,7 @@ The resulting conceptual spine is
 P  ->  behaviorally faithful score S_P  ->  possible trajectory utility U.
 ```
 
-The first arrow is the broad policy-value representation claim. The second is a stronger utility-factorization hypothesis to test rather than assume.
+The first arrow asks how closely scores can reproduce choices. The second asks how much a shared utility of consequences can explain under a declared continuation. The review fixes the three-game comparison and reports an example where increasing win probability reduced expected points. [Checkpoint B review](CHECKPOINT_B.md)
 
 See [`docs/policy_reconstruction_vs_utility_factorization.md`](docs/policy_reconstruction_vs_utility_factorization.md) for the full argument and [`docs/selection_semantics.md`](docs/selection_semantics.md) for the operational contract governing scores, rollout values, lotteries, and double counting.
 

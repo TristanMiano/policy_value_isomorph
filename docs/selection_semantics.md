@@ -1,5 +1,7 @@
 # Selection Semantics, Rollout Value, and Lotteries
 
+The common symbols, score units and fields describing a recovered model are defined in the [notation and recovery contract](../formalism/00_notation.md).
+
 A **policy** is a rule for choosing actions. A **score** assigns a number to an action or its consequences. A **decoder** converts the scores into a chosen action or probabilities for the available actions. When reporting a value, give both its meaning and the decoder.
 
 This project distinguishes two closely related but importantly different uses of value.

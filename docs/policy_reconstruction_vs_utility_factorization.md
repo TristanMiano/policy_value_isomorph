@@ -1,5 +1,7 @@
 # Policy Reconstruction versus Expected-Utility Factorization
 
+For common definitions of histories, scores and whole-play utility, see the [notation and recovery contract](../formalism/00_notation.md).
+
 ## The question
 
 A **policy** `P` is the original rule for choosing an action or assigning probabilities to the available actions. A **score** is a number attached to an action or its consequences. A **decoder** turns scores into actions or action probabilities. The project asks how closely a score and decoder together can reproduce a policy's choices.
@@ -26,19 +28,19 @@ Let
 h in H                     history or sufficiently rich state
 C(h) subset A              feasible candidate actions
 P(. | h, C)                source policy
-V_P(h,a) in extended R     recovered score, energy, or value
-D(V_P, h, C)               declared selection mechanism
+S_P(h,C,a) in extended R   fitted or constructed move score, with larger values preferred
+D(S_P, h, C)               declared selection mechanism
 ```
 
 The broadest representation thesis is
 
 ```text
-P(. | h, C) approximately equals D(V_P, h, C).
+P(. | h, C) approximately equals D(S_P, h, C).
 ```
 
 The value-like object and its decoder form a pair. A bare scalar function does not determine behavior until the project specifies whether it is consumed by `argmax`, softmax, sampling from an energy model, thresholding, or another rule.
 
-For arbitrary behavior, the most faithful decoder is the one whose output space matches the policy itself.
+Choose a decoder that can express the target, a move or a distribution over moves. For a fitted model, measure fidelity on histories withheld from fitting and record access to the source.
 
 ---
 
@@ -47,24 +49,24 @@ For arbitrary behavior, the most faithful decoder is the one whose output space 
 Suppose `P` is deterministic. On any finite feasible action set, define
 
 ```text
-V_P(h,a) = 1  if a = P(h)
+S_P(h,a) = 1  if a = P(h)
            0  otherwise.
 ```
 
 Then, with a fixed tie-breaking convention,
 
 ```text
-P(h) = argmax_{a in C(h)} V_P(h,a).
+P(h) = argmax_{a in C(h)} S_P(h,a).
 ```
 
 This representation is exact. It places no rationality, optimality, temporal consistency, or consequentialist assumptions on `P`. The policy can be path-dependent, locally inconsistent under a coarser state description, deliberately suboptimal under an external reward, or otherwise arbitrary.
 
-Many other exact scores are possible. The chosen action only needs to receive a strictly greater score than every unchosen action. This nonuniqueness is why the base artifact is better understood as a decoder-relative value or score equivalence class rather than a uniquely identified utility.
+Many other exact scores are possible. Giving the chosen action a strictly greater score is sufficient. A tie can reproduce the same choice when the specified tie rule selects it. This nonuniqueness is why the base artifact is better understood as a decoder-relative value or score equivalence class rather than a uniquely identified utility.
 
 For a deterministic policy on a metric action space, an analogous construction is
 
 ```text
-V_P(h,a) = -d(a, P(h)),
+S_P(h,a) = -d(a, P(h)),
 ```
 
 provided the metric separates actions and the decoder can identify the unique maximizer.
@@ -74,10 +76,10 @@ provided the metric separates actions and the decoder can identify the unique ma
 A scalar state value `V(h)` alone is not universally sufficient. Two actions may lead to the same represented successor state, transitions may be stochastic, or the action itself may matter independently of its successor. The broad primitive should therefore usually be an action or continuation score
 
 ```text
-V_P(h,a)  or  Q_P(h,a).
+S_P(h,a)  or  Q_P(h,a).
 ```
 
-A state-value representation can recover the same generality by lifting the state space to include the candidate action, successor, or trajectory prefix.
+Recording the history and forced action together retains which choice was made. When only the resulting state is available, histories can merge. The score comparisons imposed by all parents must be compatible with one assignment and the declared tie rule.
 
 ---
 
@@ -85,16 +87,16 @@ A state-value representation can recover the same generality by lifting the stat
 
 If `P` is stochastic, an `argmax` decoder generally reproduces only its modal action. To reconstruct the entire policy distribution, the decoder must itself be stochastic.
 
-For a discrete policy with positive probabilities, define
+For a discrete policy with positive probabilities and equal base weights, define
 
 ```text
-V_P(h,a) = tau * log P(a | h) + c(h),
+S_P(h,a) = T * log P(a | h) + c(h),
 ```
 
-where `tau > 0` is a temperature and `c(h)` is any state-dependent additive constant. Then
+where `T > 0` is the temperature controlling the spread of sampled choices and `c(h)` is any state-dependent additive constant. Then
 
 ```text
-softmax(V_P(h,.) / tau) = P(. | h).
+softmax(S_P(h,.) / T) = P(. | h).
 ```
 
 Zero-probability actions can be represented by `-infinity` or approximated with sufficiently negative finite scores.
@@ -102,10 +104,10 @@ Zero-probability actions can be represented by `-infinity` or approximated with 
 Thus the exact stochastic counterpart of deterministic score-plus-`argmax` is
 
 ```text
-log score or energy + normalized sampling.
+log score + exponential sampling at the declared temperature.
 ```
 
-For a continuous stochastic policy with density `p(a | h)` relative to a declared base measure, the analogous energy is proportional to `log p(a | h)`. The base measure is part of the semantics and cannot be omitted.
+For a continuous stochastic policy with density `p(a | h)` relative to a declared base measure, the score on positive density is `T log p(a | h) + c(h)`. Energy is its negative. Sampling weights that measure by the exponential of the score divided by temperature.
 
 The behavioral reconstruction objective should therefore match the policy type:
 
@@ -178,8 +180,8 @@ U(B) = 1.
 A direct decoder value can reproduce `P` exactly:
 
 ```text
-V_P(h,A) = 1
-V_P(h,B) = 0.
+S_P(h,A) = 1
+S_P(h,B) = 0.
 ```
 
 But return evaluation gives
@@ -222,22 +224,22 @@ argmax_a Q_U^P(h,a)
 
 is already an `argmax` over expected trajectory utility. It does not need another outer average over rollouts merely to become an expected-value selector.
 
-In a deterministic transition system,
+For an additive utility with immediate payoff `r`, discount `gamma` and deterministic successor `M(h,a)`, the recurrence is
 
 ```text
-Q_U^P(h,a) = r(h,a) + gamma * V_U^P(T(h,a)),
+Q_U^P(h,a) = r(h,a) + gamma * V_U^P(M(h,a)),
 ```
 
 up to the project’s perspective and sign conventions. If there is no intermediate reward, comparing successor-state rollout values can be equivalent to comparing action values.
 
-In a stochastic transition system,
+For the same additive utility with random transitions,
 
 ```text
 Q_U^P(h,a)
   = E_{h' | h,a}[r(h,a,h') + gamma * V_U^P(h')].
 ```
 
-The transition expectation must be performed explicitly unless the supplied `Q` estimate already contains it.
+A whole-play utility that depends on the path can be evaluated directly on complete trajectories. A recursion using only the current state needs that state to retain all information required for the chosen utility. Record whether an action score already includes the expectation over transitions.
 
 ### Do not count continuation value twice
 
@@ -292,20 +294,20 @@ Accordingly, `softmax(log P)` is the direct exact reconstruction of a stochastic
 
 ---
 
-## 8. Which mechanism is theoretically closest to `P`?
+## 8. Which comparison answers each question?
 
 The answer is objective-relative.
 
 | Objective | Preferred representation and selection mechanism |
 |---|---|
 | Exact deterministic behavioral reproduction | action score plus fixed-tie-break `argmax` |
-| Exact stochastic behavioral reproduction | log score/energy plus normalized sampling |
+| Exact stochastic behavioral reproduction | log score plus exponential sampling |
 | Reproduce only the modal action of a stochastic policy | `argmax` over action scores |
 | Measure how often `P` chooses a highest-return move and how much payoff its choices forgo | Compare the source move probabilities with the estimated return of each legal move under `Q_U^P` |
 | Give a VNM-style rational-agent interpretation | `argmax` over expected cardinal utility of induced trajectory lotteries |
 | Give a stochastic utility-like interpretation | random-utility, entropy-regularized, or soft choice with an explicit contract |
 
-For the sole loss function “match `P`,” direct policy-score distillation is theoretically dominant: it can be exact and trains against the behavioral target directly. Return-value recovery introduces environment dependence, payoff assumptions, rollout variance, continuation-policy dependence, and possible policy-improvement disagreement.
+Exact encoding with access to the source gives a reference for fidelity. When training a model from finite observations, compare direct move selection and expected-utility selection on the same withheld boards. Report separately how simulation error, the payoff, the continuation rule and access to the source change the result.
 
 Expected-return structure can nevertheless be preferable for other reasons. It may be smoother, more compressible, more transferable across action sets, more predictive of interventions, and more interpretable in terms of consequences. Those are stronger properties to test, not guaranteed consequences of behavioral reconstruction.
 
@@ -321,7 +323,7 @@ P  ->  S_P  ->  U.
 
 ### Stage A: universal behavioral value form
 
-Recover a decoder value or energy `S_P` such that
+Recover a move score `S_P` such that
 
 ```text
 P approximately equals D(S_P).
@@ -371,13 +373,13 @@ Experiments should separate at least four sources of disagreement:
    The learned score fails to reproduce the policy even under its intended decoder.
 
 2. **Return-estimation error**  
-   `V_phi` or `Q_phi` inaccurately estimates the declared rollout return.
+   Measure how far `V_phi` or `Q_phi` is from the declared expected return, separating variation from finitely many rollouts from error in fitting those targets.
 
 3. **Greedy-improvement difference**  
-   The return estimate is accurate, but `P` does not greedily maximize its own induced `Q_U^P`.
+   With exact expected returns, count different moves tied at the maximum separately from source moves with strictly lower return. Only the latter give up payoff for the forced move.
 
 4. **Semantic-factorization error**  
-   A behaviorally faithful score does not admit the proposed simple expected-trajectory representation.
+   Measure the residual mismatch under a specified, restricted complete-play utility. A trained model supplies an achieved error. A claim about the entire utility family needs an optimum or justified bound.
 
 Useful paired baselines are therefore:
 
@@ -411,17 +413,17 @@ The main universal claim concerns decoder value. Return value and utility factor
 
 ## 12. Bottom line
 
-For arbitrary `P`, the closest theoretical reconstruction is:
+With direct access to the source, these are references for behavioral reconstruction.
 
 ```text
 deterministic P:
-    P(h) = argmax_a V_P(h,a)
+    P(h) = argmax_a S_P(h,a)
 
 stochastic P:
-    P(. | h) = sample from normalized V_P(h,.).
+    P(. | h) = softmax(S_P(h,.) / T) for the log scores and equal base weights above.
 ```
 
-Maximizing expected trajectory utility is not generally a better imitation mechanism. It is a stronger attempted explanation of the policy. It reproduces `P` when `P` is already greedy with respect to the declared expected-utility contract, or when the utility has been tailored closely enough to encode `P`.
+A deterministic expected-utility maximizer reproduces the source move when the selected maximizer, including the tie rule, is the source move. For a random source, compare the entire induced distribution. The explanatory question is how much a shared utility with restricted inputs predicts about fresh conditions. [Checkpoint B decision](../CHECKPOINT_B.md)
 
 The project should therefore defend two nested theses:
 
