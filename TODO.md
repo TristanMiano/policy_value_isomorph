@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 72**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Checkpoint E**, the review following the completed tic-tac-toe experiments. [Phase IV findings](PHASE_IV.md) · [Frozen design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -556,9 +556,11 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Recorded predictions before fresh restricted-menu and edited-priority answers. On separate lottery players measured agreement after changed odds, changed presentation order and transfer to the other player. Saved per-case predictions and actual responses.
 
-- [ ] **72. Publish the finite-domain result report.**
+- [x] **72. Publish the finite-domain result report.**
   - Publish a machine-readable table by source, score, decoder, access, and budget. Link the opponent/seat results, error and action-gap curves, fidelity bounds, counterfactual predictions, representative atlases, and negative results to the claim ledger.
   - For each of the three goals in Task 35, give all methods' measured values, differences on the same cases, and applicable uncertainty. Name the formulation and move rule favored by each objective with the size of its advantage or disadvantage. Include the source, ties, uncertainty in rankings, and trade-offs between goals.
+
+  - Completed 2026-11-20. Published the comparisons for copying, playing strength and predicting changed choices across 32 original players, 64 randomized partitions and two independent fits per partition. The report includes exact representation results, uncertainty on paired changes, training losses, disagreement examples and per-opponent games. [Report](PHASE_IV.md) · [Data and reproduction](experiments/phase_iv/README.md)
 
 ## Checkpoint E — First research adjudication
 
