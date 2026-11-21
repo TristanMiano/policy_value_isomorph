@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 26.** Compare Muon, a training rule that adjusts a whole matrix of weights together, with AdamW on a fixed small training problem.
+**Next task is 27.** Save the network weights, optimizer memory and training position together so an interrupted fit can continue.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -251,10 +251,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** all three training paths run end to end and baseline commands are documented.
   - Completed 2026-11-20. All three trainers accept the same device, precision, seed, repeatability and optimizer settings. Their adaptive updates and losses were checked against PyTorch's own AdamW on three passes for each network. The command-line training example exercised all three paths. All 85 tests and the tic-tac-toe demo ran. [Configuration](src/policy_value_isomorph/training_config.py) · [Numerical tests](tests/test_adamw.py) · [Baseline command](README.md#pytorch-first-migration-decision-task-22)
 
-- [ ] **26. Evaluate Muon only after AdamW parity is complete.**
+- [x] **26. Evaluate Muon only after AdamW parity is complete.**
   - Keep this optional and config-gated; do not fork the training stack.
   - Compare maintenance burden, convergence, wall time, and final behavior on a frozen small benchmark.
   - **Done when:** retain or reject Muon with a recorded result; rejection completes the task.
+  - Completed 2026-11-20. Compared AdamW with Muon on the hidden matrix in 24 CPU fits. Over four paired initializations, Muon changed average move agreement by +1.57, +2.08 and −2.88 percentage points for the move, board and board-and-move networks on 780 withheld boards. Retained the opt-in comparison. The report gives uncertainty, all losses, times and game outcomes. All 85 tests and the demo ran. [Benchmark, results and repeat command](experiments/optimizer_comparison/README.md)
 
 - [ ] **27. Migrate checkpoint/resume to PyTorch model and optimizer state.**
   - Version the artifact schema and provide a clear legacy policy.
