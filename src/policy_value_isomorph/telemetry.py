@@ -25,5 +25,5 @@ class TrainingTelemetry:
     game: str
     seed: int
     checkpoint_step: int
-    hyperparameters: Mapping[str, float | int]
+    hyperparameters: Mapping[str, float | int | str | None]
     records: tuple[TelemetryRecord, ...]

@@ -7,7 +7,9 @@ import random
 import time
 from typing import List, Sequence
 
-from torch.optim import SGD
+import torch
+
+from .training_config import TrainingConfig
 
 from .torch_mlp import TorchMLP, TrainingBatch, train_epoch
 from .checkpointing import latest_checkpoint_path, load_checkpoint, save_checkpoint
@@ -110,6 +112,7 @@ def train_policy_mlp(
     checkpoint_dir: str | None = None,
     resume_checkpoint_path: str | None = None,
     resume_latest: bool = False,
+    config: TrainingConfig | None = None,
 ) -> TrainedPolicy:
     """Train a tiny MLP policy by supervised imitation on state-action pairs."""
     if not dataset:
@@ -155,8 +158,9 @@ def train_policy_mlp(
     gameplay_evals: list[GameplayEvalRecord] = []
     start_time = time.perf_counter()
 
-    network = TorchMLP(model)
-    optimizer = SGD(network.parameters(), lr=learning_rate)
+    config = config or TrainingConfig()
+    network = TorchMLP(model, torch.device(config.device), getattr(torch, config.dtype))
+    optimizer = config.make_optimizer(network, learning_rate)
     rows = [encode_state(sample.state) for sample in dataset]
     masks = []
     for sample in dataset:
@@ -164,73 +168,74 @@ def train_policy_mlp(
         masks.append([move in legal for move in range(9)])
     batch = TrainingBatch.policy(network, rows, [sample.action for sample in dataset], masks)
 
-    for epoch in range(start_epoch, epochs):
-        rng.shuffle(order)
-        epoch_loss = train_epoch(network, optimizer, batch, order)
-        model = TinyMLPPolicy(**network.weights())
-        losses.append(epoch_loss)
-        records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
-        if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
-            save_checkpoint(
-                checkpoint_dir,
-                run_type="policy",
-                step=epoch + 1,
-                model=model,
-                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
-            )
-
-        if eval_interval > 0 and (epoch + 1) % eval_interval == 0:
-            wins = 0
-            draws = 0
-            losses_eval = 0
-            checkpoint_samples: list[GameplaySample] = []
-            for i in range(eval_n_games):
-                state = TicTacToeState.initial()
-                model_as_x = (i % 2 == 0)
-                states = [state]
-                moves: list[int] = []
-                while not state.is_terminal():
-                    if model_as_x:
-                        move = policy_mlp_action(state, model) if state.to_move == 1 else min(state.legal_moves())
-                    else:
-                        move = min(state.legal_moves()) if state.to_move == 1 else policy_mlp_action(state, model)
-                    moves.append(move)
-                    state = state.apply_move(move)
-                    states.append(state)
-                result_for_x = state.terminal_return(root_player=1)
-                result_for_model = result_for_x if model_as_x else -result_for_x
-                if result_for_model > 0:
-                    wins += 1
-                elif result_for_model < 0:
-                    losses_eval += 1
-                else:
-                    draws += 1
-                if len(checkpoint_samples) < gameplay_samples_per_checkpoint:
-                    checkpoint_samples.append(
-                        GameplaySample(
-                            checkpoint_step=epoch + 1,
-                            game_index=i,
-                            moves=tuple(moves),
-                            states=tuple(states),
-                        )
-                    )
-
-            denom = float(eval_n_games)
-            win_rate = wins / denom
-            draw_rate = draws / denom
-            loss_rate = losses_eval / denom
-            gameplay_evals.append(
-                GameplayEvalRecord(
+    with config.execution(seed):
+        for epoch in range(start_epoch, epochs):
+            rng.shuffle(order)
+            epoch_loss = train_epoch(network, optimizer, batch, order)
+            model = TinyMLPPolicy(**network.weights())
+            losses.append(epoch_loss)
+            records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
+            if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
+                save_checkpoint(
+                    checkpoint_dir,
+                    run_type="policy",
                     step=epoch + 1,
-                    n_games=eval_n_games,
-                    win_rate=win_rate,
-                    draw_rate=draw_rate,
-                    loss_rate=loss_rate,
-                    score=win_rate - loss_rate,
+                    model=model,
+                    metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
                 )
-            )
-            if gameplay_samples_path is not None:
-                append_gameplay_samples_text(gameplay_samples_path, checkpoint_samples)
+
+            if eval_interval > 0 and (epoch + 1) % eval_interval == 0:
+                wins = 0
+                draws = 0
+                losses_eval = 0
+                checkpoint_samples: list[GameplaySample] = []
+                for i in range(eval_n_games):
+                    state = TicTacToeState.initial()
+                    model_as_x = (i % 2 == 0)
+                    states = [state]
+                    moves: list[int] = []
+                    while not state.is_terminal():
+                        if model_as_x:
+                            move = policy_mlp_action(state, model) if state.to_move == 1 else min(state.legal_moves())
+                        else:
+                            move = min(state.legal_moves()) if state.to_move == 1 else policy_mlp_action(state, model)
+                        moves.append(move)
+                        state = state.apply_move(move)
+                        states.append(state)
+                    result_for_x = state.terminal_return(root_player=1)
+                    result_for_model = result_for_x if model_as_x else -result_for_x
+                    if result_for_model > 0:
+                        wins += 1
+                    elif result_for_model < 0:
+                        losses_eval += 1
+                    else:
+                        draws += 1
+                    if len(checkpoint_samples) < gameplay_samples_per_checkpoint:
+                        checkpoint_samples.append(
+                            GameplaySample(
+                                checkpoint_step=epoch + 1,
+                                game_index=i,
+                                moves=tuple(moves),
+                                states=tuple(states),
+                            )
+                        )
+
+                denom = float(eval_n_games)
+                win_rate = wins / denom
+                draw_rate = draws / denom
+                loss_rate = losses_eval / denom
+                gameplay_evals.append(
+                    GameplayEvalRecord(
+                        step=epoch + 1,
+                        n_games=eval_n_games,
+                        win_rate=win_rate,
+                        draw_rate=draw_rate,
+                        loss_rate=loss_rate,
+                        score=win_rate - loss_rate,
+                    )
+                )
+                if gameplay_samples_path is not None:
+                    append_gameplay_samples_text(gameplay_samples_path, checkpoint_samples)
 
     if checkpoint_dir is not None and (checkpoint_interval == 0 or epochs % checkpoint_interval != 0):
         save_checkpoint(
@@ -246,7 +251,7 @@ def train_policy_mlp(
         game="tic_tac_toe",
         seed=seed,
         checkpoint_step=epochs,
-        hyperparameters={
+        hyperparameters={**config.metadata(),
             "hidden_dim": hidden_dim,
             "learning_rate": learning_rate,
             "epochs": epochs,

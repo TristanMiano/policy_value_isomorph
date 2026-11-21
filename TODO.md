@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 25.** Add configurable AdamW, a training rule that adapts the size of each weight update and controls weight shrinkage separately. The three trainers now run in PyTorch, a library for training neural networks. Their current update subtracts each example's loss gradient times a fixed learning rate. [Frozen moves and game outcomes compared across implementations](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
+**Next task is 26.** Compare Muon, a training rule that adjusts a whole matrix of weights together, with AdamW on a fixed small training problem.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -245,10 +245,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Verify forward behavior and small deterministic training fixtures within declared tolerances. Replay the Task 61 frozen inputs and checkpoints to compare legal choices, ties, value signs, and resulting matchup scores across backends.
   - Completed 2026-11-20. The public trainers and prediction functions now use the shared model. For each of the three network types, the highest-scoring legal move for the player to act matched on 22,600/22,600 archived player–board cases. The maximum absolute win, draw or loss probability difference over 900 matchup rows was 2.22 × 10⁻¹⁶. A separate four-example training comparison measured a largest absolute weight change between implementations of 5.55 × 10⁻¹⁷ across 170 weights and biases. All 82 tests passed with `pytest -q`, including saved-weight replay and continuation from old and new checkpoints. The installed training command and `python scripts/demo_tictactoe.py` also ran. [Implementation, definitions and quantitative comparisons](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks) · [Saved replay](experiments/tictactoe_pilot/torch_replay.json)
 
-- [ ] **25. Add configurable AdamW training through `torch.optim.AdamW`.**
+- [x] **25. Add configurable AdamW training through `torch.optim.AdamW`.**
   - Add device selection, dtype, seeding, and deterministic settings where available.
   - Expose optimizer parameters through existing CLI paths.
   - **Done when:** all three training paths run end to end and baseline commands are documented.
+  - Completed 2026-11-20. All three trainers accept the same device, precision, seed, repeatability and optimizer settings. Their adaptive updates and losses were checked against PyTorch's own AdamW on three passes for each network. The command-line training example exercised all three paths. All 85 tests and the tic-tac-toe demo ran. [Configuration](src/policy_value_isomorph/training_config.py) · [Numerical tests](tests/test_adamw.py) · [Baseline command](README.md#pytorch-first-migration-decision-task-22)
 
 - [ ] **26. Evaluate Muon only after AdamW parity is complete.**
   - Keep this optional and config-gated; do not fork the training stack.

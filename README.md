@@ -187,6 +187,14 @@ An editable install (`pip install -e .`) installs PyTorch. The shared one-hidden
 
 The three trainers and their prediction functions now use that network. Replaying the saved tic-tac-toe weights reproduced the top legal move in all 67,800 comparisons across five original players, 4,520 boards and three reconstruction methods. [Move comparisons, game outcomes and reproduction commands](PYTORCH_MIGRATION_AUDIT.md#replaying-the-frozen-tic-tac-toe-networks)
 
+For the adaptive training baseline, **AdamW** updates each weight using running averages of its gradient and squared gradient, and shrinks weights separately. **Stochastic gradient descent (SGD)** applies each example's gradient times the learning rate and is the default for historical runs. A seed fixes initial weights and the order of examples. The following command trains the move policy, the board-payoff network and the board-and-move payoff network on the central processor (CPU) using 64-bit arithmetic.
+
+```sh
+policy-value-cli train --optimizer adamw --learning-rate 0.001 --weight-decay 0.01 --beta1 0.9 --beta2 0.999 --epsilon 1e-8 --device cpu --dtype float64 --deterministic --seed 13 --episodes 4 --policy-epochs 3 --value-epochs 3 --q-epochs 3
+```
+
+The two beta settings control how much previous gradient information carries forward. Epsilon stabilizes division by small values. Use `--dtype float32` for 32-bit training or `--device cuda:0` for the first available NVIDIA graphics processor. The public prediction functions read the exported weights on CPU in 64-bit precision. The `eval` command accepts the same optimizer settings. [PyTorch AdamW parameters](https://docs.pytorch.org/docs/2.8/generated/torch.optim.AdamW.html)
+
 Migration constraints:
 
 1. Keep tic-tac-toe rollout/value-recovery APIs and value-sign semantics stable.

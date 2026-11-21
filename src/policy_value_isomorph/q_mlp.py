@@ -7,7 +7,9 @@ import random
 import time
 from typing import List, Sequence
 
-from torch.optim import SGD
+import torch
+
+from .training_config import TrainingConfig
 
 from .torch_mlp import TorchMLP, TrainingBatch, train_epoch
 from .checkpointing import latest_checkpoint_path, load_checkpoint, save_checkpoint
@@ -152,6 +154,7 @@ def train_q_mlp(
     checkpoint_dir: str | None = None,
     resume_checkpoint_path: str | None = None,
     resume_latest: bool = False,
+    config: TrainingConfig | None = None,
 ) -> TrainedQ:
     """Train a tiny MLP regressor for Q_phi(s,a)."""
     if not dataset:
@@ -189,25 +192,27 @@ def train_q_mlp(
     records: list[TelemetryRecord] = []
     start_time = time.perf_counter()
 
-    network = TorchMLP(model)
-    optimizer = SGD(network.parameters(), lr=learning_rate)
+    config = config or TrainingConfig()
+    network = TorchMLP(model, torch.device(config.device), getattr(torch, config.dtype))
+    optimizer = config.make_optimizer(network, learning_rate)
     rows = [_encode_state_action(sample.state, sample.action) for sample in dataset]
     batch = TrainingBatch.regression(network, rows, [sample.value for sample in dataset])
 
-    for epoch in range(start_epoch, epochs):
-        rng.shuffle(order)
-        epoch_loss = train_epoch(network, optimizer, batch, order)
-        model = TinyMLPQ(**network.weights())
-        losses.append(epoch_loss)
-        records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
-        if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
-            save_checkpoint(
-                checkpoint_dir,
-                run_type="q",
-                step=epoch + 1,
-                model=model,
-                metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
-            )
+    with config.execution(seed):
+        for epoch in range(start_epoch, epochs):
+            rng.shuffle(order)
+            epoch_loss = train_epoch(network, optimizer, batch, order)
+            model = TinyMLPQ(**network.weights())
+            losses.append(epoch_loss)
+            records.append(TelemetryRecord(step=epoch + 1, loss=epoch_loss, wall_time_seconds=time.perf_counter() - start_time))
+            if checkpoint_dir is not None and checkpoint_interval > 0 and (epoch + 1) % checkpoint_interval == 0:
+                save_checkpoint(
+                    checkpoint_dir,
+                    run_type="q",
+                    step=epoch + 1,
+                    model=model,
+                    metadata={"seed": seed, "epoch": epoch + 1, "learning_rate": learning_rate, "rng_state": repr(rng.getstate()), "order": order},
+                )
 
     if checkpoint_dir is not None and (checkpoint_interval == 0 or epochs % checkpoint_interval != 0):
         save_checkpoint(
@@ -223,7 +228,7 @@ def train_q_mlp(
         game="tic_tac_toe",
         seed=seed,
         checkpoint_step=epochs,
-        hyperparameters={"hidden_dim": hidden_dim, "learning_rate": learning_rate, "epochs": epochs},
+        hyperparameters={**config.metadata(), "hidden_dim": hidden_dim, "learning_rate": learning_rate, "epochs": epochs},
         records=tuple(records),
     )
     return TrainedQ(model=model, training_log=QTrainingLog(losses=losses, telemetry=telemetry))
