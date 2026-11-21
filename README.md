@@ -63,7 +63,7 @@ The resulting conceptual spine is
 P  ->  behaviorally faithful score S_P  ->  possible trajectory utility U.
 ```
 
-The first arrow is the broad policy-value representation claim. The second is a stronger utility-factorization hypothesis to test rather than assume.
+The first arrow asks how closely scores can reproduce choices. The second asks how much a shared utility of consequences can explain under a declared continuation. The review fixes the three-game comparison and reports an example where increasing win probability reduced expected points. [Checkpoint B review](CHECKPOINT_B.md)
 
 See [`docs/policy_reconstruction_vs_utility_factorization.md`](docs/policy_reconstruction_vs_utility_factorization.md) for the full argument and [`docs/selection_semantics.md`](docs/selection_semantics.md) for the operational contract governing scores, rollout values, lotteries, and double counting.
 

@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Checkpoint B**, the review of the claims, terminology and minimum set of experiments. Phase I Tasks 30–36 are complete. [Checkpoint B](#checkpoint-b--thesis-and-notation-freeze)
+**Next is Task 37**, the finite deterministic representation theorem. Checkpoint B is complete. [Review, proof plan and minimum experiments](CHECKPOINT_B.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -25,18 +25,18 @@ Boolean truth {0,1}
     -> policy or decision through argmax / sampling
 ```
 
-Every nondegenerate bounded real interval is affinely equivalent to `[0,1]`; an unbounded carrier supports unrestricted signed differences, additive composition, margins, advantages, costs, and losses. Neural training reinforces this perspective because minimizing a loss `L` is exactly maximizing the value `U = -L`. The historical progression from hard thresholds to sigmoid/tanh and then ReLU-like activations is a motivating hypothesis to audit, not a premise to assume.
+Every closed bounded real interval with two distinct endpoints can be rescaled onto `[0,1]`. Open endpoints stay open. Signed real numbers also represent unbounded differences, costs and losses. Minimizing a training loss `L` has the same solutions as maximizing `−L` on the same parameters. A utility of complete plays requires a separate definition. The historical progression from hard thresholds to sigmoid/tanh and then ReLU-like activations is a motivating hypothesis to audit, not a premise to assume.
 
 The long-range conjecture is not that every activation literally is utility. It is that neural networks may owe part of their generality and interpretability potential to computing in a rich real-valued value carrier and postponing discrete truth, class, or action readouts until late in the computation.
 
-The project will not define success as recovering one metaphysically unique reward hidden inside every system. It will proceed through increasingly strong meanings of “value form”:
+The project will not define success as recovering one metaphysically unique reward hidden inside every system. It investigates four meanings of a score, each with its own evidence.
 
-1. **Decoder value:** a score or energy whose declared decoder exactly reproduces the policy.
+1. **Decoder value:** a score used to produce a move or distribution. A constructed score can reproduce a known policy exactly. A fitted score has measured fidelity on a declared population.
 2. **Revealed value:** a ranking or cardinalized score inferred from behavior under counterfactual action sets or perturbations.
 3. **Return value:** expected outcome or cumulative return under a declared environment, horizon, perspective, and payoff contract.
 4. **Mechanistic value:** an internal representation that causally mediates the source policy’s computation.
 
-The first level should exist very broadly. The later levels are stronger empirical and formal claims. Failure to identify a unique reward does **not** refute policy-to-value representation; it identifies the relevant equivalence class, missing query information, or extra assumptions needed for a stronger interpretation.
+Linking any two meanings requires additional assumptions or observations. A supplied game payoff, for example, can be evaluated even when it predicts a different move from the source. Failure to identify a unique reward does **not** refute policy-to-value representation; it identifies the relevant equivalence class, missing query information, or extra assumptions needed for a stronger interpretation.
 
 ## Core research objects
 
@@ -46,8 +46,8 @@ The [notation and recovery contract](formalism/00_notation.md) defines these sym
 h in H                     state, context, or full history
 C(h) subset A              feasible candidate actions/outputs
 P(. | h, C)                deterministic or stochastic policy
-V_P(h, a) in extended R    recovered value/score/energy form
-D(V_P, h, C)               declared decoder producing behavior
+S_P(h, C, a) in extended R recovered move score on the offered set C
+D(S_P, h, C)               declared decoder producing behavior
 R(P, contract, seed)       recovery procedure returning a ValueArtifact
 ```
 
@@ -63,8 +63,8 @@ For broad policy classes, an exact value-like representation exists after fixing
 
 - Finite deterministic policies admit exact action-score representations decoded by tie-broken `argmax`.
 - Discrete stochastic policies admit log-score/energy representations decoded by softmax, using extended values for zero-probability actions when needed.
-- Deterministic policies on metric action spaces admit distance-based energies such as `-d(a,P(h))`.
-- State-value form can absorb action value by lifting the state/history space to include the candidate action or successor.
+- Deterministic policies on metric action spaces admit distance-based scores such as `-d(a,P(h))`, or energy equal to positive distance.
+- A history paired with its candidate action can carry the move score. Using only the resulting board requires compatible comparisons wherever different histories merge.
 
 **Research route:** prove exact scoped theorems, implement executable witnesses, then determine which constructions are useful rather than merely lossless.
 
@@ -98,10 +98,10 @@ A recovered value artifact should make questions answerable that a bare action c
 A normalized value function can induce a family of stochastic policies, for example
 
 ```text
-pi_(tau,mu)(a|h) proportional to mu(a|h) * exp(V(h,a)/tau),
+pi_(T,mu)(a|h) proportional to mu(a|h) * exp(S(h,a)/T),
 ```
 
-where `mu` is a base measure and `tau` a temperature. The zero-temperature limit should recover the deterministic argmax when it is unique.
+where `S` is the move score, `mu` gives the base weights and `T` is a positive temperature. The finite-action limit as temperature approaches zero should recover a unique highest-scoring move with positive base weight.
 
 **Research route:** prove which changes in scores or temperature preserve the move probabilities. Measure how much the resulting distributions vary across recovered values, how many different moves and states they explore, and how those quantities change with uncertainty in the estimated scores.
 
@@ -333,7 +333,9 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 ## Checkpoint B — Thesis and notation freeze
 
-- [ ] Review Tasks 30–36 and decide the exact theorem spine, minimum experiment suite, and terminology. Remove any claim that accidentally equates decoder score, return, latent reward, and mechanism.
+- [x] Reviewed Tasks 30–36 on 2026-11-20. The proof plan covers exact encoding, limits on sharing board scores, equivalence under declared queries, expected utility, and stability of decoded behavior. Each is a planned obligation with assumptions and limiting examples. [Frozen proof plan](CHECKPOINT_B.md#proofs-to-pursue)
+  - The minimum game comparison retains tic-tac-toe, Connect Four and 4×4 Reversi. Compare direct and expected-utility choices from the same fitted networks, with separate measurements for imitation, full-game performance and predicting fresh choices under changed conditions. Separate known game points, utility inferred from choices and claims about internal causes. [Experiment decisions](CHECKPOINT_B.md#minimum-experiments)
+  - Corrected an unsupported ranking of fitted methods and a sign error in the definition of energy. Recounting the fixed-rule tic-tac-toe pilot gave 853 disagreements at equal return and 235 at lower return among 4,520 boards for the win/block/center/corner player defined in the review. Task 37 is next. [Findings, evidence and verification](CHECKPOINT_B.md)
 
 ---
 
@@ -350,7 +352,7 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** softmax recovery and invariance properties are proved and tested.
 
 - [ ] **39. Extend exact representation to deterministic metric-action policies.**
-  - Use a separating distance/energy such as `-d(a,P(h))` and state assumptions for unique decoding, measurability, and candidate restriction.
+  - Use a score equal to negative distance or an energy equal to positive distance and state assumptions for unique decoding, measurability, and candidate restriction.
   - **Done when:** finite-dimensional continuous-action examples and edge cases are explicit.
 
 - [ ] **40. Prove action-value to state-value lifting.**
@@ -414,7 +416,7 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** artifacts are serializable and reject semantically incomplete combinations.
 
 - [ ] **51. Implement exact decoder-value encoders.**
-  - Add deterministic indicator/gap scores, stochastic log scores, and metric-action distance energies.
+  - Add deterministic indicator/gap scores, stochastic log scores, and positive-distance energies minimized over metric actions.
   - **Done when:** round-trip tests recover the source behavior exactly on supported domains.
 
 - [ ] **52. Implement policy-to-score distillation.**
