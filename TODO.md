@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 45**, whole-play expected utility.
+**Next is Task 46**, score errors and decision stability.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -388,10 +388,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** exact and sampled fixtures reproduce the derivation.
   - Completed 2026-11-20. Derived adjusted log odds and connected-menu identifiability. Checked exact probabilities and finite repeated draws with uncertainty. [Statement and checks](formalism/44_probability_ratios.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **45. Formalize expected utility over trajectories and its limits for imitation.**
+- [x] **45. Formalize expected utility over trajectories and its limits for imitation.**
   - Define `Q_U^κ(s,a) = E[U(trajectory) | s,a,environment,κ]` with a declared continuation rule, horizon, information, player perspective and evaluation distribution. Derive the current rollout target as a special case. Compare a supplied game payoff with a single consequence utility inferred from choices.
   - For deterministic sources establish when exact expected-utility maximization reproduces the action under the declared tie rule. For stochastic sources derive the best distributional match possible when choices must stay within the maximizing set. Compare specified tie mixing and random utility with soft choice, whose additional preference over choice distributions gives the objective `E_q[Q] − T KL(q || μ)`.
   - Give finite examples of an exact match, a missed win under the game payoff, and two actions inducing the same consequence lottery. Show how restrictions on the information available to the utility change what the policy can reveal.
+  - Completed 2026-11-20. Characterized deterministic and stochastic recovery from shared utilities. Derived the unavoidable probability discrepancy and the temperature-sampling objective. [Statement and checks](formalism/45_expected_utility.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **46. Prove stability bounds linking value error, action gaps, and policy agreement.**
   - For a unique best legal move, show why an action gap larger than twice the largest per-action score error on the board preserves that move. Give examples where the same mean squared error preserves or reverses a ranking. Treat ties explicitly.
