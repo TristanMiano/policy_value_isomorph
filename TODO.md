@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 56**, aligning score units.
+**Next is Task 57**, matched recovery comparisons.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -456,9 +456,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** candidate-generation bias is measurable and reproducible.
   - Completed 2026-11-20. Added reproducible legal, reachable, continuous and sequence candidates with omitted mass or distance diagnostics. [Implementation](src/policy_value_isomorph/candidate_sets.py) · [Checks](tests/test_candidate_sets.py). Full Windows suite: 118 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **56. Implement value alignment and canonicalization.**
+- [x] **56. Implement value alignment and canonicalization.**
   - Support anchor subtraction, standardized/robust scale, affine fit to shared anchors, isotonic/rank alignment, and temperature-aware alignment.
   - **Done when:** comparison refuses raw cardinal metrics across incompatible gauges.
+  - Completed 2026-11-20. Implemented shared anchors, scale, monotone and temperature transformations and enforced comparable units for numerical differences. [Implementation](src/policy_value_isomorph/score_alignment.py) · [Checks](tests/test_score_alignment.py). Full Windows suite: 119 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **57. Implement the multi-axis value comparison suite.**
   - Implement Task 35's fidelity and strength measures, including a source row, absolute rates and paired differences. For return models recompute residual error at each saved checkpoint on fixed training targets and error on held-out boards with exact targets. Log action disagreement, action gaps and matchup outcomes at the same checkpoint.
