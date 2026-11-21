@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 46**, score errors and decision stability.
+**Next is Task 47**, observable limits and repairs.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -394,9 +394,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Give finite examples of an exact match, a missed win under the game payoff, and two actions inducing the same consequence lottery. Show how restrictions on the information available to the utility change what the policy can reveal.
   - Completed 2026-11-20. Characterized deterministic and stochastic recovery from shared utilities. Derived the unavoidable probability discrepancy and the temperature-sampling objective. [Statement and checks](formalism/45_expected_utility.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **46. Prove stability bounds linking value error, action gaps, and policy agreement.**
+- [x] **46. Prove stability bounds linking value error, action gaps, and policy agreement.**
   - For a unique best legal move, show why an action gap larger than twice the largest per-action score error on the board preserves that move. Give examples where the same mean squared error preserves or reverses a ranking. Treat ties explicitly.
   - Bound or exhibit the sensitivity of soft-choice probabilities to score error at fixed temperature and base measure. State which bounds concern agreement with the exact decoder and when that decoder also matches the source. Test the finite examples against the diagnostics planned in Task 67.
+  - Completed 2026-11-20. Proved deterministic margin and probability-shift bounds, including exact ties. Compared equal squared errors with different move effects. [Statement and checks](formalism/46_stability.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **47. Build the constructive non-identifiability suite.**
   - Include equivalent argmax scores, unknown softmax temperature, unqueried alternatives, reward shaping/return ambiguity, insufficient state, and off-support behavior.
