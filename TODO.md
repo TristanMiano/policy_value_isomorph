@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 27.** Save the network weights, optimizer memory and training position together so an interrupted fit can continue.
+**Next task is 28.** Exercise the full training and resume workflow from a fresh installation on CPU, and check platform-specific paths and optional graphics-processor runs.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -257,10 +257,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** retain or reject Muon with a recorded result; rejection completes the task.
   - Completed 2026-11-20. Compared AdamW with Muon on the hidden matrix in 24 CPU fits. Over four paired initializations, Muon changed average move agreement by +1.57, +2.08 and −2.88 percentage points for the move, board and board-and-move networks on 780 withheld boards. Retained the opt-in comparison. The report gives uncertainty, all losses, times and game outcomes. All 85 tests and the demo ran. [Benchmark, results and repeat command](experiments/optimizer_comparison/README.md)
 
-- [ ] **27. Migrate checkpoint/resume to PyTorch model and optimizer state.**
+- [x] **27. Migrate checkpoint/resume to PyTorch model and optimizer state.**
   - Version the artifact schema and provide a clear legacy policy.
   - Preserve latest/specified checkpoint behavior and telemetry continuation.
   - **Done when:** round-trip and interrupted-run tests pass for policy, `V`, and `Q`.
+  - Completed 2026-11-20. Version 2 saves native PyTorch model and optimizer state, example order, random state, dataset identity and elapsed time. The interrupted and uninterrupted AdamW fits produced identical final weights, optimizer memory and subsequent losses for each of the three networks using both latest and named files. Historical JSON continuation also ran. All 92 tests and the demo passed. [Checkpoint implementation](src/policy_value_isomorph/checkpointing.py) · [Continuation tests](tests/test_training_resume.py) · [Resume commands](REPRODUCIBILITY.md#continuing-a-training-run)
 
 - [ ] **28. Expand tests and smoke demos for the PyTorch stack.**
   - Add CPU end-to-end tests for policy training, rollout labeling, `V`, `Q`, evaluation, and resume.
