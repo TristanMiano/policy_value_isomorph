@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 38**, discrete random choices.
+**Next is Task 39**, actions with a distance.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -347,10 +347,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** theorem, proof, examples, and executable finite tests agree.
   - Completed 2026-11-20. Characterized the canonical indicator tables, their inverse and every score tie that preserves a chosen move. [Statement and checks](formalism/37_finite_choices.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **38. Prove discrete stochastic policy-to-log-score representation.**
+- [x] **38. Prove discrete stochastic policy-to-log-score representation.**
   - Represent a stochastic policy by logits/energies up to state-dependent additive constants; handle zero support with extended reals or a declared approximation.
   - State the role of temperature.
   - **Done when:** softmax recovery and invariance properties are proved and tested.
+  - Completed 2026-11-20. Derived the score family for a fixed temperature and base measure, including zero support and a finite-score approximation with explicit probability error. [Statement and checks](formalism/38_random_choices.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **39. Extend exact representation to deterministic metric-action policies.**
   - Use a score equal to negative distance or an energy equal to positive distance and state assumptions for unique decoding, measurability, and candidate restriction.
