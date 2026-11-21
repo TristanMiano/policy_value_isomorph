@@ -3,17 +3,17 @@ from dataclasses import dataclass
 from itertools import combinations
 from math import fsum, inf, isclose, isfinite, log, sqrt
 from statistics import mean
-from typing import Mapping
+from typing import Callable, Mapping
 
 from .checkpointing import load_checkpoint
 from .pilot_exact import play_match, total_variation
 from .recovery_contract import ValueArtifact
-from .score_alignment import Aligned, align, cardinal_mse
+from .score_alignment import align, cardinal_mse
 
 
 # Meaning, units, population, invariance, required access travel with metric exports.
 METRICS = {
-    "agreement": ("source probability of the reconstructed move for a fixed source", "fraction", "weighted decisions", "within-row score order for greedy moves", "source and deployed laws"),
+    "agreement": ("deployed probability of the deterministic source's chosen move", "fraction", "weighted decisions with a fixed source choice", "equivalent deployed laws", "source and deployed laws"),
     "tv": ("minimum probability mass reassigned", "fraction", "weighted decisions", "equivalent laws", "source and deployed laws"),
     "cross_entropy": ("negative log probability of a source draw", "nats per draw", "weighted decisions", "equivalent laws", "source and deployed laws"),
     "kl": ("extra natural-log loss relative to the source's own probabilities", "nats per draw", "weighted decisions", "equivalent laws", "both legal probability rows"),
@@ -32,8 +32,12 @@ def _law(row, menu):
         raise ValueError("need normalized probabilities on legal actions")
 
 
-def choice_metrics(original, recovered, menu, scores) -> dict:
-    menu = tuple(menu)
+def choice_metrics(original, recovered, menu, scores, *, tie_order=None) -> dict:
+    """Rank equal scores by the supplied priority, defaulting to the offered menu's order."""
+    legal = tuple(menu)
+    menu = legal if tie_order is None else tuple(tie_order)
+    if len(menu) != len(set(menu)) or set(menu) != set(legal):
+        raise ValueError("tie priority must list each legal move once")
     _law(original,menu)
     _law(recovered,menu)
     if (not menu or set(scores)!=set(menu) or max(scores.values()) == -inf
@@ -127,6 +131,7 @@ class GameMethod:
     artifact: ValueArtifact
     law: Mapping
     mover_scores: Mapping
+    tie_order: Callable | None = None
 
 
 def compare_game(graph, source: GameMethod, methods, populations, opponents) -> dict:
@@ -165,7 +170,9 @@ def compare_game(graph, source: GameMethod, methods, populations, opponents) -> 
             total = sum(board_weights.values())
             rows = []
             for s,w in board_weights.items():
-                row = choice_metrics(source.law[s],method.law[s],graph.children[s],method.mover_scores[s])
+                priority = method.tie_order(s) if method.tie_order is not None else None
+                row = choice_metrics(source.law[s],method.law[s],graph.children[s],method.mover_scores[s],
+                                     tie_order=priority)
                 rows.append((row,w))
                 decisions.append({**key,"population_name":group,"board":tuple(s.board),"to_move":s.to_move,
                                   "weight":w,**row})

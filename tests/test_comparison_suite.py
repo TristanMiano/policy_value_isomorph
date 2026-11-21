@@ -15,6 +15,9 @@ from policy_value_isomorph.value_mlp import TinyMLPValue
 def test_structure_and_changed_choices():
     row=choice_metrics({0:1},{1:1},(0,1),{0:2,1:2})
     assert (row["tv"],row["cross_entropy"],row["ties"],row["agreement"])==(1,inf,2,0)
+    reversed_priority = choice_metrics({1:1},{1:1},(0,1),{0:2,1:2},tie_order=(1,0))
+    assert reversed_priority["source_fixed_match"] == 1
+    assert choice_metrics({0:1,1:0},{0:1},(0,1),{0:0,1:-inf})["source_score_forgone"] == 0
     assert ranking({0:2,1:1},{0:0,1:1},1)["spearman"]==-1
     r=lambda x:align({0:x,1:0},"raw",units="points",reference="first player")
     assert geometry({0:r(1),1:r(3)},{0:r(2),1:r(3)},[(0,1)])=={"move_pairs":1,"mse":1}

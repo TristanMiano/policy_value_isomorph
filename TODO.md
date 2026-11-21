@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 59**, inspecting recovered choices.
+**Next is Checkpoint D**, the review of the recovery framework against the frozen pilot. Tasks 49–59 are complete. [Phase III findings and reproduction](PHASE_III.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -444,12 +444,12 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Reuse the exact tic-tac-toe reference and compare Monte Carlo and optional bootstrapped estimates under the same payoff and continuation. Expose the induced outcome lotteries so a new utility can be evaluated without summing continuation values along a trajectory.
   - Fit one nonconstant utility shared across boards to training choices under a declared decoder. Start with anchored win/draw/loss utilities and a small prespecified extension such as game length. Restrict inputs to consequences and publish the features, parameter count, scale anchors and policy-independent tie rule. Keep source actions and board identities out of the utility inputs.
   - Verify the implementation on a source with a known utility and on choices the restricted family cannot explain. Retain multiple compatible utilities or bounds when the observations admit them. Task 71 tests predictive value on held-out choices.
-  - Completed 2026-11-20. Exposed exact and sampled outcome-and-duration distributions and fitted anchored common utilities with explicit ambiguity. [Implementation](src/policy_value_isomorph/consequence_utility.py) · [Checks](tests/test_consequence_utility.py). Full Windows suite: 115 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
+  - Completed 2026-11-20. Exposed exact and sampled outcome-and-duration distributions and fitted anchored common utilities with explicit ambiguity. [Implementation](src/policy_value_isomorph/consequence_utility.py) · [Checks](tests/test_consequence_utility.py). Full Windows suite: 116 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [x] **54. Implement constrained-choice and active preference probing.**
   - Recover action rankings from masked candidate sets; add deterministic consistency diagnostics and a stochastic pairwise model.
   - **Done when:** the probe budget and query history are part of the artifact.
-  - Completed 2026-11-20. Retained the query budget and every response, quantified ordering conflicts and estimated pairwise choice odds. [Implementation](src/policy_value_isomorph/preference_probes.py) · [Checks](tests/test_preference_probes.py). Full Windows suite: 116 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
+  - Completed 2026-11-20. Retained the query budget and every response, quantified ordering conflicts and estimated pairwise choice odds. [Implementation](src/policy_value_isomorph/preference_probes.py) · [Checks](tests/test_preference_probes.py). Full Windows suite: 117 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [x] **55. Implement candidate and neighborhood generators.**
   - Cover legal discrete actions, nearby reachable states, sampled continuous actions, and generated sequence candidates.
@@ -472,9 +472,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** a small matrix resumes safely and detects accidental seed reuse.
   - Completed 2026-11-20. Stored independently factored seeds, resumable run manifests and pairwise and mean-distribution comparisons. [Implementation](src/policy_value_isomorph/recovery_matrix.py) · [Checks](tests/test_recovery_matrix.py). Full Windows suite: 122 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **59. Build the first `ValueAtlas` reporting API.**
+- [x] **59. Build the first `ValueAtlas` reporting API.**
   - Emit per-context action tables, value gaps, uncertainty across recoveries, local state/action neighborhoods, and source-policy comparison.
   - **Done when:** a deterministic policy yields more inspectable information than a single chosen action.
+  - Completed 2026-11-20. Added per-context move comparisons with gaps, across-fit variation, neighborhoods and probabilities from the original player. [Implementation](src/policy_value_isomorph/value_atlas.py) · [Checks](tests/test_value_atlas.py). Full Windows suite: 123 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 ## Checkpoint D — Infrastructure and experiment freeze
 
