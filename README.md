@@ -10,6 +10,8 @@ The first experiment uses tic-tac-toe. A **rollout** plays a game forward under 
 
 The research protocols keep quantitative questions numerical, require definitions at first use, preserve plausible readings of the thesis and give constructive examples and limitations comparable scrutiny. [Research stance](RESEARCH_STANCE.md) · [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
 
+A worked tic-tac-toe board shows how two moves can both win yet imply different conclusions about what the player prefers. The evaluation contract specifies how to rank a reconstruction for copying choices, winning games or predicting choices after the available moves change. [Worked example](docs/hand_worked_atlas.md) · [Evaluation contract](docs/evaluation_contract.md) · [Claim ledger](CLAIM_LEDGER.md)
+
 ---
 
 ## Run the current baseline

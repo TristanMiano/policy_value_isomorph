@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 36**, a worked example of choices and scores on one tic-tac-toe board.
+**Next is Checkpoint B**, the review of the claims, terminology and minimum set of experiments. Phase I Tasks 30–36 are complete. [Checkpoint B](#checkpoint-b--thesis-and-notation-freeze)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -325,9 +325,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Specify the held-out populations, paired differences (measurements made on the same positions or opponents), sampling uncertainty, and how exact ties will be reported for each objective. Relate differences in move order, score magnitude and score patterns across nearby boards to these measurements. Claims about human usefulness or internal mechanism require their own evidence.
   - Completed 2026-11-20. Defined separate prospective rankings for imitation, points per game, win probability and predictions of changed choices. Fixed comparison players, populations, weights, tie handling, matched access and paired uncertainty. [Evaluation contract](docs/evaluation_contract.md)
 
-- [ ] **36. Produce a small hand-worked policy/value atlas.**
+- [x] **36. Produce a small hand-worked policy/value atlas.**
   - For one tic-tac-toe state, manually show the source action, all legal alternatives, exact/rollout/revealed values, action gaps, normalizations, and one softmax completion.
   - **Done when:** the example exposes every ambiguity the formalism must handle before more code is written.
+  - Completed 2026-11-20. Worked through every legal move and complete continuation on one board. The source picks cell 5 before 8 before 2 on that menu. Cells 2 and 5 both win when two copies of the source continue. Under uniformly random legal replies by both seats their win probabilities are 1 and ½. Normalized counts, restricted-menu rankings, sampled choices and VNM complete-play utilities give distinct comparisons. [Hand-worked example](docs/hand_worked_atlas.md) · [Executable verification](tests/test_hand_worked_atlas.py)
+  - Phase I verification. For each of Tasks 30–35 the Windows suite ran 96 tests successfully and skipped the graphics-processor test, and the three-board demo ran. With the Task 36 example included, `python -m pytest -q` passed 97 tests on Windows with that one skip and all 98 on Ubuntu, including the graphics-processor test. `python scripts/demo_tictactoe.py` printed all three sample boards, payoffs and moves. The exact atlas calculations cover one illustrative position. Checkpoint B is pending.
 
 ## Checkpoint B — Thesis and notation freeze
 
