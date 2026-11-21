@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 69**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 70**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -536,9 +536,11 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Constructed board scores copying every one of the 4,520 decisions for each of 32 sources. Measured incompatible frequency targets, their irreducible squared error, full-information VNM comparisons and distributional bounds. [Finite counts per player](experiments/phase_iv/finite_bounds.jsonl.gz)
 
-- [ ] **69. Produce exhaustive value-atlas visualizations.**
+- [x] **69. Produce exhaustive value-atlas visualizations.**
   - Show action values, runner-up gaps, nearby reachable-state values, uncertainty, and disagreement clusters on the exact state graph.
   - **Done when:** examples include both clear and ambiguous “what P likes” cases.
+
+  - Completed 2026-11-20. The [interactive atlas](experiments/phase_iv/atlas.html) opens every reachable decision for one frozen player, with the observed counts, four fits, gaps and legal successors. Verified all 4,520 entries and the search, scoring-rule, gap and successor controls.
 
 - [ ] **70. Test value-derived stochastic completions.**
   - Cross deterministic and stochastic sources with greedy and temperature-based decoding of raw scores, fixed-payoff returns, and fitted expected utilities. Sweep temperature with score scale and base measure recorded. Include the low-temperature limit, ties, support masks, and a validation-selected temperature.
