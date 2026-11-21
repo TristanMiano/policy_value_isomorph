@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 52**, fitting scores from observed behavior.
+**Next is Task 53**, shared utilities of complete plays.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -435,9 +435,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** round-trip tests recover the source behavior exactly on supported domains.
   - Completed 2026-11-20. Checked deterministic choices, exact zero probability under exponential sampling and minimum-distance actions. [Implementation](src/policy_value_isomorph/score_encoding.py) · [Checks](tests/test_score_encoding.py). Full Windows suite: 112 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **52. Implement policy-to-score distillation.**
+- [x] **52. Implement policy-to-score distillation.**
   - Train value/action-score networks directly from actions, probabilities, logits, or pairwise choices according to access level.
   - **Done when:** each supervision mode is a separate named recovery method with matched evaluation.
+  - Completed 2026-11-20. Added four named training objectives with common candidate and evaluation handling and final training losses. [Implementation](src/policy_value_isomorph/distillation.py) · [Checks](tests/test_distillation.py). Full Windows suite: 113 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **53. Implement return evaluation and fitting a compact trajectory utility.**
   - Reuse the exact tic-tac-toe reference and compare Monte Carlo and optional bootstrapped estimates under the same payoff and continuation. Expose the induced outcome lotteries so a new utility can be evaluated without summing continuation values along a trajectory.
