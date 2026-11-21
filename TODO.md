@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 64**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 65**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -502,9 +502,11 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Trained 32 optimal sources and 256 behavior imitators across 64 board splits and two source classes. Retained per-run probabilities and both-seat evaluations.
 
-- [ ] **64. Run constrained-choice ranking recovery.**
+- [x] **64. Run constrained-choice ranking recovery.**
   - Measure query complexity, ordering recovery, inconsistency diagnostics, and active-vs-random probing.
   - **Done when:** the report gives the fraction of alternative move pairs whose order was recovered, the number left undetermined and the number of requests for source choices.
+
+  - Completed 2026-11-20. Queried two menu rules on 32 withheld boards per split, with three query methods and three budgets. Saved every offered menu, response, determined pair, conflict count and comparison against the original full-menu ranking.
 
 - [ ] **65. Run stochastic/log-score recovery.**
   - Compare access to true probabilities or logits with repeated action samples at fixed query budgets. Include a mixture with zero support on a legal action and one that gives positive mass to a lower-return move. Check exact log-score recovery with the declared support, base measure, and temperature.
