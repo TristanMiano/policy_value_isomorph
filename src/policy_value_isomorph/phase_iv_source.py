@@ -47,7 +47,7 @@ def actors(block,dest):
     mixed=.75*original+.25*b.uniform
     opponents={"uniform":b.uniform,"priority":b.priority,"perfect":b.perfect}
     for i in range(5):
-        torch.manual_seed(6211+i if block==0 else seed(block,3,0,i))
+        torch.manual_seed(seed(block,3,0,i))
         with torch.no_grad():
             net=network(10,9)
             values=np.zeros_like(scores)

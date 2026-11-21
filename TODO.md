@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 66**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 67**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -514,10 +514,12 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Compared exact log probabilities and two estimates at four budgets, for full and restricted probability support on all withheld boards. Saved counts, infinite log errors and the independent opening-coverage comparisons.
 
-- [ ] **66. Compare behavior and gameplay under exact and learned return values.**
+- [x] **66. Compare behavior and gameplay under exact and learned return values.**
   - Compare the raw behavioral decoder with greedy expected game utility on identical boards and matchups. Score exact returns, rollout estimates before fitting, learned successor `V`, and learned direct `Q` on all legal alternatives. Sweep rollout budgets on on-policy and off-policy positions. Include exact best-response game scores against known individual opponents as strength references and record the opponent information they require.
   - Give per-source counts for each Task 61 disagreement category and the average payoff forgone. Measure how often estimated scores restore or lose the source's move. Publish original and recovered win probabilities, paired game-score differences, move agreement or total variation distance, and return errors. Report values and differences for both equal board weights and weights proportional to the source's visits.
   - Run the tic-tac-toe part of Task 81b on the networks fitted to observed move frequencies. Save both selection rules' predictions and their game results on the same cases for later comparison across games. Report the game-payoff fits separately.
+
+  - Completed 2026-11-20. Compared each fitted V and Q under direct choice and six VNM rules, plus exact and sampled game points, game-point networks and opponent-specific best replies. All primary fits and per-board choices, errors, examples and seat results are archived.
 
 - [ ] **67. Measure how residual training error affects fidelity and playing strength.**
   - The 2026-11-20 tic-tac-toe investigation compared losses, inputs and tie handling on two board partitions. With the frozen neural player that chooses the earliest cell preserving its best guaranteed outcome, a network using board and move geometry reached 96.45% direct move agreement on 780 withheld boards, up from 83.72%. Extending three fits to 120 passes recovered all 2,980 training moves in each and averaged 96.92% on those withheld boards. Carry forward the separate measurement of same-board fit, withheld-board prediction, moves corrected or lost by VNM expected-utility selection, and game outcomes. Repeat on independently trained sources with other tie conventions. [Training losses, example count predictions and results](TICTACTOE_CHOICE_TRAINING.md)

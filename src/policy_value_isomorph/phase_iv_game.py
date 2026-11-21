@@ -106,7 +106,7 @@ def game():
 
 def soft(b,scores,temp,support=None):
     mask=b.legal if support is None else support
-    z=np.where(mask,scores,-np.inf)
+    z=np.where(mask,np.asarray(scores,dtype=float),-np.inf)
     z=z-np.where(mask.any(1),z.max(1),0)[:,None]
     if temp==0:
         mass=(z==0).astype(float)
