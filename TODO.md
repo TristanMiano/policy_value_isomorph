@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Checkpoint A — backend and scope readiness.** Tasks 25–29 are complete. The checkpoint review is pending. [Checkpoint A](#checkpoint-a--backend-and-scope-readiness)
+**Next is Task 30**, the written statement of the project's research position. Checkpoint A is complete. [Review findings and public interfaces](CHECKPOINT_A.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -278,7 +278,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 ## Checkpoint A — Backend and scope readiness
 
-- [ ] Audit Tasks 23–29, run the full suite, and freeze the package interfaces that the research phases may rely on. Confirm that the new philosophical stance does not require changing existing value-sign conventions before the formalism is written.
+- [x] Audit Tasks 23–29, run the full suite, and freeze the package interfaces that the research phases may rely on. Confirm that the new philosophical stance does not require changing existing value-sign conventions before the formalism is written.
+  - Completed 2026-11-20. Later experiments can rely on the documented calls for board representation, generating game-payoff labels, training and freezing players, selecting moves, evaluating games and continuing saved fits. Freezing now copies the player's weights. Connect Four now lets the caller identify whose win has a positive payoff, with X as the default. [Frozen interfaces and regression tests](CHECKPOINT_A.md)
+  - Retain +1 for a win, 0 for a draw and −1 for a loss from one named player's viewpoint. For the tic-tac-toe rule that wins immediately, blocks a win, takes the center, takes a corner or takes any legal move, in that order with lowest-cell ties, changing that viewpoint and reversing the direction of selection changed 0 of 4,520 decisions. Playing forward and working backward from terminal boards gave identical payoffs on all 16,167 legal board–move pairs for each viewpoint. A move's observed share of visits measures how often the mover chose it. The checkpoint provides an implementation check for the payoff calculation. [Exact calculation](tests/test_pilot_exact.py)
+  - Windows passed 96 software tests and skipped the one graphics-processor test on a central-processor-only installation. Ubuntu passed all 97, including that test. The three-board demo and short training workflow ran. Task 30 is next.
 
 ---
 

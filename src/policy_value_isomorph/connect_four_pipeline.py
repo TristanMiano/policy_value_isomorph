@@ -83,10 +83,13 @@ def generate_value_targets(
     return targets
 
 
-def recovered_action_from_v(state: ConnectFourState, value_fn: Callable[[ConnectFourState], float]) -> int:
+def recovered_action_from_v(
+    state: ConnectFourState, value_fn: Callable[[ConnectFourState], float], *, root_player: int = 1,
+) -> int:
+    """Choose by successor payoff for the supplied root player (X by default), ties by lowest column."""
     legal = state.legal_moves()
     if not legal:
         raise ValueError("no legal actions in terminal state")
-    if state.to_move == 1:
+    if state.to_move == root_player:
         return max(legal, key=lambda a: value_fn(state.apply_move(a)))
     return min(legal, key=lambda a: value_fn(state.apply_move(a)))

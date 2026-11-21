@@ -2,6 +2,8 @@
 
 The short baseline fits three tic-tac-toe networks using PyTorch, the library that computes predictions and changes weights during training. Use Python 3.10 or newer. The package version is 0.1.0. For a new checkout, create a virtual environment with `python -m venv .venv`. Activate it with `.venv\Scripts\Activate.ps1` in PowerShell or `source .venv/bin/activate` in a POSIX shell, then run the install and verification commands below.
 
+For the public training and evaluation calls, which player's payoff each score measures, and what is saved when freezing or resuming a model, see the [Checkpoint A interface reference](CHECKPOINT_A.md#what-later-experiments-can-rely-on).
+
 ## Dependencies and optional groups
 
 An **extra** installs dependencies for an additional feature with `python -m pip install -e ".[name]"`. The base package requires PyTorch 2.0 or later. For a graphics-processor installation, select a compatible build of PyTorch for the installed driver. The source package runs on a central processor by default. [Package configuration](pyproject.toml)
