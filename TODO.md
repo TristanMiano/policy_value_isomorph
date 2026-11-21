@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 44**, recovering differences from probabilities.
+**Next is Task 45**, whole-play expected utility.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -382,10 +382,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** this yields an implementable black-box preference-probing algorithm.
   - Completed 2026-11-20. Proved pairwise and elimination recovery under a stable strict order, with query counts and explicit tests for context effects. [Statement and checks](formalism/43_menu_queries.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **44. Prove score-difference recovery for soft/stochastic choice.**
+- [x] **44. Prove score-difference recovery for soft/stochastic choice.**
   - Under a declared Luce/softmax model, recover pairwise score differences from probability or repeated-choice ratios.
   - Separate ordinal recovery, cardinal differences, unknown temperature, and finite-sample uncertainty.
   - **Done when:** exact and sampled fixtures reproduce the derivation.
+  - Completed 2026-11-20. Derived adjusted log odds and connected-menu identifiability. Checked exact probabilities and finite repeated draws with uncertainty. [Statement and checks](formalism/44_probability_ratios.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **45. Formalize expected utility over trajectories and its limits for imitation.**
   - Define `Q_U^κ(s,a) = E[U(trajectory) | s,a,environment,κ]` with a declared continuation rule, horizon, information, player perspective and evaluation distribution. Derive the current rollout target as a special case. Compare a supplied game payoff with a single consequence utility inferred from choices.
