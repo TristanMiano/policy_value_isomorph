@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Checkpoint E**, the review following the completed tic-tac-toe experiments. [Phase IV findings](PHASE_IV.md) · [Frozen design](PHASE_IV_PROTOCOL.md)
+**Next is Task 73**, the Connect Four baseline. [Checkpoint E findings and methods selected for both games](CHECKPOINT_E.md) · [Phase IV experiments](PHASE_IV.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -564,8 +564,9 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 ## Checkpoint E — First research adjudication
 
-- [ ] Answer the original README question for each policy class and state weighting. Record which limits are structural, which shrink with training, and which remain open. Use the three objective-specific results from Task 72 to select methods for Connect Four and 4×4 Reversi, including a direct behavioral control and an expected-utility comparison.
+- [x] Answer the original README question for each policy class and state weighting. Record which limits are structural, which shrink with training, and which remain open. Use the three objective-specific results from Task 72 to select methods for Connect Four and 4×4 Reversi, including a direct behavioral control and an expected-utility comparison.
   - Carry the full Task 81b direct and VNM pairs forward. Use the objective rankings to choose additional methods.
+  - Completed 2026-11-20. Replayed the frozen choices with equal-board and original self-play weights. The preferred way to copy a player changed with the positions counted. Selected the move imitator, direct board-and-move scores, and discounted whole-game scores for distinct aims, with all paired direct and expected-utility comparisons retained for both games. [Review and method choices](CHECKPOINT_E.md) · [Reproducible differences across 32 original players](experiments/checkpoint_e.json)
 
 ---
 

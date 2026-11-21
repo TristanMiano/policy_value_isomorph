@@ -56,6 +56,30 @@ def test_full_choice_construction_and_randomized_partitions():
     assert all(r["common_test_boards"] < min(v[2] for v in r["partition_board_counts"]) for r in rows)
 
 
+def test_checkpoint_e_weighting_uses_matching_originals_and_partitions():
+    review = json.loads((DATA.parent / "checkpoint_e.json").read_text())
+    partitions = [r for r in review["populations"] if r["source"] == "fixed"]
+    assert {(r["block"], r["split"]) for r in partitions} == {(b, k) for b in range(32) for k in range(2)}
+    assert all(r["positive"] == r["expected_visits"] <= r["withheld"] for r in partitions)
+    archived = load_rows(DATA / "methods.jsonl.gz")
+    for metric in ("agreement", "visit_agreement"):
+        selected = {
+            r["method"]: r
+            for r in archived
+            if r["source"] == "fixed" and r["network"] == "Q" and r["metric"] == metric
+        }
+        planned = selected["vnm_decay_copies"]
+        direct = selected["direct"]
+        assert planned["block_ids"] == direct["block_ids"] == list(range(32))
+        delta = [v - d for v, d in zip(planned["block_means"], direct["block_means"])]
+        row = next(
+            r for r in review["contrasts"] if r["method"] == "Qvnm_decay_copies" and r["metric"] == metric
+        )
+        assert row["block_differences"] == pytest.approx(delta)
+        assert row["mean"] == pytest.approx(mean(delta))
+        assert row["sd"] == pytest.approx(stdev(delta))
+
+
 def test_full_game_enumeration_and_changed_menu_labels():
     pytest.importorskip("scipy")
     from policy_value_isomorph.phase_iv_game import game

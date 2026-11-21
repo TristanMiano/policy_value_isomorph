@@ -1,0 +1,4001 @@
+{
+  "definitions": "See CHECKPOINT_E.md. Rates are fractions. Game points = win minus loss. visit_ weights by the original playing both sides. Contrasts are method minus reference. One paired difference per original, equal weights within and between originals. Holm family contains all 15 exploratory contrasts displayed in this file. V and Q score the resulting board and the board plus move, respectively. direct takes their highest immediate score. vnm_terminal_copies and vnm_decay_copies maximize signed last-move and discounted cumulative frequency with both sides playing direct. Q_direct and Q_VNM_decay_copies sample those scores at temperature 0.25, except Q_direct_T0.05. counts_n uses n original draws per board.",
+  "populations": [
+    {
+      "block": 0,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 802,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 0,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 994,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 0,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 802,
+      "positive": 802,
+      "expected_visits": 2.3564534414382208
+    },
+    {
+      "block": 0,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 994,
+      "positive": 994,
+      "expected_visits": 1.9634040166461282
+    },
+    {
+      "block": 0,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 802,
+      "positive": 26,
+      "expected_visits": 2.4823455810546875
+    },
+    {
+      "block": 0,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 994,
+      "positive": 36,
+      "expected_visits": 1.9486541748046875
+    },
+    {
+      "block": 1,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 975,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 1,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 931,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 1,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 975,
+      "positive": 975,
+      "expected_visits": 2.248735936104305
+    },
+    {
+      "block": 1,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 931,
+      "positive": 931,
+      "expected_visits": 2.163200980897934
+    },
+    {
+      "block": 1,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 975,
+      "positive": 33,
+      "expected_visits": 2.3850860595703125
+    },
+    {
+      "block": 1,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 931,
+      "positive": 32,
+      "expected_visits": 1.9288482666015625
+    },
+    {
+      "block": 2,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 881,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 2,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 902,
+      "positive": 1,
+      "expected_visits": 1.0
+    },
+    {
+      "block": 2,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 881,
+      "positive": 881,
+      "expected_visits": 2.310834148321202
+    },
+    {
+      "block": 2,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 902,
+      "positive": 902,
+      "expected_visits": 1.6932374423143093
+    },
+    {
+      "block": 2,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 881,
+      "positive": 27,
+      "expected_visits": 2.1807708740234375
+    },
+    {
+      "block": 2,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 902,
+      "positive": 24,
+      "expected_visits": 1.6628570556640625
+    },
+    {
+      "block": 3,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 871,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 3,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 1111,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 3,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 871,
+      "positive": 871,
+      "expected_visits": 1.886756990952466
+    },
+    {
+      "block": 3,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 1111,
+      "positive": 1111,
+      "expected_visits": 3.0492811831216966
+    },
+    {
+      "block": 3,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 871,
+      "positive": 28,
+      "expected_visits": 1.5404052734375
+    },
+    {
+      "block": 3,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 1111,
+      "positive": 40,
+      "expected_visits": 2.8756256103515625
+    },
+    {
+      "block": 4,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 749,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 4,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 867,
+      "positive": 1,
+      "expected_visits": 1.0
+    },
+    {
+      "block": 4,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 749,
+      "positive": 749,
+      "expected_visits": 1.857564746008979
+    },
+    {
+      "block": 4,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 867,
+      "positive": 867,
+      "expected_visits": 1.8866363874818912
+    },
+    {
+      "block": 4,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 749,
+      "positive": 24,
+      "expected_visits": 1.681640625
+    },
+    {
+      "block": 4,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 867,
+      "positive": 34,
+      "expected_visits": 1.847076416015625
+    },
+    {
+      "block": 5,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 829,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 5,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 898,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 5,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 829,
+      "positive": 829,
+      "expected_visits": 1.7945215601138962
+    },
+    {
+      "block": 5,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 898,
+      "positive": 898,
+      "expected_visits": 2.6331154709770566
+    },
+    {
+      "block": 5,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 829,
+      "positive": 10,
+      "expected_visits": 1.6674041748046875
+    },
+    {
+      "block": 5,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 898,
+      "positive": 20,
+      "expected_visits": 2.5630950927734375
+    },
+    {
+      "block": 6,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 964,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 6,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 890,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 6,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 964,
+      "positive": 964,
+      "expected_visits": 2.9912724142982845
+    },
+    {
+      "block": 6,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 890,
+      "positive": 890,
+      "expected_visits": 2.723491241061498
+    },
+    {
+      "block": 6,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 964,
+      "positive": 34,
+      "expected_visits": 2.8654937744140625
+    },
+    {
+      "block": 6,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 890,
+      "positive": 37,
+      "expected_visits": 2.6043243408203125
+    },
+    {
+      "block": 7,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 923,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 7,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 935,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 7,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 923,
+      "positive": 923,
+      "expected_visits": 2.6542132878429676
+    },
+    {
+      "block": 7,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 935,
+      "positive": 935,
+      "expected_visits": 2.1225437141600105
+    },
+    {
+      "block": 7,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 923,
+      "positive": 35,
+      "expected_visits": 2.776702880859375
+    },
+    {
+      "block": 7,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 935,
+      "positive": 37,
+      "expected_visits": 1.8054962158203125
+    },
+    {
+      "block": 8,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 1018,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 8,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 985,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 8,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 1018,
+      "positive": 1018,
+      "expected_visits": 2.478250928656765
+    },
+    {
+      "block": 8,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 985,
+      "positive": 985,
+      "expected_visits": 2.254506794359318
+    },
+    {
+      "block": 8,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 1018,
+      "positive": 35,
+      "expected_visits": 2.3142852783203125
+    },
+    {
+      "block": 8,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 985,
+      "positive": 35,
+      "expected_visits": 1.9887237548828125
+    },
+    {
+      "block": 9,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 912,
+      "positive": 1,
+      "expected_visits": 1.0
+    },
+    {
+      "block": 9,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 966,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 9,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 912,
+      "positive": 912,
+      "expected_visits": 1.5773877446613613
+    },
+    {
+      "block": 9,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 966,
+      "positive": 966,
+      "expected_visits": 2.23182392473574
+    },
+    {
+      "block": 9,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 912,
+      "positive": 27,
+      "expected_visits": 1.3712158203125
+    },
+    {
+      "block": 9,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 966,
+      "positive": 31,
+      "expected_visits": 2.302978515625
+    },
+    {
+      "block": 10,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 861,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 10,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 947,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 10,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 861,
+      "positive": 861,
+      "expected_visits": 1.9297321473479903
+    },
+    {
+      "block": 10,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 947,
+      "positive": 947,
+      "expected_visits": 3.0940324563828727
+    },
+    {
+      "block": 10,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 861,
+      "positive": 23,
+      "expected_visits": 1.8031158447265625
+    },
+    {
+      "block": 10,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 947,
+      "positive": 36,
+      "expected_visits": 2.9611358642578125
+    },
+    {
+      "block": 11,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 808,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 11,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 729,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 11,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 808,
+      "positive": 808,
+      "expected_visits": 1.9922499525483954
+    },
+    {
+      "block": 11,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 729,
+      "positive": 729,
+      "expected_visits": 1.6982935201554068
+    },
+    {
+      "block": 11,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 808,
+      "positive": 25,
+      "expected_visits": 1.649658203125
+    },
+    {
+      "block": 11,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 729,
+      "positive": 19,
+      "expected_visits": 1.8419189453125
+    },
+    {
+      "block": 12,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 774,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 12,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 1004,
+      "positive": 6,
+      "expected_visits": 6.0
+    },
+    {
+      "block": 12,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 774,
+      "positive": 774,
+      "expected_visits": 1.7602660596686062
+    },
+    {
+      "block": 12,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 1004,
+      "positive": 1004,
+      "expected_visits": 3.548224681395072
+    },
+    {
+      "block": 12,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 774,
+      "positive": 29,
+      "expected_visits": 2.20977783203125
+    },
+    {
+      "block": 12,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 1004,
+      "positive": 49,
+      "expected_visits": 3.363494873046875
+    },
+    {
+      "block": 13,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 877,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 13,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 892,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 13,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 877,
+      "positive": 877,
+      "expected_visits": 2.044844138811505
+    },
+    {
+      "block": 13,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 892,
+      "positive": 892,
+      "expected_visits": 2.211116741195558
+    },
+    {
+      "block": 13,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 877,
+      "positive": 34,
+      "expected_visits": 1.80181884765625
+    },
+    {
+      "block": 13,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 892,
+      "positive": 35,
+      "expected_visits": 2.2042999267578125
+    },
+    {
+      "block": 14,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 912,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 14,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 833,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 14,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 912,
+      "positive": 912,
+      "expected_visits": 2.257191381883369
+    },
+    {
+      "block": 14,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 833,
+      "positive": 833,
+      "expected_visits": 3.215691728188248
+    },
+    {
+      "block": 14,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 912,
+      "positive": 32,
+      "expected_visits": 2.184295654296875
+    },
+    {
+      "block": 14,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 833,
+      "positive": 44,
+      "expected_visits": 3.1483612060546875
+    },
+    {
+      "block": 15,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 973,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 15,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 971,
+      "positive": 5,
+      "expected_visits": 5.0
+    },
+    {
+      "block": 15,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 973,
+      "positive": 973,
+      "expected_visits": 3.1715150733473436
+    },
+    {
+      "block": 15,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 971,
+      "positive": 971,
+      "expected_visits": 3.9656636588787917
+    },
+    {
+      "block": 15,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 973,
+      "positive": 44,
+      "expected_visits": 3.2331085205078125
+    },
+    {
+      "block": 15,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 971,
+      "positive": 45,
+      "expected_visits": 3.6002197265625
+    },
+    {
+      "block": 16,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 840,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 16,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 929,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 16,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 840,
+      "positive": 840,
+      "expected_visits": 1.974895026696422
+    },
+    {
+      "block": 16,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 929,
+      "positive": 929,
+      "expected_visits": 2.357110577664047
+    },
+    {
+      "block": 16,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 840,
+      "positive": 31,
+      "expected_visits": 1.81427001953125
+    },
+    {
+      "block": 16,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 929,
+      "positive": 28,
+      "expected_visits": 1.9545440673828125
+    },
+    {
+      "block": 17,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 940,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 17,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 905,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 17,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 940,
+      "positive": 940,
+      "expected_visits": 2.543238812905771
+    },
+    {
+      "block": 17,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 905,
+      "positive": 905,
+      "expected_visits": 2.6046405465514573
+    },
+    {
+      "block": 17,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 940,
+      "positive": 24,
+      "expected_visits": 2.131988525390625
+    },
+    {
+      "block": 17,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 905,
+      "positive": 25,
+      "expected_visits": 2.766448974609375
+    },
+    {
+      "block": 18,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 1091,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 18,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 969,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 18,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 1091,
+      "positive": 1091,
+      "expected_visits": 2.566903209307837
+    },
+    {
+      "block": 18,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 969,
+      "positive": 969,
+      "expected_visits": 2.4660064987404637
+    },
+    {
+      "block": 18,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 1091,
+      "positive": 42,
+      "expected_visits": 2.4766693115234375
+    },
+    {
+      "block": 18,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 969,
+      "positive": 46,
+      "expected_visits": 2.3531341552734375
+    },
+    {
+      "block": 19,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 789,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 19,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 906,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 19,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 789,
+      "positive": 789,
+      "expected_visits": 1.91755800020127
+    },
+    {
+      "block": 19,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 906,
+      "positive": 906,
+      "expected_visits": 1.9424656783462197
+    },
+    {
+      "block": 19,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 789,
+      "positive": 30,
+      "expected_visits": 1.937225341796875
+    },
+    {
+      "block": 19,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 906,
+      "positive": 28,
+      "expected_visits": 1.6949462890625
+    },
+    {
+      "block": 20,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 849,
+      "positive": 1,
+      "expected_visits": 1.0
+    },
+    {
+      "block": 20,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 959,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 20,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 849,
+      "positive": 849,
+      "expected_visits": 1.622550706636338
+    },
+    {
+      "block": 20,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 959,
+      "positive": 959,
+      "expected_visits": 2.379590423523433
+    },
+    {
+      "block": 20,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 849,
+      "positive": 26,
+      "expected_visits": 1.489166259765625
+    },
+    {
+      "block": 20,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 959,
+      "positive": 42,
+      "expected_visits": 2.5711517333984375
+    },
+    {
+      "block": 21,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 859,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 21,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 948,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 21,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 859,
+      "positive": 859,
+      "expected_visits": 2.08473759025493
+    },
+    {
+      "block": 21,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 948,
+      "positive": 948,
+      "expected_visits": 2.809448959966185
+    },
+    {
+      "block": 21,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 859,
+      "positive": 37,
+      "expected_visits": 1.985565185546875
+    },
+    {
+      "block": 21,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 948,
+      "positive": 31,
+      "expected_visits": 2.9480133056640625
+    },
+    {
+      "block": 22,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 1071,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 22,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 899,
+      "positive": 6,
+      "expected_visits": 6.0
+    },
+    {
+      "block": 22,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 1071,
+      "positive": 1071,
+      "expected_visits": 2.3369440795252565
+    },
+    {
+      "block": 22,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 899,
+      "positive": 899,
+      "expected_visits": 4.177382194175922
+    },
+    {
+      "block": 22,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 1071,
+      "positive": 54,
+      "expected_visits": 2.1261749267578125
+    },
+    {
+      "block": 22,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 899,
+      "positive": 48,
+      "expected_visits": 3.828521728515625
+    },
+    {
+      "block": 23,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 1026,
+      "positive": 5,
+      "expected_visits": 5.0
+    },
+    {
+      "block": 23,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 731,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 23,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 1026,
+      "positive": 1026,
+      "expected_visits": 3.1371435368502576
+    },
+    {
+      "block": 23,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 731,
+      "positive": 731,
+      "expected_visits": 2.4618002230528173
+    },
+    {
+      "block": 23,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 1026,
+      "positive": 68,
+      "expected_visits": 3.273651123046875
+    },
+    {
+      "block": 23,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 731,
+      "positive": 31,
+      "expected_visits": 2.236846923828125
+    },
+    {
+      "block": 24,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 913,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 24,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 989,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 24,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 913,
+      "positive": 913,
+      "expected_visits": 1.8420234208384516
+    },
+    {
+      "block": 24,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 989,
+      "positive": 989,
+      "expected_visits": 2.3087378518291253
+    },
+    {
+      "block": 24,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 913,
+      "positive": 29,
+      "expected_visits": 1.699066162109375
+    },
+    {
+      "block": 24,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 989,
+      "positive": 32,
+      "expected_visits": 2.053680419921875
+    },
+    {
+      "block": 25,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 909,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 25,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 913,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 25,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 909,
+      "positive": 909,
+      "expected_visits": 2.0414617561158677
+    },
+    {
+      "block": 25,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 913,
+      "positive": 913,
+      "expected_visits": 2.7318172070084423
+    },
+    {
+      "block": 25,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 909,
+      "positive": 28,
+      "expected_visits": 1.6875762939453125
+    },
+    {
+      "block": 25,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 913,
+      "positive": 24,
+      "expected_visits": 2.529083251953125
+    },
+    {
+      "block": 26,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 775,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 26,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 885,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 26,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 775,
+      "positive": 775,
+      "expected_visits": 2.535234188276624
+    },
+    {
+      "block": 26,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 885,
+      "positive": 885,
+      "expected_visits": 1.9086492360584324
+    },
+    {
+      "block": 26,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 775,
+      "positive": 34,
+      "expected_visits": 2.907318115234375
+    },
+    {
+      "block": 26,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 885,
+      "positive": 28,
+      "expected_visits": 1.8210296630859375
+    },
+    {
+      "block": 27,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 867,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 27,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 885,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 27,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 867,
+      "positive": 867,
+      "expected_visits": 2.7634731301554933
+    },
+    {
+      "block": 27,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 885,
+      "positive": 885,
+      "expected_visits": 2.5617154488487843
+    },
+    {
+      "block": 27,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 867,
+      "positive": 40,
+      "expected_visits": 2.8753204345703125
+    },
+    {
+      "block": 27,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 885,
+      "positive": 39,
+      "expected_visits": 2.7052459716796875
+    },
+    {
+      "block": 28,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 983,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 28,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 805,
+      "positive": 1,
+      "expected_visits": 1.0
+    },
+    {
+      "block": 28,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 983,
+      "positive": 983,
+      "expected_visits": 1.9358626292496128
+    },
+    {
+      "block": 28,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 805,
+      "positive": 805,
+      "expected_visits": 1.628929895572562
+    },
+    {
+      "block": 28,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 983,
+      "positive": 38,
+      "expected_visits": 2.0662689208984375
+    },
+    {
+      "block": 28,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 805,
+      "positive": 41,
+      "expected_visits": 1.6166534423828125
+    },
+    {
+      "block": 29,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 957,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 29,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 923,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 29,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 957,
+      "positive": 957,
+      "expected_visits": 1.9129855644135243
+    },
+    {
+      "block": 29,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 923,
+      "positive": 923,
+      "expected_visits": 3.3615875980841414
+    },
+    {
+      "block": 29,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 957,
+      "positive": 44,
+      "expected_visits": 2.0567626953125
+    },
+    {
+      "block": 29,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 923,
+      "positive": 43,
+      "expected_visits": 3.129608154296875
+    },
+    {
+      "block": 30,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 942,
+      "positive": 2,
+      "expected_visits": 2.0
+    },
+    {
+      "block": 30,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 1018,
+      "positive": 3,
+      "expected_visits": 3.0
+    },
+    {
+      "block": 30,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 942,
+      "positive": 942,
+      "expected_visits": 2.1155514633844765
+    },
+    {
+      "block": 30,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 1018,
+      "positive": 1018,
+      "expected_visits": 3.126704974275418
+    },
+    {
+      "block": 30,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 942,
+      "positive": 36,
+      "expected_visits": 2.0809326171875
+    },
+    {
+      "block": 30,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 1018,
+      "positive": 54,
+      "expected_visits": 3.0854644775390625
+    },
+    {
+      "block": 31,
+      "split": 0,
+      "source": "fixed",
+      "withheld": 904,
+      "positive": 1,
+      "expected_visits": 1.0
+    },
+    {
+      "block": 31,
+      "split": 1,
+      "source": "fixed",
+      "withheld": 826,
+      "positive": 4,
+      "expected_visits": 4.0
+    },
+    {
+      "block": 31,
+      "split": 0,
+      "source": "randomized",
+      "withheld": 904,
+      "positive": 904,
+      "expected_visits": 1.4866328791966508
+    },
+    {
+      "block": 31,
+      "split": 1,
+      "source": "randomized",
+      "withheld": 826,
+      "positive": 826,
+      "expected_visits": 3.224397590929869
+    },
+    {
+      "block": 31,
+      "split": 0,
+      "source": "top_two",
+      "withheld": 904,
+      "positive": 22,
+      "expected_visits": 1.3269805908203125
+    },
+    {
+      "block": 31,
+      "split": 1,
+      "source": "top_two",
+      "withheld": 826,
+      "positive": 30,
+      "expected_visits": 3.03070068359375
+    }
+  ],
+  "constructions": [
+    {
+      "block": 0,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 1,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 9
+    },
+    {
+      "block": 2,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 3,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 4,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 5,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 6,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 7,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 9
+    },
+    {
+      "block": 8,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 9,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 10,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 9
+    },
+    {
+      "block": 11,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 12,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 13,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 14,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 15,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 16,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 17,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 18,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 19,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 20,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 21,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 9
+    },
+    {
+      "block": 22,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 23,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 24,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 25,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 26,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 27,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 28,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 29,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 8
+    },
+    {
+      "block": 30,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 7
+    },
+    {
+      "block": 31,
+      "optimal_decisions": 4520,
+      "reproduced_choices": 4520,
+      "distinct_resulting_board_scores": 9
+    }
+  ],
+  "methods": {
+    "fixed/imitation": {
+      "agreement": {
+        "mean": 0.8259240339117971,
+        "sd": 0.021403160135543078,
+        "ci95": [
+          0.8182073717942019,
+          0.8336406960293924
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.6651041666666666,
+        "sd": 0.21077268136047733,
+        "ci95": [
+          0.58911251144481,
+          0.7410958218885232
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.17407596608820286,
+        "sd": 0.021403160135543085,
+        "ci95": [
+          0.16635930397060758,
+          0.18179262820579814
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.3348958333333333,
+        "sd": 0.21077268136047733,
+        "ci95": [
+          0.2589041781114767,
+          0.41088748855518986
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.42585508154813567,
+        "sd": 0.029087126349752666,
+        "ci95": [
+          0.4153680541843539,
+          0.43634210891191744
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.35708097427610375,
+        "sd": 0.08584136212751892,
+        "ci95": [
+          0.3261318628805311,
+          0.3880300856716764
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.21706394417576058,
+        "sd": 0.0904709863700277,
+        "ci95": [
+          0.18444567524529001,
+          0.24968221310623115
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.20879113737237515,
+        "sd": 0.10340880589290545,
+        "ci95": [
+          0.17150828708269297,
+          0.24607398766205732
+        ],
+        "n": 32
+      }
+    },
+    "fixed/source": {
+      "agreement": {
+        "mean": 1.0,
+        "sd": 0.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 1.0,
+        "sd": 0.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4554755962714947,
+        "sd": 0.06006735293136613,
+        "ci95": [
+          0.43381900612619384,
+          0.47713218641679556
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.5445244037285053,
+        "sd": 0.06006735293136613,
+        "ci95": [
+          0.5228678135832044,
+          0.5661809938738062
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.4554755962714947,
+        "sd": 0.06006735293136613,
+        "ci95": [
+          0.43381900612619384,
+          0.47713218641679556
+        ],
+        "n": 32
+      }
+    },
+    "fixed/Vdirect": {
+      "agreement": {
+        "mean": 0.739526996761384,
+        "sd": 0.025572554833878863,
+        "ci95": [
+          0.7303071075540413,
+          0.7487468859687267
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.6717447916666667,
+        "sd": 0.21985285069259686,
+        "ci95": [
+          0.5924793862947022,
+          0.7510101970386311
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.260473003238616,
+        "sd": 0.025572554833878856,
+        "ci95": [
+          0.2512531140312733,
+          0.2696928924459587
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.3282552083333333,
+        "sd": 0.21985285069259686,
+        "ci95": [
+          0.2489898029613689,
+          0.40752061370529774
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4000102532603753,
+        "sd": 0.03201974848350245,
+        "ci95": [
+          0.38846590286665705,
+          0.4115546036540936
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.34999073169849537,
+        "sd": 0.06008335231476454,
+        "ci95": [
+          0.32832837316035,
+          0.3716530902366407
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.2499990150411293,
+        "sd": 0.07250956751345518,
+        "ci95": [
+          0.22385652817232754,
+          0.2761415019099311
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.150011238219246,
+        "sd": 0.09463505757640782,
+        "ci95": [
+          0.1158916615225507,
+          0.1841308149159413
+        ],
+        "n": 32
+      }
+    },
+    "fixed/Vvnm_terminal_copies": {
+      "agreement": {
+        "mean": 0.6856433635944605,
+        "sd": 0.029412229820441522,
+        "ci95": [
+          0.6750391239302205,
+          0.6962476032587006
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.41731770833333326,
+        "sd": 0.1805572733496311,
+        "ci95": [
+          0.3522198693932034,
+          0.48241554727346314
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.31435663640553946,
+        "sd": 0.02941222982044151,
+        "ci95": [
+          0.30375239674129945,
+          0.32496087606977947
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.5826822916666666,
+        "sd": 0.1805572733496311,
+        "ci95": [
+          0.5175844527265367,
+          0.6477801306067965
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4418787799815021,
+        "sd": 0.04686353815858113,
+        "ci95": [
+          0.4249826727097416,
+          0.4587748872532626
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.29881553044394843,
+        "sd": 0.06959437207240397,
+        "ci95": [
+          0.2737240836123601,
+          0.32390697727553674
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.25930568957454947,
+        "sd": 0.06888262616851672,
+        "ci95": [
+          0.23447085450585495,
+          0.28414052464324396
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.1825730904069527,
+        "sd": 0.09507175274008904,
+        "ci95": [
+          0.14829606831410208,
+          0.2168501124998033
+        ],
+        "n": 32
+      }
+    },
+    "fixed/Vvnm_decay_copies": {
+      "agreement": {
+        "mean": 0.7647604403710757,
+        "sd": 0.02032046283959649,
+        "ci95": [
+          0.7574341322552047,
+          0.7720867484869467
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.560546875,
+        "sd": 0.18330884603999428,
+        "ci95": [
+          0.49445698831509455,
+          0.6266367616849055
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.2352395596289243,
+        "sd": 0.02032046283959648,
+        "ci95": [
+          0.22791325151305325,
+          0.24256586774479533
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.43945312499999994,
+        "sd": 0.1833088460399943,
+        "ci95": [
+          0.3733632383150945,
+          0.5055430116849055
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4610811344530217,
+        "sd": 0.04284495667331313,
+        "ci95": [
+          0.44563388030937195,
+          0.4765283885966714
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.39961272547484705,
+        "sd": 0.04523362105955013,
+        "ci95": [
+          0.3833042659828192,
+          0.4159211849668749
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.13930614007213127,
+        "sd": 0.05399628286645653,
+        "ci95": [
+          0.11983840410006795,
+          0.1587738760441946
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.32177499438089036,
+        "sd": 0.08635101202247694,
+        "ci95": [
+          0.2906421346036417,
+          0.352907854158139
+        ],
+        "n": 32
+      }
+    },
+    "fixed/Qdirect": {
+      "agreement": {
+        "mean": 0.7838526769000106,
+        "sd": 0.02141671112534985,
+        "ci95": [
+          0.7761311291295941,
+          0.791574224670427
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.7604166666666666,
+        "sd": 0.20032735306766467,
+        "ci95": [
+          0.6881909538866059,
+          0.8326423794467274
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.21614732309998944,
+        "sd": 0.021416711125349853,
+        "ci95": [
+          0.20842577532957302,
+          0.22386887087040586
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.23958333333333331,
+        "sd": 0.20032735306766467,
+        "ci95": [
+          0.16735762055327255,
+          0.3118090461133941
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4403505113389756,
+        "sd": 0.028966425280253616,
+        "ci95": [
+          0.42990700135135035,
+          0.4507940213266009
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.33662327357700894,
+        "sd": 0.07885895553915577,
+        "ci95": [
+          0.3081915882095952,
+          0.3650549589444227
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.22302621508401538,
+        "sd": 0.0796357777716998,
+        "ci95": [
+          0.1943144554352331,
+          0.2517379747327977
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.21732429625496028,
+        "sd": 0.09023905429975203,
+        "ci95": [
+          0.18478964775293194,
+          0.2498589447569886
+        ],
+        "n": 32
+      }
+    },
+    "fixed/Qvnm_terminal_copies": {
+      "agreement": {
+        "mean": 0.6709659308886138,
+        "sd": 0.024979820236387517,
+        "ci95": [
+          0.6619597452925735,
+          0.679972116484654
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.37330729166666665,
+        "sd": 0.16426992882146432,
+        "ci95": [
+          0.3140816666295674,
+          0.4325329167037659
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.3290340691113861,
+        "sd": 0.024979820236387534,
+        "ci95": [
+          0.32002788351534583,
+          0.3380402547074264
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.6266927083333333,
+        "sd": 0.16426992882146435,
+        "ci95": [
+          0.5674670832962341,
+          0.6859183333704326
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4099042458509011,
+        "sd": 0.04108221778493875,
+        "ci95": [
+          0.39509252684865054,
+          0.4247159648531517
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.30168306058046046,
+        "sd": 0.04990442031399164,
+        "ci95": [
+          0.2836905983786745,
+          0.3196755227822464
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.2884126935686384,
+        "sd": 0.06178629822897103,
+        "ci95": [
+          0.266136357555146,
+          0.31068902958213085
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.12149155228226267,
+        "sd": 0.09230460100699983,
+        "ci95": [
+          0.08821219477805883,
+          0.15477090978646652
+        ],
+        "n": 32
+      }
+    },
+    "fixed/Qvnm_decay_copies": {
+      "agreement": {
+        "mean": 0.8105891576433044,
+        "sd": 0.01895756651123425,
+        "ci95": [
+          0.8037542260531745,
+          0.8174240892334343
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.5787760416666666,
+        "sd": 0.20992499347191745,
+        "ci95": [
+          0.503090010519749,
+          0.6544620728135843
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.18941084235669553,
+        "sd": 0.018957566511234245,
+        "ci95": [
+          0.18257591076656554,
+          0.19624577394682552
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.42122395833333326,
+        "sd": 0.20992499347191745,
+        "ci95": [
+          0.3455379271864156,
+          0.4969099894802509
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4473971573764054,
+        "sd": 0.04410002112272797,
+        "ci95": [
+          0.43149740424519467,
+          0.4632969105076161
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.3528151497008309,
+        "sd": 0.07420620727183379,
+        "ci95": [
+          0.32606095896831117,
+          0.3795693404333506
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.19978769292276372,
+        "sd": 0.05733506204606569,
+        "ci95": [
+          0.17911619869018444,
+          0.220459187155343
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.24760946445364168,
+        "sd": 0.07041080320541838,
+        "ci95": [
+          0.22222366280921918,
+          0.2729952660980642
+        ],
+        "n": 32
+      }
+    },
+    "randomized/imitation": {
+      "agreement": {
+        "mean": 0.5575066716717768,
+        "sd": 0.013393362553775306,
+        "ci95": [
+          0.5526778495356331,
+          0.5623354938079205
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.3847811797749694,
+        "sd": 0.054209365401855975,
+        "ci95": [
+          0.36523661935649604,
+          0.40432574019344275
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.24976484196192827,
+        "sd": 0.011705951912188215,
+        "ci95": [
+          0.24554439623806681,
+          0.2539852876857897
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.3798001500904002,
+        "sd": 0.06530257296780313,
+        "ci95": [
+          0.35625606184310826,
+          0.4033442383376921
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.36641644903916115,
+        "sd": 0.014451246226481659,
+        "ci95": [
+          0.36120621916648243,
+          0.37162667891183987
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.20761931590921195,
+        "sd": 0.021868189352667298,
+        "ci95": [
+          0.19973499287983393,
+          0.21550363893858998
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.4259642350516269,
+        "sd": 0.025784737488982384,
+        "ci95": [
+          0.41666784583931865,
+          0.43526062426393514
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": -0.0595477860124657,
+        "sd": 0.03562533795185887,
+        "ci95": [
+          -0.07239209003386637,
+          -0.046703481991065034
+        ],
+        "n": 32
+      }
+    },
+    "randomized/source": {
+      "agreement": {
+        "mean": 0.7093541916952766,
+        "sd": 0.004499641390148346,
+        "ci95": [
+          0.707731897976114,
+          0.7109764854144391
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.6604928248075639,
+        "sd": 0.01656755045201781,
+        "ci95": [
+          0.654519585895889,
+          0.6664660637192388
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.39360201545493323,
+        "sd": 0.029606135896422834,
+        "ci95": [
+          0.382927865195182,
+          0.40427616571468444
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.3723854901550939,
+        "sd": 0.02787372942635622,
+        "ci95": [
+          0.3623359390337494,
+          0.38243504127643846
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.234012494389973,
+        "sd": 0.01523713429460898,
+        "ci95": [
+          0.22851892165364318,
+          0.23950606712630285
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.15958952106496016,
+        "sd": 0.0379531592403728,
+        "ci95": [
+          0.14590594797114914,
+          0.17327309415877118
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Vdirect": {
+      "agreement": {
+        "mean": 0.6350121031511338,
+        "sd": 0.021013014599473245,
+        "ci95": [
+          0.6274361034992433,
+          0.6425881028030243
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.5412174165372249,
+        "sd": 0.1198074389587381,
+        "ci95": [
+          0.4980222285479657,
+          0.5844126045264841
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.36498789684886634,
+        "sd": 0.021013014599473218,
+        "ci95": [
+          0.3574118971969758,
+          0.3725638965007569
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.4587825834627751,
+        "sd": 0.11980743895873815,
+        "ci95": [
+          0.41558739547351586,
+          0.5019777714520344
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.391107508745143,
+        "sd": 0.034844044371851124,
+        "ci95": [
+          0.3785448910977817,
+          0.40367012639250427
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.34238391048693784,
+        "sd": 0.06461784924680122,
+        "ci95": [
+          0.3190866914666859,
+          0.3656811295071898
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.26650858076791917,
+        "sd": 0.07641192402694996,
+        "ci95": [
+          0.23895914434184015,
+          0.29405801719399816
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.12459892797722383,
+        "sd": 0.09965095424577468,
+        "ci95": [
+          0.0886709276847064,
+          0.16052692826974124
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Vvnm_terminal_copies": {
+      "agreement": {
+        "mean": 0.5882375597516747,
+        "sd": 0.02511182012950568,
+        "ci95": [
+          0.5791837831191566,
+          0.5972913363841927
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.34578712506179093,
+        "sd": 0.1092393058844626,
+        "ci95": [
+          0.3064021553595285,
+          0.38517209476405334
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.4117624402483253,
+        "sd": 0.025111820129505677,
+        "ci95": [
+          0.4027086636158072,
+          0.4208162168808434
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.6542128749382091,
+        "sd": 0.10923930588446264,
+        "ci95": [
+          0.6148279052359467,
+          0.6935978446404716
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4402709476531498,
+        "sd": 0.0410754684267251,
+        "ci95": [
+          0.42546166205402824,
+          0.4550802332522713
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.28695939482835237,
+        "sd": 0.06851347299490305,
+        "ci95": [
+          0.26225765367160236,
+          0.31166113598510237
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.2727696575184979,
+        "sd": 0.05991214795004869,
+        "ci95": [
+          0.25116902473613834,
+          0.2943702903008575
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.16750129013465193,
+        "sd": 0.076545562739479,
+        "ci95": [
+          0.13990367181468966,
+          0.1950989084546142
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Vvnm_decay_copies": {
+      "agreement": {
+        "mean": 0.6544758599114203,
+        "sd": 0.01679269480933618,
+        "ci95": [
+          0.648421447802792,
+          0.6605302720200487
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.4706161247215956,
+        "sd": 0.106570970008868,
+        "ci95": [
+          0.43219319269217327,
+          0.5090390567510179
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.3455241400885797,
+        "sd": 0.016792694809336157,
+        "ci95": [
+          0.33946972797995134,
+          0.351578552197208
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.5293838752784045,
+        "sd": 0.10657097000886805,
+        "ci95": [
+          0.4909609432489821,
+          0.5678068073078268
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.4591619420934606,
+        "sd": 0.03600886769438661,
+        "ci95": [
+          0.446179360854285,
+          0.47214452333263623
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.3966416616288443,
+        "sd": 0.04951390691473013,
+        "ci95": [
+          0.3787899945215869,
+          0.4144933287361017
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.14419639627769512,
+        "sd": 0.051971455243063076,
+        "ci95": [
+          0.12545868851254846,
+          0.16293410404284178
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.3149655458157655,
+        "sd": 0.07445612431134552,
+        "ci95": [
+          0.28812125038192465,
+          0.3418098412496064
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Qdirect": {
+      "agreement": {
+        "mean": 0.671375744965656,
+        "sd": 0.017703736369776964,
+        "ci95": [
+          0.6649928673476129,
+          0.6777586225836991
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.6025694814832762,
+        "sd": 0.11469272607919631,
+        "ci95": [
+          0.5612183441328006,
+          0.6439206188337517
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.3286242550343441,
+        "sd": 0.017703736369776964,
+        "ci95": [
+          0.32224137741630093,
+          0.3350071326523873
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.3974305185167239,
+        "sd": 0.11469272607919632,
+        "ci95": [
+          0.3560793811662483,
+          0.43878165586719947
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.435932720527447,
+        "sd": 0.02992751121843788,
+        "ci95": [
+          0.42514270210817084,
+          0.4467227389467232
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.3397323931335772,
+        "sd": 0.07890408962598251,
+        "ci95": [
+          0.3112844351925892,
+          0.36818035107456526
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.2243348863389757,
+        "sd": 0.08206234331230355,
+        "ci95": [
+          0.1947482565184778,
+          0.25392151615947356
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.21159783418847136,
+        "sd": 0.09504689829535265,
+        "ci95": [
+          0.17732977307852874,
+          0.245865895298414
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Qvnm_terminal_copies": {
+      "agreement": {
+        "mean": 0.5757619237612233,
+        "sd": 0.0204334014027277,
+        "ci95": [
+          0.568394896951187,
+          0.5831289505712596
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.29853276415873775,
+        "sd": 0.07006989158040795,
+        "ci95": [
+          0.2732698742621836,
+          0.3237956540552919
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.42423807623877663,
+        "sd": 0.0204334014027277,
+        "ci95": [
+          0.4168710494287403,
+          0.43160510304881294
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.7014672358412624,
+        "sd": 0.07006989158040795,
+        "ci95": [
+          0.6762043459447082,
+          0.7267301257378165
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.40514687835854823,
+        "sd": 0.04386062187887448,
+        "ci95": [
+          0.3893334378589454,
+          0.42096031885815105
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.285215565514943,
+        "sd": 0.04411902122838612,
+        "ci95": [
+          0.26930896211514416,
+          0.3011221689147418
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.3096375561265088,
+        "sd": 0.049689785125442476,
+        "ci95": [
+          0.29172247816228825,
+          0.3275526340907293
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.09550932223203946,
+        "sd": 0.08269927303596877,
+        "ci95": [
+          0.0656930547580805,
+          0.12532558970599844
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Qvnm_decay_copies": {
+      "agreement": {
+        "mean": 0.6893658160837768,
+        "sd": 0.015141662292474321,
+        "ci95": [
+          0.683906664674835,
+          0.6948249674927186
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.4399875767812824,
+        "sd": 0.11196436881704978,
+        "ci95": [
+          0.39962011712114515,
+          0.4803550364414197
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.3106341839162232,
+        "sd": 0.015141662292474333,
+        "ci95": [
+          0.3051750325072814,
+          0.31609333532516504
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.5600124232187177,
+        "sd": 0.11196436881704983,
+        "ci95": [
+          0.5196449635585804,
+          0.600379882878855
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.44398598645729986,
+        "sd": 0.042474624429092764,
+        "ci95": [
+          0.4286722513258802,
+          0.4592997215887195
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.3546957026083003,
+        "sd": 0.06706595469036652,
+        "ci95": [
+          0.330515847453169,
+          0.3788755577634316
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.20131831093439978,
+        "sd": 0.06013528119294613,
+        "ci95": [
+          0.1796372300391569,
+          0.22299939182964265
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.24266767552290008,
+        "sd": 0.07964200682155162,
+        "ci95": [
+          0.2139536700621575,
+          0.2713816809836426
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Q_direct_T0.05": {
+      "agreement": {
+        "mean": 0.6558745379743038,
+        "sd": 0.0171157627744565,
+        "ci95": [
+          0.649703647443234,
+          0.6620454285053737
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.5335180639543231,
+        "sd": 0.08575342568646213,
+        "ci95": [
+          0.5026006570266497,
+          0.5644354708819965
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.2841466773593251,
+        "sd": 0.014468962561929087,
+        "ci95": [
+          0.27893006006657645,
+          0.2893632946520737
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.32552632468020737,
+        "sd": 0.08191667618876297,
+        "ci95": [
+          0.2959922134582195,
+          0.3550604359021952
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.42555408161810826,
+        "sd": 0.026754463645039837,
+        "ci95": [
+          0.4159080688434148,
+          0.4352000943928017
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.3195870168745402,
+        "sd": 0.05712177002908521,
+        "ci95": [
+          0.29899242261453485,
+          0.3401816111345456
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.25485890150735147,
+        "sd": 0.06099045898454006,
+        "ci95": [
+          0.23286949613916114,
+          0.2768483068755418
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.17069518011075685,
+        "sd": 0.07488910610296762,
+        "ci95": [
+          0.14369477809415623,
+          0.19769558212735747
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Q_direct": {
+      "agreement": {
+        "mean": 0.5134431773017505,
+        "sd": 0.014247113874888046,
+        "ci95": [
+          0.5083065449901115,
+          0.5185798096133895
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.31123164578917006,
+        "sd": 0.044518893809560284,
+        "ci95": [
+          0.29518087294993,
+          0.3272824186284101
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.27914539473113964,
+        "sd": 0.013042944882892508,
+        "ci95": [
+          0.2744429116378809,
+          0.28384787782439835
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.46696059357053876,
+        "sd": 0.04076198419898997,
+        "ci95": [
+          0.45226433108806485,
+          0.48165685605301267
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.3394175866413884,
+        "sd": 0.014882532928459162,
+        "ci95": [
+          0.33405186133093806,
+          0.3447833119518387
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.1693369134480383,
+        "sd": 0.01256517185446244,
+        "ci95": [
+          0.1648066859005003,
+          0.17386714099557632
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.4912454999105733,
+        "sd": 0.019245158022405867,
+        "ci95": [
+          0.48430688052361587,
+          0.49818411929753076
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": -0.15182791326918493,
+        "sd": 0.03202886578722253,
+        "ci95": [
+          -0.16337555080142788,
+          -0.140280275736942
+        ],
+        "n": 32
+      }
+    },
+    "randomized/Q_VNM_decay_copies": {
+      "agreement": {
+        "mean": 0.5965946873842738,
+        "sd": 0.014487163057245825,
+        "ci95": [
+          0.5913715081132078,
+          0.6018178666553398
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.3439142436666507,
+        "sd": 0.06067747938692144,
+        "ci95": [
+          0.32203767947654943,
+          0.36579080785675194
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.2543289240546042,
+        "sd": 0.011702252904149132,
+        "ci95": [
+          0.25010981196535687,
+          0.2585480361438516
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.4553158622661299,
+        "sd": 0.0674514953081342,
+        "ci95": [
+          0.4309970048953874,
+          0.47963471963687243
+        ],
+        "n": 32
+      },
+      "win": {
+        "mean": 0.40078910755088143,
+        "sd": 0.02036588006449548,
+        "ci95": [
+          0.3934464247792752,
+          0.40813179032248764
+        ],
+        "n": 32
+      },
+      "draw": {
+        "mean": 0.27961308508344845,
+        "sd": 0.027174716550651897,
+        "ci95": [
+          0.2698155549787902,
+          0.28941061518810673
+        ],
+        "n": 32
+      },
+      "loss": {
+        "mean": 0.3195978073656701,
+        "sd": 0.027423035722497012,
+        "ci95": [
+          0.3097107486524179,
+          0.32948486607892236
+        ],
+        "n": 32
+      },
+      "points": {
+        "mean": 0.08119130018521128,
+        "sd": 0.03993893712242789,
+        "ci95": [
+          0.06679177781758411,
+          0.09559082255283846
+        ],
+        "n": 32
+      }
+    },
+    "top_two/counts_1": {
+      "agreement": {
+        "mean": 0.6440814229757359,
+        "sd": 0.006430792289874617,
+        "ci95": [
+          0.641762875110134,
+          0.6463999708413378
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.6172050856871656,
+        "sd": 0.07773656071122463,
+        "ci95": [
+          0.5891780668080102,
+          0.645232104566321
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.3559185770242641,
+        "sd": 0.006430792289874609,
+        "ci95": [
+          0.3536000291586622,
+          0.35823712488986603
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.3827949143128343,
+        "sd": 0.07773656071122463,
+        "ci95": [
+          0.3547678954336789,
+          0.4108219331919897
+        ],
+        "n": 32
+      }
+    },
+    "top_two/counts_64": {
+      "agreement": {
+        "mean": 0.6441433272238302,
+        "sd": 0.004628971719736962,
+        "ci95": [
+          0.6424744049484791,
+          0.6458122494991813
+        ],
+        "n": 32
+      },
+      "visit_agreement": {
+        "mean": 0.6439148062064628,
+        "sd": 0.01653694514129325,
+        "ci95": [
+          0.6379526016859886,
+          0.649877010726937
+        ],
+        "n": 32
+      },
+      "tv": {
+        "mean": 0.04089179800245052,
+        "sd": 0.0007645393571837718,
+        "ci95": [
+          0.04061615216988987,
+          0.04116744383501117
+        ],
+        "n": 32
+      },
+      "visit_tv": {
+        "mean": 0.044097260338955946,
+        "sd": 0.01579025650158459,
+        "ci95": [
+          0.038404265781084856,
+          0.049790254896827035
+        ],
+        "n": 32
+      }
+    }
+  },
+  "contrasts": [
+    {
+      "source": "fixed",
+      "method": "Qvnm_decay_copies",
+      "reference": "Qdirect",
+      "metric": "agreement",
+      "block_differences": [
+        0.01914291233686405,
+        0.026549891211545384,
+        0.018860534415890196,
+        0.02236015794461199,
+        0.02486937600768724,
+        0.03085398190859734,
+        0.04678481514289701,
+        0.0417219483085266,
+        0.024321851345825984,
+        0.033025839054157125,
+        0.002851476696996591,
+        0.03803698271061684,
+        0.0183921934999024,
+        0.016114352332400883,
+        0.006056698995387633,
+        0.023390820961003755,
+        0.020487659541749914,
+        0.009185082872928185,
+        0.04907801800830336,
+        0.028790950066728715,
+        0.029379776981076966,
+        0.027609132393176306,
+        0.03066042879888342,
+        0.010930912552699623,
+        0.03347113982171923,
+        0.0175692268021983,
+        0.025944960816475238,
+        0.02290383750708669,
+        0.02559852903079063,
+        0.05089770194189813,
+        0.051715094331752476,
+        0.028011099445027776
+      ],
+      "mean": 0.026736480743293937,
+      "sd": 0.012220363728754402,
+      "ci95": [
+        0.02233056978193479,
+        0.031142391704653084
+      ],
+      "n": 32,
+      "p": 1.5673040738022193e-13,
+      "holm_p": 1.5673040738022194e-12,
+      "positive": 32,
+      "equal": 0,
+      "negative": 0
+    },
+    {
+      "source": "fixed",
+      "method": "Qvnm_decay_copies",
+      "reference": "Qdirect",
+      "metric": "visit_agreement",
+      "block_differences": [
+        -0.08333333333333337,
+        -0.125,
+        -0.33333333333333337,
+        -0.0625,
+        -0.75,
+        -0.125,
+        -0.24999999999999994,
+        -0.16666666666666674,
+        -0.16666666666666674,
+        -0.08333333333333337,
+        -0.25,
+        0.0,
+        -0.125,
+        -0.375,
+        -0.3125,
+        -0.45000000000000007,
+        -0.04166666666666674,
+        0.06250000000000011,
+        -0.33333333333333337,
+        -0.125,
+        0.125,
+        -0.08333333333333326,
+        -0.2500000000000001,
+        -0.11249999999999993,
+        -0.08333333333333337,
+        -0.33333333333333337,
+        -0.125,
+        -0.08333333333333331,
+        -0.5,
+        -0.1875,
+        0.16666666666666666,
+        -0.25
+      ],
+      "mean": -0.181640625,
+      "sd": 0.18404024079492734,
+      "ci95": [
+        -0.24799420761404198,
+        -0.11528704238595802
+      ],
+      "n": 32,
+      "p": 4.035536675228104e-06,
+      "holm_p": 2.4213220051368627e-05,
+      "positive": 3,
+      "equal": 1,
+      "negative": 28
+    },
+    {
+      "source": "fixed",
+      "method": "imitation",
+      "reference": "Qvnm_decay_copies",
+      "metric": "agreement",
+      "block_differences": [
+        0.023443027240751202,
+        -0.022584483185987048,
+        0.0037748753558115578,
+        0.029930834644888105,
+        0.021002243668220455,
+        -0.01554419283167785,
+        0.016164506503799747,
+        0.007208822660355385,
+        0.02543456364125929,
+        0.027953715811267266,
+        0.01837270824058379,
+        -0.013792119952736104,
+        0.0303559663156161,
+        0.015965749011867758,
+        0.022343476864430056,
+        0.027277163115763114,
+        0.05246841201496755,
+        0.05110056424121312,
+        -0.005518459976976531,
+        0.001820352697269545,
+        0.011059751335988688,
+        -0.010495105190512,
+        0.03198179531360179,
+        0.0027229782161741767,
+        0.03894786794941507,
+        0.03617711168707227,
+        0.01468926553672334,
+        0.015259124587023165,
+        0.028209688935506128,
+        -0.0096367530801722,
+        -0.024043334626406176,
+        0.038665923846664785
+      ],
+      "mean": 0.015334876268492673,
+      "sd": 0.02025102386173774,
+      "ci95": [
+        0.008033603573864751,
+        0.022636148963120595
+      ],
+      "n": 32,
+      "p": 0.00016512650129578259,
+      "holm_p": 0.0008256325064789129,
+      "positive": 25,
+      "equal": 0,
+      "negative": 7
+    },
+    {
+      "source": "fixed",
+      "method": "imitation",
+      "reference": "Qvnm_decay_copies",
+      "metric": "visit_agreement",
+      "block_differences": [
+        -0.25,
+        -0.25,
+        -0.08333333333333337,
+        0.0,
+        0.375,
+        -0.125,
+        0.020833333333333315,
+        -0.08333333333333326,
+        -0.08333333333333326,
+        0.08333333333333337,
+        0.25,
+        -0.125,
+        -0.04166666666666674,
+        0.375,
+        0.3125,
+        0.45000000000000007,
+        0.0,
+        0.06249999999999989,
+        0.08333333333333337,
+        -0.375,
+        -0.125,
+        0.16666666666666663,
+        0.16666666666666674,
+        0.125,
+        0.08333333333333337,
+        0.0,
+        0.625,
+        0.16666666666666669,
+        0.5,
+        0.25,
+        -0.16666666666666666,
+        0.375
+      ],
+      "mean": 0.086328125,
+      "sd": 0.236653685409453,
+      "ci95": [
+        0.0010053727697907217,
+        0.17165087723020928
+      ],
+      "n": 32,
+      "p": 0.04751898667271144,
+      "holm_p": 0.09503797334542288,
+      "positive": 18,
+      "equal": 3,
+      "negative": 11
+    },
+    {
+      "source": "fixed",
+      "method": "Vvnm_decay_copies",
+      "reference": "Vdirect",
+      "metric": "points",
+      "block_differences": [
+        0.214266338045635,
+        0.2515485491071429,
+        0.2635525173611111,
+        0.08138408358134919,
+        0.3050964678406084,
+        0.2039413855820107,
+        0.2255487351190476,
+        0.08450882523148154,
+        0.1328546110284392,
+        0.1373850343088625,
+        0.24172867063492068,
+        0.07462255084325395,
+        0.17986343625992068,
+        0.07591171668320107,
+        0.03220150256283083,
+        0.0963489996693121,
+        0.13051008597883598,
+        0.37508861400462973,
+        0.20962482432208995,
+        0.0857390873015873,
+        0.14001684441137566,
+        0.2548342427248678,
+        0.018853598296957652,
+        0.24819749297288363,
+        0.14808149388227515,
+        0.1713210978835979,
+        0.22391389715608467,
+        0.14781332671957673,
+        0.08831121858465607,
+        0.28289233010912695,
+        0.1117887628141534,
+        0.2586898561507937
+      ],
+      "mean": 0.17176375616164435,
+      "sd": 0.08592206918964655,
+      "ci95": [
+        0.14078554676722488,
+        0.20274196555606383
+      ],
+      "n": 32,
+      "p": 1.571355868432713e-12,
+      "holm_p": 1.4142202815894417e-11,
+      "positive": 32,
+      "equal": 0,
+      "negative": 0
+    },
+    {
+      "source": "fixed",
+      "method": "Vvnm_decay_copies",
+      "reference": "Vdirect",
+      "metric": "win",
+      "block_differences": [
+        0.08786995701058203,
+        0.06101913855820107,
+        0.03900540467923275,
+        0.023615503058862397,
+        0.15713433159722212,
+        0.13058216559193137,
+        0.0594987495866402,
+        -0.028156518683862375,
+        0.06647548776455026,
+        0.05921043113425928,
+        0.06760395998677249,
+        0.050342571924603174,
+        0.01406172495039687,
+        0.05630192832341274,
+        -0.03025767815806868,
+        0.008808697089947026,
+        0.05942511987433863,
+        0.1289933139054234,
+        0.1208658854166666,
+        0.013806991980820138,
+        0.014116495122354467,
+        0.08424014136904778,
+        0.017726676173941802,
+        0.060618954613095244,
+        0.1133161272321429,
+        0.05736116278108466,
+        0.10721648685515872,
+        0.0386434565145502,
+        0.0753890749007936,
+        0.12987893725198413,
+        0.006431878306878247,
+        0.10312164145171965
+      ],
+      "mean": 0.06107088119264634,
+      "sd": 0.04691866688005636,
+      "ci95": [
+        0.04415489789725639,
+        0.07798686448803628
+      ],
+      "n": 32,
+      "p": 2.7336643395095673e-08,
+      "holm_p": 1.9135650376566972e-07,
+      "positive": 30,
+      "equal": 0,
+      "negative": 2
+    },
+    {
+      "source": "randomized",
+      "method": "Q_VNM_decay_copies",
+      "reference": "Q_direct",
+      "metric": "tv",
+      "block_differences": [
+        -0.023126571945616348,
+        -0.018956070027836253,
+        -0.021393052779838773,
+        -0.011735783519383702,
+        -0.025170159883705412,
+        -0.030928295161273545,
+        -0.03763591963375701,
+        -0.025673475134992324,
+        -0.025215438134601087,
+        -0.03347250771260951,
+        -0.024788367317291116,
+        -0.030218560804632977,
+        -0.014876601952345025,
+        -0.0171640812209502,
+        -0.01611573789295312,
+        -0.023276422031213495,
+        -0.018570909453068385,
+        -0.014816796878064253,
+        -0.0344268383477393,
+        -0.020823577145317795,
+        -0.02975310089933192,
+        -0.02815868132299648,
+        -0.026968392729369517,
+        -0.020807155825188717,
+        -0.01920309114797064,
+        -0.022613820981935095,
+        -0.02686709813958882,
+        -0.023953111454988518,
+        -0.030988477798369107,
+        -0.03379239445404508,
+        -0.039710928329137085,
+        -0.02292564158902155
+      ],
+      "mean": -0.02481647067653538,
+      "sd": 0.006842048833049752,
+      "ci95": [
+        -0.027283292337559797,
+        -0.022349649015510963
+      ],
+      "n": 32,
+      "p": 1.3459701055154345e-19,
+      "holm_p": 1.480567116066978e-18,
+      "positive": 0,
+      "equal": 0,
+      "negative": 32
+    },
+    {
+      "source": "randomized",
+      "method": "Q_VNM_decay_copies",
+      "reference": "Q_direct",
+      "metric": "visit_tv",
+      "block_differences": [
+        -0.08556159073722558,
+        -0.028706072322475518,
+        -0.04466786556936114,
+        -0.029160711232767533,
+        0.09243958746847192,
+        -0.0500395185231064,
+        -0.0031731643086697625,
+        -0.026215172875191317,
+        -0.0470837289203615,
+        -0.1025642988389675,
+        -0.0073494279865312095,
+        -0.04043123098713919,
+        -0.014191401271378024,
+        0.015630586125795487,
+        -0.03419197489729009,
+        0.034607898389488856,
+        0.034091066461023556,
+        -0.07553424429443373,
+        0.015746482337730572,
+        0.03317264576857126,
+        0.0029216281042934167,
+        -0.045467281577163454,
+        0.01815544364889954,
+        0.004872482817212531,
+        -0.05967806901697903,
+        0.04645610603118783,
+        0.030679231256161565,
+        -0.006449970796585158,
+        -0.016464120550312655,
+        0.07973283292628558,
+        -0.03822342718771182,
+        -0.025984121182555997
+      ],
+      "mean": -0.01164473130440889,
+      "sd": 0.0446301208230856,
+      "ci95": [
+        -0.027735605758377274,
+        0.004446143149559491
+      ],
+      "n": 32,
+      "p": 0.15003924489702497,
+      "holm_p": 0.15003924489702497,
+      "positive": 12,
+      "equal": 0,
+      "negative": 20
+    },
+    {
+      "source": "randomized",
+      "method": "Q_VNM_decay_copies",
+      "reference": "imitation",
+      "metric": "tv",
+      "block_differences": [
+        0.0031524330859952765,
+        -0.01539010307229835,
+        0.004016081242573799,
+        0.01717450585757474,
+        0.0032326541391173857,
+        -0.008879700476053132,
+        -0.006937882290565689,
+        0.0013552145380527902,
+        0.001975827095450633,
+        0.0018251489038879631,
+        0.003891435360004858,
+        -0.0037199425389515817,
+        0.01194281857750118,
+        0.007443643453334259,
+        0.01804753278473384,
+        0.010600902755097674,
+        0.027047786631207077,
+        0.014881020222257985,
+        -0.0004019224241170738,
+        -0.0034977869176799625,
+        0.0007651371359079229,
+        -0.0017141531028102008,
+        0.009321520664523464,
+        0.00600648931930553,
+        0.016541212284467782,
+        0.013485930432576343,
+        0.01144225871563287,
+        0.005888022629409434,
+        -0.002045974187283306,
+        0.0002641826470745623,
+        -0.01610066408280858,
+        0.014436997582511768
+      ],
+      "mean": 0.004564082092675977,
+      "sd": 0.009651712855523726,
+      "ci95": [
+        0.0010842685282087408,
+        0.008043895657143214
+      ],
+      "n": 32,
+      "p": 0.011823970263515967,
+      "holm_p": 0.0354719107905479,
+      "positive": 23,
+      "equal": 0,
+      "negative": 9
+    },
+    {
+      "source": "randomized",
+      "method": "Q_VNM_decay_copies",
+      "reference": "imitation",
+      "metric": "visit_tv",
+      "block_differences": [
+        0.0026391432642849377,
+        -0.053424431021096064,
+        -0.03728414490717946,
+        0.09961986759989261,
+        0.12795835939403927,
+        0.0381173163103149,
+        0.038590343645514724,
+        0.06782176161319081,
+        0.07248112585884853,
+        0.11773443690405774,
+        0.1435636817108255,
+        -0.03176572925046439,
+        0.009596457632290445,
+        0.11107667867825977,
+        0.15683119386135264,
+        0.12195522508471313,
+        0.08386849716389544,
+        0.12025898038259808,
+        0.06164150964601389,
+        0.06302153132213162,
+        0.09801711686933717,
+        0.06963110322379529,
+        0.07673644573698551,
+        0.02902989693280339,
+        0.09755270372286795,
+        0.07586221891214556,
+        0.12090845892981644,
+        0.1199026099672762,
+        0.11935530995192661,
+        0.10017064476018633,
+        0.023047505205821273,
+        0.17198697051690437
+      ],
+      "mean": 0.0755157121757297,
+      "sd": 0.0560393534974885,
+      "ci95": [
+        0.055311370691105886,
+        0.0957200536603535
+      ],
+      "n": 32,
+      "p": 1.3526841462986727e-08,
+      "holm_p": 1.0821473170389381e-07,
+      "positive": 29,
+      "equal": 0,
+      "negative": 3
+    },
+    {
+      "source": "randomized",
+      "method": "Q_direct_T0.05",
+      "reference": "imitation",
+      "metric": "tv",
+      "block_differences": [
+        0.03506214958562337,
+        0.007377431322489247,
+        0.02716883168504719,
+        0.0418568043815809,
+        0.03717830305806191,
+        0.02886712597807828,
+        0.03953683014014725,
+        0.03699285840777711,
+        0.03129371999084851,
+        0.03392565678732412,
+        0.01625337426142648,
+        0.028103359301652864,
+        0.03594565633878144,
+        0.031225523950594525,
+        0.03570500403204288,
+        0.04091996752442112,
+        0.05225539995351405,
+        0.03164559129706343,
+        0.040181160029686414,
+        0.02505903311505861,
+        0.03219689386789437,
+        0.030546243365820847,
+        0.04016505668313486,
+        0.03257084136671473,
+        0.054932711578350085,
+        0.038745795375128345,
+        0.03709966636174067,
+        0.03613426996061911,
+        0.03424365971015364,
+        0.03989918707015394,
+        0.027466919689723535,
+        0.03966370654604362
+      ],
+      "mean": 0.034381835397396796,
+      "sd": 0.008809199055980911,
+      "ci95": [
+        0.031205780449849254,
+        0.03755789034494434
+      ],
+      "n": 32,
+      "p": 1.5973009952906683e-20,
+      "holm_p": 1.916761194348802e-19,
+      "positive": 32,
+      "equal": 0,
+      "negative": 0
+    },
+    {
+      "source": "randomized",
+      "method": "Q_direct_T0.05",
+      "reference": "imitation",
+      "metric": "visit_tv",
+      "block_differences": [
+        -0.09359399405686969,
+        -0.20105275112708837,
+        -0.1794547771977179,
+        0.012939389022888048,
+        -0.15319536687855578,
+        -0.024303339112611178,
+        -0.025023383329052407,
+        -0.08387115423126973,
+        -0.051874873223254014,
+        -0.03119978640062579,
+        -0.04466277173446509,
+        -0.10184534235018583,
+        -0.1346540963380671,
+        -0.05592192257094325,
+        -0.025371488337911252,
+        -0.025437016036738647,
+        -0.009881412731144179,
+        0.04074879947490001,
+        -0.10838559747376975,
+        -0.14979014235907162,
+        -0.0004420574715730541,
+        0.017425995505213676,
+        -0.06052030955877713,
+        -0.05722251536277967,
+        -0.019741127949613996,
+        -0.1848869085597711,
+        0.00018642607203339656,
+        0.08714490690961729,
+        -0.09558678399372492,
+        -0.07735889204704316,
+        0.014555191128688139,
+        0.08551468919311256
+      ],
+      "mean": -0.05427382541019286,
+      "sd": 0.07308651164655412,
+      "ci95": [
+        -0.08062432282078653,
+        -0.02792332799959918
+      ],
+      "n": 32,
+      "p": 0.00020845431089982415,
+      "holm_p": 0.0008338172435992966,
+      "positive": 7,
+      "equal": 0,
+      "negative": 25
+    },
+    {
+      "source": "top_two",
+      "method": "counts_64",
+      "reference": "counts_1",
+      "metric": "tv",
+      "block_differences": [
+        -0.3197108147638951,
+        -0.30669145390949903,
+        -0.3117059812064752,
+        -0.3210528007809391,
+        -0.32094599797038115,
+        -0.3116152559568106,
+        -0.31804862697561664,
+        -0.31355511591763663,
+        -0.3246728228810348,
+        -0.3127317167749537,
+        -0.32669555358200664,
+        -0.31331176616890083,
+        -0.3204387512932765,
+        -0.31375768542818205,
+        -0.3133085162518955,
+        -0.31310502484432934,
+        -0.3149136996866831,
+        -0.3184552060068179,
+        -0.31326215510807537,
+        -0.3031669874579273,
+        -0.3211205394373065,
+        -0.313386664238296,
+        -0.31112291389488683,
+        -0.30622075856726483,
+        -0.3149173614441219,
+        -0.30210966315005,
+        -0.3254289684709313,
+        -0.3091826542431529,
+        -0.3185396795997801,
+        -0.3165070824432165,
+        -0.3194972416617655,
+        -0.311677468581928
+      ],
+      "mean": -0.31502677902181364,
+      "sd": 0.00599676123733527,
+      "ci95": [
+        -0.31718884200575415,
+        -0.31286471603787314
+      ],
+      "n": 32,
+      "p": 4.0123227528708924e-55,
+      "holm_p": 6.018484129306338e-54,
+      "positive": 0,
+      "equal": 0,
+      "negative": 32
+    },
+    {
+      "source": "top_two",
+      "method": "counts_64",
+      "reference": "counts_1",
+      "metric": "visit_tv",
+      "block_differences": [
+        -0.3852358916684566,
+        -0.2197783920002022,
+        -0.3177878669697918,
+        -0.41585040113619176,
+        -0.21390210717751057,
+        -0.3207696348421242,
+        -0.27848920935030747,
+        -0.3297626066475609,
+        -0.378465792123214,
+        -0.2788438769861232,
+        -0.3745108089895022,
+        -0.3561183984032624,
+        -0.40539463527326963,
+        -0.3897747947583092,
+        -0.3047066638457802,
+        -0.2939363491839828,
+        -0.3728259172713309,
+        -0.3622937127429548,
+        -0.3039043195474559,
+        -0.23017660767127227,
+        -0.34774790441999176,
+        -0.5190579773078792,
+        -0.4859528645949547,
+        -0.24842062491173839,
+        -0.3605298423869956,
+        -0.4763310766226547,
+        -0.4099498295338806,
+        -0.3088365769396667,
+        -0.27067300775447095,
+        -0.21266585596406443,
+        -0.2943296692494518,
+        -0.37130171088975666
+      ],
+      "mean": -0.3386976539738784,
+      "sd": 0.07732414657022375,
+      "ci95": [
+        -0.3665759816990889,
+        -0.3108193262486679
+      ],
+      "n": 32,
+      "p": 5.383696781482522e-22,
+      "holm_p": 6.998805815927279e-21,
+      "positive": 0,
+      "equal": 0,
+      "negative": 32
+    },
+    {
+      "source": "fixed",
+      "method": "imitation",
+      "reference": "Q_direct",
+      "metric": "removed_move_error",
+      "block_differences": [
+        -0.08661500716438769,
+        -0.05164199200240391,
+        -0.08110885721466268,
+        -0.09456691913122894,
+        -0.0850551446964121,
+        -0.060362684728135385,
+        -0.10817251927856733,
+        -0.09541708461414009,
+        -0.0839106887554795,
+        -0.07906303481880617,
+        -0.07484075309739394,
+        -0.06540732752477507,
+        -0.08947109908064757,
+        -0.09282629249063404,
+        -0.08575375173003486,
+        -0.09601201730989514,
+        -0.09513991724738674,
+        -0.10295237355294846,
+        -0.08299535929153926,
+        -0.07464754454308441,
+        -0.0785310460683595,
+        -0.07807682088644324,
+        -0.09240437937737853,
+        -0.0699923570657216,
+        -0.09895919343970627,
+        -0.09239579260722541,
+        -0.07925198516589513,
+        -0.0789612862280516,
+        -0.08725265777349414,
+        -0.0790192778554572,
+        -0.08210485544739687,
+        -0.09973580290814771
+      ],
+      "mean": -0.08445768197174502,
+      "sd": 0.01229116505490994,
+      "ci95": [
+        -0.08888911953328657,
+        -0.08002624441020348
+      ],
+      "n": 32,
+      "p": 7.211651657423276e-28,
+      "holm_p": 1.0096312320392586e-26,
+      "positive": 0,
+      "equal": 0,
+      "negative": 32
+    }
+  ]
+}
