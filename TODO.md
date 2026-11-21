@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 50**, serializable recovery records.
+**Next is Task 51**, exact behavioral score encodings.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -424,10 +424,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** tic-tac-toe and Connect Four satisfy the protocol without changing their game logic.
   - Completed 2026-11-20. Both game adapters preserve the existing legal moves and transitions and distinguish observed source queries from derived choices. [Implementation](src/policy_value_isomorph/policy_adapter.py) · [Checks](tests/test_policy_adapter.py). Full Windows suite: 110 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **50. Define `RecoveryContract` and `ValueArtifact` dataclasses.**
+- [x] **50. Define `RecoveryContract` and `ValueArtifact` dataclasses.**
   - Record semantics level, access mode, query/state distribution, candidate generator, decoder, normalization, provenance, uncertainty, and supported scope.
   - For game artifacts link the frozen source, utility specification, continuation and opponent policies, tie or mixing rule, temperature, split, and opponent-panel manifest to the evaluation rows.
   - **Done when:** artifacts are serializable and reject semantically incomplete combinations.
+  - Completed 2026-11-20. Validated provenance, source access, score units, legal support, evaluation links and the rules for complete-play utility. [Implementation](src/policy_value_isomorph/recovery_contract.py) · [Checks](tests/test_recovery_contract.py). Full Windows suite: 111 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **51. Implement exact decoder-value encoders.**
   - Add deterministic indicator/gap scores, stochastic log scores, and positive-distance energies minimized over metric actions.
