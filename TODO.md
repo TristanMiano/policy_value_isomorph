@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 51**, exact behavioral score encodings.
+**Next is Task 52**, fitting scores from observed behavior.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -430,9 +430,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** artifacts are serializable and reject semantically incomplete combinations.
   - Completed 2026-11-20. Validated provenance, source access, score units, legal support, evaluation links and the rules for complete-play utility. [Implementation](src/policy_value_isomorph/recovery_contract.py) · [Checks](tests/test_recovery_contract.py). Full Windows suite: 111 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **51. Implement exact decoder-value encoders.**
+- [x] **51. Implement exact decoder-value encoders.**
   - Add deterministic indicator/gap scores, stochastic log scores, and positive-distance energies minimized over metric actions.
   - **Done when:** round-trip tests recover the source behavior exactly on supported domains.
+  - Completed 2026-11-20. Checked deterministic choices, exact zero probability under exponential sampling and minimum-distance actions. [Implementation](src/policy_value_isomorph/score_encoding.py) · [Checks](tests/test_score_encoding.py). Full Windows suite: 112 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **52. Implement policy-to-score distillation.**
   - Train value/action-score networks directly from actions, probabilities, logits, or pairwise choices according to access level.
