@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 70**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 71**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -542,10 +542,12 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. The [interactive atlas](experiments/phase_iv/atlas.html) opens every reachable decision for one frozen player, with the observed counts, four fits, gaps and legal successors. Verified all 4,520 entries and the search, scoring-rule, gap and successor controls.
 
-- [ ] **70. Test value-derived stochastic completions.**
+- [x] **70. Test value-derived stochastic completions.**
   - Cross deterministic and stochastic sources with greedy and temperature-based decoding of raw scores, fixed-payoff returns, and fitted expected utilities. Sweep temperature with score scale and base measure recorded. Include the low-temperature limit, ties, support masks, and a validation-selected temperature.
   - For a known stochastic source, compare each score with the score predicted by its move probability. In `S(s,a) = T log(P(a|s)/μ(a|s)) + c(s)`, `S` is the score, `P` the source probability, `μ` the reference move weight, `T` a shared positive temperature governing the spread of choices, and `c` an offset common to that board's moves. On moves with positive probabilities and weights report score residuals and the resulting probability differences. Report probability mass assigned or omitted where the sets of possible moves differ. Compare a network that predicts expected utility directly with one that predicts outcome probabilities and averages their utilities.
   - Compare these distributions with classical expected-utility choice under a specified tie mixture and one declared random-utility model that samples a utility then maximizes its expectation. Report distributional fidelity, win probability and game score for each, with uncertainty across independent recoveries.
+
+  - Completed 2026-11-20. Measured highest-score, equal-best and temperature-sampled moves for fixed and randomized original players, including fitted continuations, support restrictions, direct payoff prediction, outcome probabilities and a mixture of complete-game utilities. Saved point estimates by split and initialization.
 
 - [ ] **71. Measure how closely a compact utility predicts held-out choices over moves and lotteries.**
   - Compare direct scores, the supplied payoff, and the shared utility fitted in Task 53 at matched access and budgets. Measure the change in held-out fidelity and game performance from requiring scores to factor through expected utility. Report utility complexity and stability up to the allowed normalization.
