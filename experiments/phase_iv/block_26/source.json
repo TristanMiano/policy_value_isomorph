@@ -1,0 +1,22 @@
+{
+  "boards": 4520,
+  "optimal_moves": 4520,
+  "mean_payoff_forgone": 0.0,
+  "worst_payoff_forgone": 0,
+  "same_minimax_move": 2986,
+  "seed": 6227,
+  "passes": 90,
+  "priority": [
+    7,
+    2,
+    3,
+    6,
+    8,
+    0,
+    5,
+    1,
+    4
+  ],
+  "own_teacher_matches": 4520,
+  "loss_nats": 0.013174722902476788
+}

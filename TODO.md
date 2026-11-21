@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 63**, which runs the first comparisons under the frozen design. Tasks 49–59 and Checkpoint D are complete. [Checkpoint D findings and reproduction](CHECKPOINT_D.md)
+**Next is Task 64**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -497,8 +497,10 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Fixed 32 independently trained sources, two random holdouts and two network initializations per holdout. [Frozen design and simulated precision](PHASE_IV_PROTOCOL.md)
 
-- [ ] **63. Run exact decoder-score recovery baselines.**
+- [x] **63. Run exact decoder-score recovery baselines.**
   - Report exact behavioral encoding and learned score distillation side by side, with access to the source at inference identified. Add the frozen source as the reference row for both game strength and fidelity. Report approximation error on unseen boards at matched training budgets.
+
+  - Completed 2026-11-20. Trained 32 optimal sources and 256 behavior imitators across 64 board splits and two source classes. Retained per-run probabilities and both-seat evaluations.
 
 - [ ] **64. Run constrained-choice ranking recovery.**
   - Measure query complexity, ordering recovery, inconsistency diagnostics, and active-vs-random probing.
