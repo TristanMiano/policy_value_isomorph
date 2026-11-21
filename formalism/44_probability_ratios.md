@@ -6,7 +6,7 @@
 `(S(i)−S(j))/T = log(p(i)/p(j)) − log(μ(i)/μ(j))`.
 Divide the two model probabilities to cancel the normalizing constant and take logarithms. The sign of the adjusted log odds identifies their ordering. The magnitude gives a gap in temperature units. Multiplying by a known T gives the gap in score units. When base weights differ, raw choice frequency can even order moves differently from the scores.
 
-Suppose several menus at the same history share these scores, temperature and known base-weight ratios. Join two moves by an edge whenever their odds are observed. In each connected component, summing oriented gaps along a path from an anchor determines all scores relative to it in temperature units. Such scores exist precisely when every directed traversal of a cycle sums to zero, counting a reversed edge with reversed sign. Necessity follows by cancellation. For sufficiency the cycle condition makes all path sums between fixed endpoints equal, so the assigned differences realize every observation. Separate components retain independent offsets. Fresh menus connecting components test and narrow that ambiguity. This result applies within positive support; a zero known probability is handled by a mask or extended score, and a zero base weight makes the score observationally inaccessible. [Discrete sampling theorem](38_random_choices.md)
+Suppose several menus at the same history share these scores, temperature and known base-weight ratios. Join two moves for each observed exact positive probability ratio. Keep each menu's comparison even when the same pair appears twice. Two different ratios after base-weight adjustment for the same ordered pair already contradict a shared score gap. In each connected component, summing oriented gaps along a path from an anchor determines all scores relative to it in temperature units. For the recorded positive ratios, such scores exist precisely when every directed traversal of a cycle sums to zero, counting a reversed edge with reversed sign. Necessity follows by cancellation. For sufficiency the cycle condition makes all path sums between fixed endpoints equal, so the assigned differences realize every observation. Separate components retain independent offsets. Fresh menus connecting components test and narrow that ambiguity. Also check which moves receive zero probability. With positive base weights and one common score per offered move, that move cannot have exact probability zero on one menu and positive probability on another menu offering it. A declared menu-dependent exclusion changes that model. A zero count in a finite sample still permits a positive underlying probability. [Discrete sampling theorem](38_random_choices.md)
 
 **Repeated draws.** Given n independent pair choices at unchanged odds, let k select i. For interior counts replace p(i)/p(j) by k/(n−k). This estimates the score gap and need not be unbiased. In a larger menu the same calculation conditions on the n draws that selected either i or j. If n=0 there is no pair information. For extremes k=0 or n record the counts and a one-sided or unbounded log-gap interval. Assigning a pseudocount is a modeling assumption.
 
@@ -25,6 +25,13 @@ Here is a conservative finite-sample interval with a short proof. Let b denote t
 (311, 0.81093, 1.11602, -0.00872, 2.781)
 >>> assert isclose(log(2) + log(3), log(6))
 >>> assert log(0.6/0.4) - log(3) < 0
+>>> from fractions import Fraction as F
+>>> # Same two moves on different menus, equal base weights and unit temperature.
+>>> ab, abc = (F(2,3), F(1,3)), (F(1,6), F(1,3), F(1,2))
+>>> ab[0]/ab[1], abc[0]/abc[1]
+(Fraction(2, 1), Fraction(1, 2))
+>>> # Zero probability for B on AB forces zero weight, incompatible with a positive B on ABC.
+>>> assert (1,0)[1] == 0 < abc[1]
 
 ```
 

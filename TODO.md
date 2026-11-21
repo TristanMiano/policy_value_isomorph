@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Checkpoint C**, the review of the formal proofs and their scope. Phase II Tasks 37–48 are complete. [Results and verification](formalism/48_finite_checks.md)
+**Next is Task 49**, defining how the project queries a policy (the player's rule for choosing moves). Phase II and Checkpoint C are complete. [Proofs](formalism/48_finite_checks.md) · [Checkpoint findings](CHECKPOINT_C.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -412,7 +412,8 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 ## Checkpoint C — Formal spine audit
 
-- [ ] Adversarially check every proof, boundary convention, and use of “isomorphism.” Freeze the exact positive theorem claims and the quotient language before building the generalized recovery API.
+- [x] Adversarially check every proof, boundary convention, and use of “isomorphism.” Freeze the exact positive theorem claims and the quotient language before building the generalized recovery API.
+  - Completed 2026-11-20. The review fixes the reversible correspondence between groups of scores giving the same observable answers and the answer patterns themselves. It corrects the assumptions for sharing a board payoff and for interpreting repeated random choices. On all 4,520 tic-tac-toe decision boards the archived player chose the lowest-numbered move giving the best guaranteed outcome. Three distinct scores are necessary and enough to copy it with lowest-cell ties, compared with seven when each winner must lead outright. [Decision, counts, assumptions and verification](CHECKPOINT_C.md)
 
 ---
 

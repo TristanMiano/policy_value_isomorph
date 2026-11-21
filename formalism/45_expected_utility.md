@@ -18,7 +18,7 @@ No such decoder can put mass outside G. Hence the difference in probability assi
 
 A third rule, **VNM scores + temperature sampling**, uses base probabilities μ and temperature T>0 to choose a distribution q. Put `KL(q||μ)=Σa q(a) log(q(a)/μ(a))`, with zero-q terms zero and positive mass outside μ's support forbidden. This measures distributional discrepancy in natural-log units. Let Z=Σa μ(a)exp(Q(a)/T) and q*(a)=μ(a)exp(Q(a)/T)/Z. For finite Q on the base support, substitution gives
 `Σa q(a)Q(a) − T KL(q||μ) = T log Z − T KL(q||q*)`.
-The last discrepancy is nonnegative, with equality only at q=q*: use −log x ≥ 1−x on positive q and sum, accounting for any q* mass outside q. Thus q* uniquely maximizes this objective. At positive temperature it can choose moves below the best expected utility. Its trade-off depends on T and μ. The three rules imply distinct probabilities until their parameters and tie conventions are specified.
+The last discrepancy is nonnegative, with equality only at q=q*: use −log x ≥ 1−x on positive q and sum, accounting for any q* mass outside q. Thus q* uniquely maximizes this objective. At positive temperature it can choose moves below the best expected utility. Its trade-off depends on T and μ. These three rules can also produce identical probabilities. With two moves, a fair tie between equal expected utilities, a half-and-half draw between two utilities that favor opposite moves, and sampling equal scores at equal base weights all give (1/2,1/2). Observing only their move probabilities leaves all three explanations available.
 
 ```pycon
 >>> from fractions import Fraction as F
@@ -38,6 +38,12 @@ The last discrepancy is nonnegative, with equality only at q=q*: use −log x �
 >>> optimum = (.5*exp(1)/Z, .5/Z)
 >>> kl = lambda a,b: sum(x*log(x/y) for x,y in zip(a,b) if x)
 >>> assert isclose(q[0]-kl(q,mu), log(Z)-kl(q,optimum))
+>>> fair_tie = (F(1,2), F(1,2))
+>>> types = [((1,0), F(1,2)), ((0,1), F(1,2))]
+>>> random_utility = tuple(sum(w for u,w in types if u.index(max(u)) == i) for i in (0,1))
+>>> equal_score_weights = [exp(v) for v in (0,0)]
+>>> sampled = tuple(w/sum(equal_score_weights) for w in equal_score_weights)
+>>> assert fair_tie == random_utility == sampled
 
 ```
 
