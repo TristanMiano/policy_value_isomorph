@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 65**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 66**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -508,9 +508,11 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Queried two menu rules on 32 withheld boards per split, with three query methods and three budgets. Saved every offered menu, response, determined pair, conflict count and comparison against the original full-menu ranking.
 
-- [ ] **65. Run stochastic/log-score recovery.**
+- [x] **65. Run stochastic/log-score recovery.**
   - Compare access to true probabilities or logits with repeated action samples at fixed query budgets. Include a mixture with zero support on a legal action and one that gives positive mass to a lower-return move. Check exact log-score recovery with the declared support, base measure, and temperature.
   - Compare full legal distributions using total variation and source-to-recovered KL, reporting infinite KL when source support is missed. Report conditional probabilities and calibration by board. Independent draws can disagree even when distributions match exactly.
+
+  - Completed 2026-11-20. Compared exact log probabilities and two estimates at four budgets, for full and restricted probability support on all withheld boards. Saved counts, infinite log errors and the independent opening-coverage comparisons.
 
 - [ ] **66. Compare behavior and gameplay under exact and learned return values.**
   - Compare the raw behavioral decoder with greedy expected game utility on identical boards and matchups. Score exact returns, rollout estimates before fitting, learned successor `V`, and learned direct `Q` on all legal alternatives. Sweep rollout budgets on on-policy and off-policy positions. Include exact best-response game scores against known individual opponents as strength references and record the opponent information they require.
