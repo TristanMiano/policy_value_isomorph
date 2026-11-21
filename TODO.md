@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 33**, the audit of primary literature.
+**Next is Task 34**, the shared notation and recovery contract.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -306,10 +306,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** every later adapter can declare capabilities without overloading “value function.”
   - Completed 2026-11-20. Defined seven forms of access and four score meanings. Documented how to declare what each procedure sees during fitting and deployed play, including controls for changed menus and source-assisted continuations. [Access and value taxonomy](docs/policy_value_taxonomy.md)
 
-- [ ] **33. Audit the primary literature and expand `REFERENCES.md`.**
+- [x] **33. Audit the primary literature and expand `REFERENCES.md`.**
   - Cover policy evaluation/improvement, policy distillation, inverse decision/reward modeling, maximum-entropy control, reward invariances, revealed preference/choice, value equivalence, imitation distribution shift, representation similarity, explainable RL, many-valued/fuzzy neural interpretations, and the historical activation/loss story.
   - Use primary papers and record exactly what is imported versus merely analogous.
   - **Done when:** each load-bearing concept in PV-H1–PV-H7 has a verified source or an explicit original-proof obligation.
+  - Completed 2026-11-20. Audited primary work on decisions, imitation, reward ambiguity, explanation, neural representations and logic. Each of the seven claim families has a source boundary and a project-specific proof or measurement to pursue. [Annotated literature audit](REFERENCES.md)
 
 - [ ] **34. Freeze notation and the recovery contract.**
   - Create `formalism/00_notation.md` defining histories, candidate sets, policies, value forms, decoders, recovery procedures, equivalence, normalization, and `ValueArtifact`.
