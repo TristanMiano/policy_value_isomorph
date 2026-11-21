@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 55**, candidate generation and coverage.
+**Next is Task 56**, aligning score units.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -451,9 +451,10 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** the probe budget and query history are part of the artifact.
   - Completed 2026-11-20. Retained the query budget and every response, quantified ordering conflicts and estimated pairwise choice odds. [Implementation](src/policy_value_isomorph/preference_probes.py) · [Checks](tests/test_preference_probes.py). Full Windows suite: 116 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
-- [ ] **55. Implement candidate and neighborhood generators.**
+- [x] **55. Implement candidate and neighborhood generators.**
   - Cover legal discrete actions, nearby reachable states, sampled continuous actions, and generated sequence candidates.
   - **Done when:** candidate-generation bias is measurable and reproducible.
+  - Completed 2026-11-20. Added reproducible legal, reachable, continuous and sequence candidates with omitted mass or distance diagnostics. [Implementation](src/policy_value_isomorph/candidate_sets.py) · [Checks](tests/test_candidate_sets.py). Full Windows suite: 118 passed, 1 skipped, 11 subtests passed. Three-board demo verified.
 
 - [ ] **56. Implement value alignment and canonicalization.**
   - Support anchor subtraction, standardized/robust scale, affine fit to shared anchors, isotonic/rank alignment, and temperature-aware alignment.
