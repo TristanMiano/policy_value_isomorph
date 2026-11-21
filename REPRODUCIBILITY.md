@@ -46,7 +46,10 @@ Run from repository root.
 pip install -e .[dev]
 pytest -q
 python scripts/demo_tictactoe.py
+python scripts/smoke_torch_training.py
 ```
+
+The short training check fits and freezes a move-selecting network, plays games with copies of it to label the two payoff networks, resumes all three trainers after the first pass, and plays each finished model from both seats. It uses temporary storage by default. Add `--output-dir artifacts/smoke` to inspect a fresh run's checkpoint files and per-pass training logs. The default device is the CPU. Use `python -m pytest -m gpu -q` for the separately marked graphics-processor check.
 
 ### 2) Dataset summary runs
 

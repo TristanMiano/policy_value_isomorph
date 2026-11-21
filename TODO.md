@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next task is 28.** Exercise the full training and resume workflow from a fresh installation on CPU, and check platform-specific paths and optional graphics-processor runs.
+**Next task is 29.** Update package requirements and contributor instructions for the current PyTorch experiments.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -263,11 +263,12 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** round-trip and interrupted-run tests pass for policy, `V`, and `Q`.
   - Completed 2026-11-20. Version 2 saves native PyTorch model and optimizer state, example order, random state, dataset identity and elapsed time. The interrupted and uninterrupted AdamW fits produced identical final weights, optimizer memory and subsequent losses for each of the three networks using both latest and named files. Historical JSON continuation also ran. All 92 tests and the demo passed. [Checkpoint implementation](src/policy_value_isomorph/checkpointing.py) · [Continuation tests](tests/test_training_resume.py) · [Resume commands](REPRODUCIBILITY.md#continuing-a-training-run)
 
-- [ ] **28. Expand tests and smoke demos for the PyTorch stack.**
+- [x] **28. Expand tests and smoke demos for the PyTorch stack.**
   - Add CPU end-to-end tests for policy training, rollout labeling, `V`, `Q`, evaluation, and resume.
   - Verify telemetry paths on Windows and POSIX when porting the checkpoint stack.
   - Mark any GPU-only checks separately.
   - **Done when:** `pytest -q` and a documented smoke command pass from a fresh editable install.
+  - Completed 2026-11-20. A short end-to-end program freezes a trained player, generates rollout labels with it, fits and resumes both payoff networks, and plays both seats. Tests read all three trainers’ checkpoints and both log formats through native paths. With fresh editable installations, Windows passed 93 tests and skipped the GPU check on its CPU-only PyTorch build. Ubuntu passed all 94, including the separately marked NVIDIA GPU check. The short program and the three-board demo ran on both platforms. [Runnable check](scripts/smoke_torch_training.py) · [Cross-platform tests](tests/test_torch_smoke.py)
 
 - [ ] **29. Update dependencies, README, reproducibility docs, and examples for the PyTorch-first stack.**
   - Replace stale “no neural nets/no dependencies” language in `AGENTS.md`, `DESIGN.md`, `REFERENCES.md`, and package metadata.
