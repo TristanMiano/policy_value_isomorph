@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 37**, the finite deterministic representation theorem. Checkpoint B is complete. [Review, proof plan and minimum experiments](CHECKPOINT_B.md)
+**Next is Task 49**, defining how the project queries a policy (the player's rule for choosing moves). Phase II and Checkpoint C are complete. [Proofs](formalism/48_finite_checks.md) · [Checkpoint findings](CHECKPOINT_C.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -341,66 +341,79 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 # Phase II — Prove the value-form and equivalence results
 
-- [ ] **37. Prove finite deterministic policy-to-score representation.**
+- [x] **37. Prove finite deterministic policy-to-score representation.**
   - For finite feasible action sets and deterministic `P`, construct an exact real action-score representation with fixed tie-breaking.
   - Characterize the encoder image and inverse decoder.
   - **Done when:** theorem, proof, examples, and executable finite tests agree.
+  - Completed 2026-11-20. Characterized the canonical indicator tables, their inverse and every score tie that preserves a chosen move. [Statement and checks](formalism/37_finite_choices.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **38. Prove discrete stochastic policy-to-log-score representation.**
+- [x] **38. Prove discrete stochastic policy-to-log-score representation.**
   - Represent a stochastic policy by logits/energies up to state-dependent additive constants; handle zero support with extended reals or a declared approximation.
   - State the role of temperature.
   - **Done when:** softmax recovery and invariance properties are proved and tested.
+  - Completed 2026-11-20. Derived the score family for a fixed temperature and base measure, including zero support and a finite-score approximation with explicit probability error. [Statement and checks](formalism/38_random_choices.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **39. Extend exact representation to deterministic metric-action policies.**
+- [x] **39. Extend exact representation to deterministic metric-action policies.**
   - Use a score equal to negative distance or an energy equal to positive distance and state assumptions for unique decoding, measurability, and candidate restriction.
   - **Done when:** finite-dimensional continuous-action examples and edge cases are explicit.
+  - Completed 2026-11-20. Proved unique distance decoding and quantified the error from restricting the candidate set, including absent maxima and measurability conditions. [Statement and checks](formalism/39_metric_actions.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **40. Prove action-value to state-value lifting.**
+- [x] **40. Prove action-value to state-value lifting.**
   - Show how `Q(h,a)` can be represented as state value on an action-augmented history or successor object.
   - State when an ordinary `V(h)` plus a transition/action harness is sufficient.
   - Characterize when one score per resulting board can reproduce every source choice under a fixed rule for ties. Give an exact example and a counterexample with conflicting move orders. In the counterexample, give the highest attainable fraction of reproduced moves or bounds on it. Compare with scores that also take the action as input.
   - **Done when:** the theorem covers the current deterministic game convention and a general history-based form.
+  - Completed 2026-11-20. Separated exact score lifting from recovering the same choice. Characterized finite successor feasibility with strict and weak comparisons and bounded a conflicting example exactly. [Statement and checks](formalism/40_successor_scores.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **41. Define decoder-relative value equivalence and prove the quotient result.**
+- [x] **41. Define decoder-relative value equivalence and prove the quotient result.**
   - Two values are equivalent when every declared decoder/query consumer sees the same result.
   - Prove that exact representations factor through the response quotient and identify common invariant transformations.
   - **Done when:** deterministic argmax, softmax with known temperature, and threshold consumers have separate examples.
+  - Completed 2026-11-20. Identified the response quotient and the inverse on its attainable responses. Different consumers preserve different information. [Statement and checks](formalism/41_response_equivalence.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **42. Prove normalization and scale/temperature lemmas.**
+- [x] **42. Prove normalization and scale/temperature lemmas.**
   - Analyze additive anchors, positive affine transforms, rank/quantile normalization, and the equivalence between value scale and softmax temperature.
   - **Done when:** the project has a justified comparison protocol rather than raw-output RMSE between arbitrary gauges.
+  - Completed 2026-11-20. Proved the effects of offsets, scale, temperature and rank normalization on choices, probabilities and lotteries. [Statement and checks](formalism/42_score_units.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **43. Prove revealed ranking recovery from constrained choice sets.**
+- [x] **43. Prove revealed ranking recovery from constrained choice sets.**
   - If a deterministic policy chooses the unique maximum of one stable ordering from every offered finite subset, prove that pairwise or elimination queries recover the total order.
   - Record consistency tests and counterexamples when context effects violate the assumption.
   - **Done when:** this yields an implementable black-box preference-probing algorithm.
+  - Completed 2026-11-20. Proved pairwise and elimination recovery under a stable strict order, with query counts and explicit tests for context effects. [Statement and checks](formalism/43_menu_queries.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **44. Prove score-difference recovery for soft/stochastic choice.**
+- [x] **44. Prove score-difference recovery for soft/stochastic choice.**
   - Under a declared Luce/softmax model, recover pairwise score differences from probability or repeated-choice ratios.
   - Separate ordinal recovery, cardinal differences, unknown temperature, and finite-sample uncertainty.
   - **Done when:** exact and sampled fixtures reproduce the derivation.
+  - Completed 2026-11-20. Derived adjusted log odds and connected-menu identifiability. Checked exact probabilities and finite repeated draws with uncertainty. [Statement and checks](formalism/44_probability_ratios.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **45. Formalize expected utility over trajectories and its limits for imitation.**
+- [x] **45. Formalize expected utility over trajectories and its limits for imitation.**
   - Define `Q_U^κ(s,a) = E[U(trajectory) | s,a,environment,κ]` with a declared continuation rule, horizon, information, player perspective and evaluation distribution. Derive the current rollout target as a special case. Compare a supplied game payoff with a single consequence utility inferred from choices.
   - For deterministic sources establish when exact expected-utility maximization reproduces the action under the declared tie rule. For stochastic sources derive the best distributional match possible when choices must stay within the maximizing set. Compare specified tie mixing and random utility with soft choice, whose additional preference over choice distributions gives the objective `E_q[Q] − T KL(q || μ)`.
   - Give finite examples of an exact match, a missed win under the game payoff, and two actions inducing the same consequence lottery. Show how restrictions on the information available to the utility change what the policy can reveal.
+  - Completed 2026-11-20. Characterized deterministic and stochastic recovery from shared utilities. Derived the unavoidable probability discrepancy and the temperature-sampling objective. [Statement and checks](formalism/45_expected_utility.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **46. Prove stability bounds linking value error, action gaps, and policy agreement.**
+- [x] **46. Prove stability bounds linking value error, action gaps, and policy agreement.**
   - For a unique best legal move, show why an action gap larger than twice the largest per-action score error on the board preserves that move. Give examples where the same mean squared error preserves or reverses a ranking. Treat ties explicitly.
   - Bound or exhibit the sensitivity of soft-choice probabilities to score error at fixed temperature and base measure. State which bounds concern agreement with the exact decoder and when that decoder also matches the source. Test the finite examples against the diagnostics planned in Task 67.
+  - Completed 2026-11-20. Proved deterministic margin and probability-shift bounds, including exact ties. Compared equal squared errors with different move effects. [Statement and checks](formalism/46_stability.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **47. Build the constructive non-identifiability suite.**
+- [x] **47. Build the constructive non-identifiability suite.**
   - Include equivalent argmax scores, unknown softmax temperature, unqueried alternatives, reward shaping/return ambiguity, insufficient state, and off-support behavior.
   - For each case, record the stronger interpretation that fails and the value-form result that survives.
   - **Done when:** future work cannot mistake one counterexample for a refutation of PV-H1.
+  - Completed 2026-11-20. Constructed six pairs of indistinguishable explanations and recorded what each preserves, what is hidden and which extra observations can help. [Statement and checks](formalism/47_ambiguities.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **48. Implement executable formal fixtures.**
+- [x] **48. Implement executable formal fixtures.**
   - Add a small exact module and tests for Tasks 37–47, independent of neural training.
   - **Done when:** one command checks every finite theorem example and normalization invariant.
+  - Completed 2026-11-20. Unified executable examples and independent enumeration checks in a standard-library verification command. Linked theorem results to the claim ledger. [Statement and checks](formalism/48_finite_checks.md). Verified with the executable examples, the three-board demo and the full Windows suite (107 passed, 1 skipped, 11 subtests passed).
 
 ## Checkpoint C — Formal spine audit
 
-- [ ] Adversarially check every proof, boundary convention, and use of “isomorphism.” Freeze the exact positive theorem claims and the quotient language before building the generalized recovery API.
+- [x] Adversarially check every proof, boundary convention, and use of “isomorphism.” Freeze the exact positive theorem claims and the quotient language before building the generalized recovery API.
+  - Completed 2026-11-20. The review fixes the reversible correspondence between groups of scores giving the same observable answers and the answer patterns themselves. It corrects the assumptions for sharing a board payoff and for interpreting repeated random choices. On all 4,520 tic-tac-toe decision boards the archived player chose the lowest-numbered move giving the best guaranteed outcome. Three distinct scores are necessary and enough to copy it with lowest-cell ties, compared with seven when each winner must lead outright. [Decision, counts, assumptions and verification](CHECKPOINT_C.md)
 
 ---
 
