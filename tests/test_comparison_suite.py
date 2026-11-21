@@ -1,15 +1,39 @@
+from dataclasses import replace
 from math import inf
 from types import SimpleNamespace
 
 import pytest
 
 from policy_value_isomorph.comparison_suite import (choice_metrics,ranking,geometry,calibration,
-    changed_choices,return_checkpoints,GameMethod)
+    changed_choices,return_checkpoints,GameMethod,compare_game)
 from policy_value_isomorph.score_alignment import align
 from policy_value_isomorph.recovery_contract import RecoveryContract,ValueArtifact
 from policy_value_isomorph.tictactoe import TicTacToeState
 from policy_value_isomorph.checkpointing import save_checkpoint
 from policy_value_isomorph.value_mlp import TinyMLPValue
+
+
+def test_random_source_keeps_forced_decisions_out_of_population_agreement(monkeypatch):
+    # Only the aggregation is under test. Both players receive identical game results.
+    monkeypatch.setattr("policy_value_isomorph.comparison_suite.play_match", lambda *args: (0,1,0))
+    opening = TicTacToeState.initial()
+    forced = opening.apply_move(0)
+    law = {opening: {0: 0.75, 1: 0.25}, forced: {1: 1}}
+    graph = SimpleNamespace(children={opening: {0: None, 1: None}, forced: {1: None}})
+    c = RecoveryContract("test game","random source","behavior","complete law","source",
+                         "two decisions","given menu","source policy","lowest","none","probability",
+                         "test","two boards",game=True,opponent_panel="self")
+    a = ValueArtifact(c,"source","known laws","exact",{"reference":"two rows"})
+    source = GameMethod(a,law,law)
+    recovered = GameMethod(replace(a,method="first move"),{opening:{0:1},forced:{1:1}},law)
+    weights = {"all":{opening:3,forced:1},"forced":{forced:1},"unvisited":{opening:0}}
+    result = compare_game(graph,source,[recovered],weights,{"self":(1,law)},include_decisions=False)
+    all_rows, only_forced, empty = result["fidelity"][3:]
+    assert all_rows["agreement"] is only_forced["agreement"] is None
+    assert all_rows["fixed_choice_agreement"] == 1 and all_rows["fixed_choice_weight"] == 1
+    assert all_rows["tv"] == 0.1875 and all_rows["weight_sum"] == 4
+    assert empty["fixed_choice_agreement"] is None and empty["tv"] is None
+    assert result["decisions"] == []
 
 
 def test_structure_and_changed_choices():

@@ -13,7 +13,8 @@ from .score_alignment import align, cardinal_mse
 
 # Meaning, units, population, invariance, required access travel with metric exports.
 METRICS = {
-    "agreement": ("deployed probability of the deterministic source's chosen move", "fraction", "weighted decisions with a fixed source choice", "equivalent deployed laws", "source and deployed laws"),
+    "agreement": ("deployed probability of the deterministic source's chosen move", "fraction", "weighted decisions of a source with a fixed choice on every board", "equivalent deployed laws", "source and deployed laws"),
+    "fixed_choice_agreement": ("deployed probability of the source move conditional on the source assigning it probability one", "fraction", "only point-mass decisions, with their own total weight", "equivalent deployed laws", "source and deployed laws"),
     "tv": ("minimum probability mass reassigned", "fraction", "weighted decisions", "equivalent laws", "source and deployed laws"),
     "cross_entropy": ("negative log probability of a source draw", "nats per draw", "weighted decisions", "equivalent laws", "source and deployed laws"),
     "kl": ("extra natural-log loss relative to the source's own probabilities", "nats per draw", "weighted decisions", "equivalent laws", "both legal probability rows"),
@@ -134,7 +135,7 @@ class GameMethod:
     tie_order: Callable | None = None
 
 
-def compare_game(graph, source: GameMethod, methods, populations, opponents) -> dict:
+def compare_game(graph, source: GameMethod, methods, populations, opponents, *, include_decisions=True) -> dict:
     """Exact tic-tac-toe games. Opponents map names to (panel weight, full decision law).
     Populations map names to nonnegative decision-board weights. Total weight may be zero.
     """
@@ -145,6 +146,7 @@ def compare_game(graph, source: GameMethod, methods, populations, opponents) -> 
         raise ValueError("panel weights must sum to one")
     records, games, decisions = [], [], []
     baselines = {}
+    deterministic_source = all(any(p == 1 for p in law.values()) for law in source.law.values())
     for index, method in enumerate([source,*methods]):
         if not method.artifact.contract.game or any(getattr(method.artifact.contract,key)!=getattr(source.artifact.contract,key)
                 for key in ("domain","source","split","opponent_panel")):
@@ -174,14 +176,22 @@ def compare_game(graph, source: GameMethod, methods, populations, opponents) -> 
                 row = choice_metrics(source.law[s],method.law[s],graph.children[s],method.mover_scores[s],
                                      tie_order=priority)
                 rows.append((row,w))
-                decisions.append({**key,"population_name":group,"board":tuple(s.board),"to_move":s.to_move,
-                                  "weight":w,**row})
+                if include_decisions:
+                    decisions.append({**key,"population_name":group,"board":tuple(s.board),"to_move":s.to_move,
+                                      "weight":w,**row})
             avg = {}
             for stat in ("tv","agreement","cross_entropy","kl","missing_mass","gap","source_score_forgone"):
                 defined = [(r[stat],w) for r,w in rows if r[stat] is not None and w>0]
                 mass = sum(w for _,w in defined)
                 avg[stat] = fsum(v*w for v,w in defined)/mass if mass else None
                 avg[stat+"_weight"] = mass
+            # A random policy can have a point mass on forced moves. Reporting that
+            # subset as the whole population's move agreement conceals its free choices.
+            avg["fixed_choice_agreement"] = avg["agreement"]
+            avg["fixed_choice_weight"] = avg["agreement_weight"]
+            if not deterministic_source:
+                avg["agreement"] = None
+                avg["agreement_weight"] = 0
             if index==0:
                 baselines[group] = avg
             for stat in ("tv","agreement"):

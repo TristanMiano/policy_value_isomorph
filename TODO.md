@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Checkpoint D**, the review of the recovery framework against the frozen pilot. Tasks 49–59 are complete. [Phase III findings and reproduction](PHASE_III.md)
+**Next is Task 62**, which will fix the design for independent confirmation runs. Tasks 49–59 and Checkpoint D are complete. [Checkpoint D findings and reproduction](CHECKPOINT_D.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -479,7 +479,8 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
 
 ## Checkpoint D — Infrastructure and experiment freeze
 
-- [ ] Validate Tasks 49–59 against the Task 61 fixtures. Verify that the source, direct decoder, and expected-utility variants can be evaluated in the same tables. Task 62 freezes the confirmation protocol before final runs.
+- [x] Validate Tasks 49–59 against the saved Task 61 study. Report copying the original player's moves and winning games in the same tables for the original player, the highest immediate score, and the move with the highest average whole-game score.
+  - Completed 2026-11-20. Replayed all 240 original move-comparison rows, 900 game rows and 90 payoff comparisons. For networks trained to predict observed move frequencies, replayed another 172 move and 1,290 game rows. Corrected the denominator for reporting a randomized player's forced moves and preserved raw fitted count estimates for diagnosing disagreements. [Review, results and reproduction](CHECKPOINT_D.md)
 
 ---
 

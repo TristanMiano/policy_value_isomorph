@@ -49,9 +49,12 @@ class ValueAtlas:
             raw.append(row)
             laws.append(law)
             if fit.visit_probabilities is not None:
-                fitted_law = fit.visit_probabilities(history)
-                choice_metrics(original,fitted_law,menu,oriented)
-                predictions.append(fitted_law)
+                # Independent per-move regressions target fractions of visits. Only
+                # the deployed law must sum to one. Preserve raw estimates for diagnosis.
+                estimates = fit.visit_probabilities(history)
+                if set(estimates).difference(menu) or any(not 0 <= p <= 1 for p in estimates.values()):
+                    raise ValueError("visit-frequency predictions must lie in [0, 1] on legal moves")
+                predictions.append(estimates)
         if predictions and len(predictions) != len(laws):
             raise ValueError("all repeats must expose the same visit prediction")
         def spread(values):

@@ -1,6 +1,6 @@
 # Phase III · What can be recovered from a player's choices?
 
-A **policy** is the original player's rule for choosing a move or giving each legal move a probability. A **recovery** uses specified observations of that player to produce scores. A **decoder** turns those scores into moves. Tasks 49–59 implemented a common way to query players, fit and compare recoveries, repeat an experiment, and inspect individual decisions. Checkpoint D is the next, separate review against the frozen pilot.
+A **policy** is the original player's rule for choosing a move or giving each legal move a probability. A **recovery** uses specified observations of that player to produce scores. A **decoder** turns those scores into moves. Tasks 49–59 implemented a common way to query players, fit and compare recoveries, repeat an experiment, and inspect individual decisions. Checkpoint D then compared those tools with the original pilot and the visit-count study. [Review and corrections](CHECKPOINT_D.md)
 
 ## A result ordinary move agreement concealed
 
@@ -48,9 +48,9 @@ The fitted utility can use terminal results and duration with win and loss ancho
 
 ## Reproduction and scope
 
-The new querying interface was exercised with both tic-tac-toe and Connect Four. The exhaustive game-outcome and training results above concern tic-tac-toe. Larger-game performance and comparisons against the full frozen pilot belong to later roadmap items.
+The new querying interface was exercised with both tic-tac-toe and Connect Four. The exhaustive game-outcome and training results above concern tic-tac-toe. Checkpoint D replayed the full frozen pilot. Larger-game performance remains open. [Pilot replay](CHECKPOINT_D.md)
 
-The final suite passed all 124 tests on Ubuntu. Windows passed 123 and skipped the graphics-processor test on its processor-only installation. Both platforms reproduced the four changed-menu predictions in the table. The three-board demo also printed the sample states, payoffs and moves.
+At the end of Task 59, the suite passed all 124 tests on Ubuntu. Windows passed 123 and skipped the graphics-processor test on its processor-only installation. Both platforms reproduced the four changed-menu predictions in the table. The three-board demo also printed the sample states, payoffs and moves.
 
 Run `python scripts/demo_value_atlas.py` for the worked comparison or add `--json` for the per-fit move probabilities, sample standard deviations, originally observed counts, predicted counts, rollout definitions and neighborhood records. Run `python -m pytest -q` for the repository suite. The original three-board demo remains available as `python scripts/demo_tictactoe.py`.
 

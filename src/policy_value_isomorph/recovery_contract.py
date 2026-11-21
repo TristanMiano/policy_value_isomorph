@@ -61,7 +61,7 @@ class RecoveryContract:
                       units=self.units, split=self.split, scope=self.scope)
         if self.semantics not in {"behavior", "preference", "return", "internal"}:
             raise ValueError("unknown score meaning")
-        if self.decoder not in {"direct maximum", "minimum energy", "temperature sampling",
+        if self.decoder not in {"source policy", "direct maximum", "minimum energy", "temperature sampling",
                                 "VNM maximum", "VNM temperature sampling"}:
             raise ValueError("unknown decoder")
         if type(self.game) is not bool:

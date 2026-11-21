@@ -23,6 +23,15 @@ def test_atlas_keeps_source_mass_gaps_neighborhoods_and_between_fit_spread():
     assert len(report["neighboring_states"])==3
     assert report["actions"][0]["expected_deployed_count_at_same_visits"]==4
     assert report["actions"][0]["predicted_visit_count"] is None
+    # Independent frequency fits may assign more than one visit in total per trial.
+    estimates = replace(first,visit_probabilities=lambda s:{2:0.75,5:0.5,8:0.25})
+    raw = ValueAtlas(p,atlas.source_law,[estimates]).inspect(s,visits={2:8,5:0,8:0})
+    assert [a["predicted_visit_count"] for a in raw["actions"]] == [6,4,2]
+    assert [a["expected_deployed_count_at_same_visits"] for a in raw["actions"]] == [8,0,0]
+    for invalid in (-0.01,1.01,float("nan")):
+        bad = replace(first,visit_probabilities=lambda s:{2:invalid})
+        with pytest.raises(ValueError):
+            ValueAtlas(p,atlas.source_law,[bad]).inspect(s)
     assert report["actions"][0]["probability_sd"]==pytest.approx(2**-0.5)
     assert [d["agreement"] for d in report["per_fit_decisions"]]==[1,0]
     altered=replace(second,artifact=replace(second.artifact,contract=replace(c,units="ranks")))
