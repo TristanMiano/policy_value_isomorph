@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 47**, observable limits and repairs.
+**Next is Task 48**, executable verification and conclusions.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -399,10 +399,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - Bound or exhibit the sensitivity of soft-choice probabilities to score error at fixed temperature and base measure. State which bounds concern agreement with the exact decoder and when that decoder also matches the source. Test the finite examples against the diagnostics planned in Task 67.
   - Completed 2026-11-20. Proved deterministic margin and probability-shift bounds, including exact ties. Compared equal squared errors with different move effects. [Statement and checks](formalism/46_stability.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **47. Build the constructive non-identifiability suite.**
+- [x] **47. Build the constructive non-identifiability suite.**
   - Include equivalent argmax scores, unknown softmax temperature, unqueried alternatives, reward shaping/return ambiguity, insufficient state, and off-support behavior.
   - For each case, record the stronger interpretation that fails and the value-form result that survives.
   - **Done when:** future work cannot mistake one counterexample for a refutation of PV-H1.
+  - Completed 2026-11-20. Constructed six pairs of indistinguishable explanations and recorded what each preserves, what is hidden and which extra observations can help. [Statement and checks](formalism/47_ambiguities.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **48. Implement executable formal fixtures.**
   - Add a small exact module and tests for Tasks 37–47, independent of neural training.
