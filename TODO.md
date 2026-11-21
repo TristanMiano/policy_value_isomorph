@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 41**, equivalence under queries.
+**Next is Task 42**, score units and temperature.
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -365,10 +365,11 @@ On 2026-11-19 we compared starting-board rules. The frozen neural player takes t
   - **Done when:** the theorem covers the current deterministic game convention and a general history-based form.
   - Completed 2026-11-20. Separated exact score lifting from recovering the same choice. Characterized finite successor feasibility with strict and weak comparisons and bounded a conflicting example exactly. [Statement and checks](formalism/40_successor_scores.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
-- [ ] **41. Define decoder-relative value equivalence and prove the quotient result.**
+- [x] **41. Define decoder-relative value equivalence and prove the quotient result.**
   - Two values are equivalent when every declared decoder/query consumer sees the same result.
   - Prove that exact representations factor through the response quotient and identify common invariant transformations.
   - **Done when:** deterministic argmax, softmax with known temperature, and threshold consumers have separate examples.
+  - Completed 2026-11-20. Identified the response quotient and the inverse on its attainable responses. Different consumers preserve different information. [Statement and checks](formalism/41_response_equivalence.md). Verified with the executable examples, the three-board demo and the full Windows suite (97 passed, 1 skipped).
 
 - [ ] **42. Prove normalization and scale/temperature lemmas.**
   - Analyze additive anchors, positive affine transforms, rank/quantile normalization, and the equivalence between value scale and softmax temperature.
