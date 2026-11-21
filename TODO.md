@@ -4,7 +4,7 @@ Last updated 2026-11-20
 
 ## Resume here
 
-**Next is Task 68**. [Phase IV design](PHASE_IV_PROTOCOL.md)
+**Next is Task 69**. [Phase IV design](PHASE_IV_PROTOCOL.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -529,10 +529,12 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
   - Completed 2026-11-20. Measured 1, 16 and 256 full-batch weight updates and the limiting solution at two widths, plus paired reductions in training coverage, across-fit rankings and neighboring-board score changes. [Training and held-out curves](experiments/phase_iv/training_curves.png)
 
-- [ ] **68. Establish attainable fidelity and explain the gaps for each formulation.**
+- [x] **68. Establish attainable fidelity and explain the gaps for each formulation.**
   - For every score family and decoder in the game comparison, separate best validation-selected performance on held-out data, fidelity with its exact scores, and any certified optimum within that family. Compute a finite optimum or give justified bounds where possible. Label unresolved gaps and record when independent recoveries converge to different aligned solutions.
   - Include exact encoding controls and constructive limits. For a stochastic source `P`, the best deterministic action has total variation error `1 - max_a P(a|s)` on that board. A mixture restricted to expected-utility maximizers must miss at least the source mass outside that set. A fixed tie or temperature rule can impose further error.
   - Measure the reduction and remaining gap as training data, simulated games, network size, or training time increases. Derive bounds from indistinguishable inputs, shared resulting boards, restricted utility features, unobserved moves, conflicting rankings, or restrictions on move probabilities. Quantify the change in fit when each assumption changes and record what extra information the method uses.
+
+  - Completed 2026-11-20. Constructed board scores copying every one of the 4,520 decisions for each of 32 sources. Measured incompatible frequency targets, their irreducible squared error, full-information VNM comparisons and distributional bounds. [Finite counts per player](experiments/phase_iv/finite_bounds.jsonl.gz)
 
 - [ ] **69. Produce exhaustive value-atlas visualizations.**
   - Show action values, runner-up gaps, nearby reachable-state values, uncertainty, and disagreement clusters on the exact state graph.
