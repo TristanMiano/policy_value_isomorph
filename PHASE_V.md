@@ -8,7 +8,7 @@ How closely can scores learned from watching a player reproduce its choices? And
 
 The follow-up traced the two drops in agreement on the original boards. Fitting every opening and continuation score exactly isolated a change due to the final-move utility. Scoring every turn with a discount of 0.9 preserved every choice in the fully covered fixed-player control. Additional training coverage and fitting move probabilities jointly improved agreement on withheld boards in the larger games. [Diagnosis, corrections and controls](AGREEMENT_DIAGNOSIS.md)
 
-The later win-rate study compared 56 expected-utility formulations and froze a new standard on a separate set of originals. The Phase V tables below document the earlier final-move comparison. [Prospective VNM standard and self-play results](experiments/win_selection/README.md)
+The later win-rate study compared 56 expected-utility formulations and froze a new standard before evaluating it on separate originals. Checkpoint F replayed the original and both reconstructed players against matched opponents and tested what each reconstruction chooses when the original's favorite disappears. The Phase V tables below document the earlier final-move comparison. [Checkpoint F review and release decision](CHECKPOINT_F.md) · [Prospective VNM standard and self-play results](experiments/win_selection/README.md)
 
 ## What the players learned
 

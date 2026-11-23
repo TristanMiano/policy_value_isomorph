@@ -546,6 +546,7 @@ PYBIND11_MODULE(_phase_v_native, m) {
         .def_readwrite("draw_value", &Engine::draw_value);
     py::class_<WinPlanner>(m, "WinPlanner")
         .def(py::init<Engine &, int, U, int>(), py::keep_alive<1, 2>())
-        .def("choose", &WinPlanner::choose)
+        .def("choose", &WinPlanner::choose, py::arg("state"), py::arg("mode"), py::arg("utility"),
+             py::arg("fit_ties"), py::arg("offered") = ~0u)
         .def("result", &WinPlanner::result);
 }

@@ -132,11 +132,20 @@ class FinitePlanner:
             endpoints[:] = np.rint(endpoints * 1451520) / 1451520
         return self.menus[finish]
 
-    def law(self, rule: Selection | None = None) -> np.ndarray:
-        """Return a policy on the finite game. Omitting the rule deploys standard VNM."""
+    def law(self, rule: Selection | None = None, *, offered: np.ndarray | None = None) -> np.ndarray:
+        """Choose from the offered root moves. Continuation players keep their original legal menus."""
         rule = standard_vnm() if rule is None else rule
+        legal = self.board.legal
+        if offered is not None:
+            if offered.shape != legal.shape:
+                raise ValueError("supply a move mask for each board")
+            legal = legal & offered
+            if not legal[self.board.dec].any(1).all():
+                raise ValueError("every decision board needs at least one offered legal move")
         if rule.prize == "direct":
-            return self.direct
+            return (
+                self.direct if offered is None else self.board.greedy(np.where(legal, self.scores, -np.inf))
+            )
         last, total, decay, win, draw = np.moveaxis(self.menu(rule.finish), 2, 0)
         scores = {
             "last": last,
@@ -147,7 +156,7 @@ class FinitePlanner:
             "quarter_draw": win + 0.25 * draw,
             "hybrid": win + 0.25 * draw + 0.02 * decay,
         }[rule.prize]
-        scores = np.where(self.board.legal, scores, -np.inf)
+        scores = np.where(legal, scores, -np.inf)
         if rule.prize in ("win", "points", "quarter_draw"):
             scores = np.rint(scores * 5806080)
         if rule.fitted_ties:

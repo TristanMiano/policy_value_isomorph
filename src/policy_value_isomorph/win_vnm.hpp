@@ -143,11 +143,27 @@ class WinPlanner {
         if (game.models[model].table.empty())
             throw std::invalid_argument("install the frozen visit-frequency weights before creating a planner");
     }
-    int choose(State s, int mode, int utility, bool fit_ties) {
+    int choose(State s, int mode, int utility, bool fit_ties, unsigned offered = ~0u) {
         if (mode == int(Finish::Original) && game.models[0].table.empty())
             throw std::invalid_argument("the original-continuation diagnostic needs the original weights");
-        if (utility == int(Prize::Direct))
-            return game.best(s, model).move;
+        unsigned eligible = game.legal(s) & offered;
+        if (!eligible)
+            return -1;
+        if (utility == int(Prize::Direct)) {
+            if (eligible == game.legal(s))
+                return game.best(s, model).move;
+            int best = first(eligible);
+            double value = game.score(s, game.next(s, best), best, model);
+            for (unsigned m = eligible & (eligible - 1); m; m &= m - 1) {
+                int a = first(m);
+                double v = game.score(s, game.next(s, a), a, model);
+                if (v > value) {
+                    best = a;
+                    value = v;
+                }
+            }
+            return best;
+        }
         auto &cache = menus.at(mode);
         auto it = cache.find(s);
         if (it == cache.end()) {
@@ -157,7 +173,7 @@ class WinPlanner {
         }
         double best = -1e100, secondary = -1e100;
         int chosen = -1;
-        for (unsigned moves = game.legal(s); moves; moves &= moves - 1) {
+        for (unsigned moves = eligible; moves; moves &= moves - 1) {
             int a = first(moves);
             double v = prize(it->second[a], Prize(utility));
             double tie = fit_ties ? game.score(s, game.next(s, a), a, model) : 0.;

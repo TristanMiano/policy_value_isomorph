@@ -80,6 +80,12 @@ policy-value-cli eval --optimizer adamw --learning-rate 0.001 --seed 13 --device
 
 The independent frozen-weight replay uses `python scripts/replay_torch_pilot.py`. The primary visit-count experiment has separate commands, archived settings and reports. [Visit-count training](NEURAL_TICTACTOE_CONTROL.md) · [Rare-board sampling](TICTACTOE_SAMPLING.md) · [Withheld-board experiments](TICTACTOE_CHOICE_TRAINING.md)
 
+## Replaying Checkpoint F
+
+Use the Linux or Windows Subsystem for Linux environment and C++17 compiler described in the Phase V instructions. Install the numerical study dependencies with `python -m pip install -e ".[dev,phase-v]"`. From the repository root run `python scripts/review_checkpoint_f.py --workers 4 --output /tmp/pvi-checkpoint-f`. This replays the frozen original and both types of visit-trained network. It checks the four reconstructed players' individual external games (exact probabilities in tic-tac-toe), win/draw/loss rates and unrestricted agreement against the existing confirmation files, then computes predictions after removing the original's favorite move. [Phase V environment and data](experiments/phase_v/README.md) · [Checkpoint F review](CHECKPOINT_F.md)
+
+The compressed observations contain one JSON record per original. Each partition retains the board identifiers, weights, legal move counts, original favorite and next choice. Each fit retains unrestricted and restricted predictions for every method and the original's external outcomes. Look up reconstructed external outcomes in the confirmation files by game, original, partition, fit and method. The summary gives original-level spread, paired differences, individual 95% intervals, and raw and multiplicity-adjusted p-values. [Observations](experiments/checkpoint_f/observations.jsonl.gz) · [Checkpoint summary](experiments/checkpoint_f/summary.json) · [Original confirmation files](experiments/win_selection/confirmation)
+
 ## Reporting template
 
 Use the two mandatory project protocols in experiments, reports, progress updates, and chat summaries. Define a new term before using it. Express each measurable question and answer numerically. [Project instructions](AGENTS.md#mandatory-research-protocols)

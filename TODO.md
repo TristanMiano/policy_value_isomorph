@@ -4,9 +4,9 @@ Last updated 2026-11-23
 
 ## Resume here
 
-**Checkpoint F is on hold.** The requested Phase V diagnosis now includes selection on a perfect training fit, coverage of all alternative continuations, and repairs tested on withheld boards. [Causal diagnosis](AGREEMENT_DIAGNOSIS.md) · [Perfect-fit control](experiments/agreement_diagnosis/training_tables.md) Phase V is complete through Task 82. [Three-game research report](PHASE_V.md) · [Paired measurements and uncertainty](experiments/phase_v/tables.md) · [Results and reproduction](experiments/phase_v/README.md)
+**Checkpoint F is complete. Task 83, the first task of Phase VI, is next and has not started.** Release the first empirical report and reproducible benchmark for tic-tac-toe, Connect Four and 4×4 Reversi before extending the study to other domains. The review measures games won, moves copied and choices predicted when the favorite is removed. [Checkpoint F review](CHECKPOINT_F.md) · [Three-game research report](PHASE_V.md) · [Diagnosis and perfect-fit controls](AGREEMENT_DIAGNOSIS.md)
 
-Future unqualified VNM selection uses the complete-game rule selected for external wins across the three games. Keep direct selection, the purely visit-derived VNM comparison and explicitly labeled exact-copy self-play in reports. [Win-rate standard, matched comparisons and reproduction](experiments/win_selection/README.md)
+Von Neumann–Morgenstern (VNM) selection compares moves by the expected score of complete games. Its project standard combines game outcomes with learned move frequencies and considers four possible opponents. Keep direct selection (the highest immediate fitted frequency), the VNM comparison scoring games entirely from visits, and games against an exact copy of the tested player in reports. [Win-rate standard, matched comparisons and reproduction](experiments/win_selection/README.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -642,7 +642,8 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 ## Checkpoint F — Minimum publishable program
 
-- [ ] Audit the three-game comparison in Task 82, including the Reversi measurements from Task 81a. Review Tasks 73–82 and decide whether to release a first paper/software benchmark before broader adapters. Record the scope and uncertainty of each empirical claim.
+- [x] Audit the three-game comparison in Task 82, including the Reversi measurements from Task 81a. Review Tasks 73–82 and decide whether to release a first paper/software benchmark before broader adapters. Record the scope and uncertainty of each empirical claim.
+  - Completed 2026-11-23. Release the board-game report, software, and measurements together. Replayed the win-selected rule and direct selection on the same fitted networks, positions and opponents, measured the original's wins on that panel, and checked the original's next choice after removing its favorite. [Decision and scope of each result](CHECKPOINT_F.md) · [Paired uncertainty and individual changes](experiments/checkpoint_f/summary.json) · [Archived observations](experiments/checkpoint_f/observations.jsonl.gz)
 
 ---
 

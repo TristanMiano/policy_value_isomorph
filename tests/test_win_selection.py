@@ -71,6 +71,11 @@ def test_finite_vnm_agrees_with_explicit_complete_paths_in_both_seats():
                 axis=0,
             )
             np.testing.assert_allclose(menu[root, a], expected, atol=1e-13)
+        offered = b.legal.copy()
+        offered[root, planner.law()[root].argmax()] = False
+        win, draw, decay = menu[root, :, 3], menu[root, :, 4], menu[root, :, 2]
+        best_remaining = np.where(offered[root], win + 0.25 * draw + 0.02 * decay, -np.inf).argmax()
+        assert planner.law(offered=offered)[root].argmax() == best_remaining
     np.testing.assert_array_equal(planner.law(), planner.law(standard_vnm()))
     with pytest.raises(ValueError, match="original"):
         planner.law(Selection("V", "original", "hybrid"))
@@ -94,6 +99,15 @@ def test_native_expected_selection_reproduces_previous_payoff_and_frequency_conv
             choose = board_game_player(engine, 43, Selection("V", "copies", rule))
             expected = engine.profiles(states, spec(1, code), False)[:, :-2].argmax(1)
             np.testing.assert_array_equal([choose(s) for s in states], expected)
+        direct = native().WinPlanner(engine, 1, 43, 16)
+        args = Selection("V", "copies", "direct").native_args()
+        scores = engine.profiles(states, spec(1), False)[:, :-2]
+        for state, row in zip(states, scores):
+            legal = engine.legal(state)
+            if legal.bit_count() > 1:
+                remaining = legal ^ (1 << int(row.argmax()))
+                options = [a for a in range(len(row)) if remaining & (1 << a)]
+                assert direct.choose(state, *args, remaining) == max(options, key=row.__getitem__)
         choose = board_game_player(engine, 43)
         assert engine.legal(engine.start()) & (1 << choose(engine.start()))
         if rev:
@@ -126,6 +140,11 @@ def test_native_expected_selection_reproduces_previous_payoff_and_frequency_conv
                         a, signed_weight = legal.bit_length() - 1, -0.9 * signed_weight
                 if len(utilities) == moves.bit_count():
                     assert choose(root) == max(utilities, key=utilities.get)
+                    remaining = moves ^ (1 << choose(root))
+                    other = [a for a in utilities if remaining & (1 << a)]
+                    assert direct.choose(root, *standard_vnm().native_args(), remaining) == max(
+                        other, key=utilities.get
+                    )
                     checked[seat] += 1
                     if checked == [10, 10]:
                         break
