@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/policy_value_isomorph/__init__.py
+src/policy_value_isomorph/agreement_diagnosis.py
 src/policy_value_isomorph/candidate_sets.py
 src/policy_value_isomorph/checkpointing.py
 src/policy_value_isomorph/choice_training.py
@@ -29,6 +30,12 @@ src/policy_value_isomorph/phase_iv_source.py
 src/policy_value_isomorph/phase_iv_statistics.py
 src/policy_value_isomorph/phase_iv_utility.py
 src/policy_value_isomorph/phase_iv_visits.py
+src/policy_value_isomorph/phase_v.py
+src/policy_value_isomorph/phase_v_diagnostics.py
+src/policy_value_isomorph/phase_v_evaluate.py
+src/policy_value_isomorph/phase_v_native.cpp
+src/policy_value_isomorph/phase_v_rules.hpp
+src/policy_value_isomorph/phase_v_study.py
 src/policy_value_isomorph/pilot_exact.py
 src/policy_value_isomorph/pilot_metrics.py
 src/policy_value_isomorph/pilot_protocol.py
@@ -54,6 +61,8 @@ src/policy_value_isomorph/training_plots.py
 src/policy_value_isomorph/trajectory_utility.py
 src/policy_value_isomorph/value_atlas.py
 src/policy_value_isomorph/value_mlp.py
+src/policy_value_isomorph/win_selection.py
+src/policy_value_isomorph/win_vnm.hpp
 src/policy_value_isomorph.egg-info/PKG-INFO
 src/policy_value_isomorph.egg-info/SOURCES.txt
 src/policy_value_isomorph.egg-info/dependency_links.txt
@@ -61,6 +70,7 @@ src/policy_value_isomorph.egg-info/entry_points.txt
 src/policy_value_isomorph.egg-info/requires.txt
 src/policy_value_isomorph.egg-info/top_level.txt
 tests/test_adamw.py
+tests/test_agreement_diagnosis.py
 tests/test_candidate_sets.py
 tests/test_checkpoint_c.py
 tests/test_checkpoint_d_statistics.py
@@ -82,6 +92,7 @@ tests/test_monitoring_smoke_demo.py
 tests/test_neural_game_control.py
 tests/test_periodic_gameplay_eval.py
 tests/test_phase_iv.py
+tests/test_phase_v.py
 tests/test_pilot_exact.py
 tests/test_pilot_protocol.py
 tests/test_pilot_results.py
@@ -106,3 +117,4 @@ tests/test_training_plots.py
 tests/test_training_resume.py
 tests/test_value_atlas.py
 tests/test_value_mlp.py
+tests/test_win_selection.py

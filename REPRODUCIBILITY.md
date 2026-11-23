@@ -14,12 +14,13 @@ An **extra** installs dependencies for an additional feature with `python -m pip
 | `neural-control` | Installs NumPy for the existing tic-tac-toe neural training and visit-count experiments. |
 | `muon` | Requests PyTorch 2.9 or later for the optional matrix-update benchmark. |
 | `phase-iv` | Installs NumPy for numerical arrays, SciPy for game enumeration and statistical inference, and Matplotlib for figures. [Independent tic-tac-toe runs and result files](experiments/phase_iv/README.md) |
+| `phase-v` | Installs NumPy, SciPy and Matplotlib for the repeated three-game study. Rerunning the new-game simulator also uses a C++17 compiler and Python development headers on Linux or Windows Subsystem for Linux. [Commands, operating conditions and files](experiments/phase_v/README.md) |
 | Control | Planned for continuous-state environments and numerical integration once an experiment specifies them. |
 | Sequence | Planned for datasets and tools for time-series or token-sequence models. |
 | Large language models | Planned for tokenizers and pretrained text-model loading. |
 | Visualization | Planned for optional interactive displays. Current training and gameplay plots write scalable vector graphics using the standard library. |
 
-The first four rows are installable extras. Record the code revision, Python and PyTorch versions, device, numerical precision and seed alongside an experiment. The cross-platform workflow was exercised on Windows with Python 3.13 and PyTorch 2.8.0 (CPU), and on Ubuntu with Python 3.12 and PyTorch 2.11.0 (CPU and NVIDIA GPU). For deterministic NVIDIA training set the CUDA matrix-library workspace before starting Python, e.g. `$env:CUBLAS_WORKSPACE_CONFIG = ":4096:8"` in PowerShell or `export CUBLAS_WORKSPACE_CONFIG=:4096:8` in a POSIX shell.
+The first five rows are installable extras. Record the code revision, Python and PyTorch versions, device, numerical precision and seed alongside an experiment. The cross-platform workflow was exercised on Windows with Python 3.13 and PyTorch 2.8.0 (CPU), and on Ubuntu with Python 3.12 and PyTorch 2.11.0 (CPU and NVIDIA GPU). For deterministic NVIDIA training set the CUDA matrix-library workspace before starting Python, e.g. `$env:CUBLAS_WORKSPACE_CONFIG = ":4096:8"` in PowerShell or `export CUBLAS_WORKSPACE_CONFIG=:4096:8` in a POSIX shell.
 
 ## Determinism and seeds
 
@@ -78,6 +79,12 @@ policy-value-cli eval --optimizer adamw --learning-rate 0.001 --seed 13 --device
 ```
 
 The independent frozen-weight replay uses `python scripts/replay_torch_pilot.py`. The primary visit-count experiment has separate commands, archived settings and reports. [Visit-count training](NEURAL_TICTACTOE_CONTROL.md) · [Rare-board sampling](TICTACTOE_SAMPLING.md) · [Withheld-board experiments](TICTACTOE_CHOICE_TRAINING.md)
+
+## Replaying Checkpoint F
+
+Use the Linux or Windows Subsystem for Linux environment and C++17 compiler described in the Phase V instructions. Install the numerical study dependencies with `python -m pip install -e ".[dev,phase-v]"`. From the repository root run `python scripts/review_checkpoint_f.py --workers 4 --output /tmp/pvi-checkpoint-f`. This replays the frozen original and both types of visit-trained network. It checks the four reconstructed players' individual external games (exact probabilities in tic-tac-toe), win/draw/loss rates and unrestricted agreement against the existing confirmation files, then computes predictions after removing the original's favorite move. [Phase V environment and data](experiments/phase_v/README.md) · [Checkpoint F review](CHECKPOINT_F.md)
+
+The compressed observations contain one JSON record per original. Each partition retains the board identifiers, weights, legal move counts, original favorite and next choice. Each fit retains unrestricted and restricted predictions for every method and the original's external outcomes. Look up reconstructed external outcomes in the confirmation files by game, original, partition, fit and method. The summary gives original-level spread, paired differences, individual 95% intervals, and raw and multiplicity-adjusted p-values. [Observations](experiments/checkpoint_f/observations.jsonl.gz) · [Checkpoint summary](experiments/checkpoint_f/summary.json) · [Original confirmation files](experiments/win_selection/confirmation)
 
 ## Reporting template
 

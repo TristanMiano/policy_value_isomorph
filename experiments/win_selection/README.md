@@ -1,0 +1,64 @@
+# The project standard for VNM selection
+
+**Von Neumann–Morgenstern (VNM) selection** compares legal first moves by the expected numerical score, or *utility*, of the complete games they lead to. **Direct selection** takes the largest immediate fitted move frequency. In future project reports, an unqualified **VNM selection** uses the rule below. We chose it for external wins across three games. Comparisons of copying behavior also retain an explicitly labeled utility learned entirely from visits. Historical tables keep the utility and continuation they actually measured.
+
+## How the standard chooses a move
+
+A frozen **original** is the trained player we observed before fitting a reconstruction. The **board-scoring network (V)** estimates the frequency of a candidate move from the resulting board. V is the default. The **board-and-move network (Q)** also receives the parent board and the move. Run the same selection rule on Q when comparing representations. The normalized label is the count of the move divided by all original visits to the parent. Clip each fitted score to [0,1].
+
+1. Try each legal move. Continue to the game's actual end, including mandatory passes. On the choosing player's later turns, take an immediate win if available, avoid a move that finishes in an immediate loss when possible, and minimize the number of immediate winning replies open to the opponent. In Reversi next prefer taking a corner, leaving fewer opponent corners, then leaving fewer opponent placements. Resolve the remaining choices by highest fitted score and then lowest move number. We call this the **guarded** player. The first move itself is free to be any legal candidate.
+2. Draw the simulated opponent once per path from four equally weighted rules. It may take the largest fitted frequency (**direct**), use the **guarded** rule, follow a **positional** preference, or choose uniformly among legal moves. Positional preference is center then corners in tic-tac-toe, central columns in Connect Four, and corners then edges in Reversi. Lowest index resolves positional ties. The three deterministic rules contribute one full path each. Tic-tac-toe sums the exact probabilities of the uniform replies. The larger games use 16 sampled full paths for that component, giving each path weight 1/64 and each deterministic path weight 1/4. Board and replicate determine a reproducible random move independently of the external opponent.
+3. Score a win as 1, a draw as 0.25 and a loss as 0 for the player currently choosing. Add 0.02 times the discounted sum of learned frequencies. A move by the choosing player adds its fitted score, an opponent move subtracts its score, and successive weights are 1, 0.9, 0.81 and so on. For example, the opening contributes +0.02 times its frequency and the reply contributes −0.018 times its frequency. The learned contribution has absolute value at most 0.20.
+4. Choose the candidate with the highest average utility, using the lowest legal move index for an exact tie. Plan again from the actual reply. Selection uses the fitted network, the game rules and the stated opponent mixture. The actual opponent's weights, its identity and queries to the original are unavailable. This is a **hybrid utility** because game results are supplied and move scores are learned. It makes no claim that the original internally seeks this utility.
+
+## Games won
+
+A **confirmation original** is an independently trained original held back from this selection exercise. Each provided two randomized board partitions and collections, with two independently initialized reconstructions of each type per partition. The external opponents receive equal weight in four groups and both seats have equal weight. The groups choose uniform legal moves, use independently initialized untrained neural players, use a fixed board preference, or use the game's tactical or optimal rule. In tic-tac-toe the third player takes a win, blocks one, then prefers the center and corners. The fourth preserves the best outcome against perfect replies. In Connect Four the third prefers central columns and the fourth scores immediate wins and blocks, followed by centrality. In Reversi the third prefers corners then edges and the fourth preserves the best guaranteed outcome. Ties for the fixed external players go to the lowest index. External networks are fresh, as are the larger-game openings and random game draws. The projected and external opponent groups have overlapping behaviors.
+
+**Exact-copy self-play** pairs a method with an identical copy running full VNM selection at every turn. The two seats share the fitted network, planning seed, utility, decision rule and opening. For each decisive mirror game, one seat wins and one loses. With equal seat weights, both win and loss rates equal half of one minus the draw rate. The mirror first-seat win rate in the detailed table also measures the effect of seat assignment. Win rate against the four external groups determined the standard.
+
+| Game | Confirmation originals | External wins | External draws | External losses | Withheld move agreement | Exact-copy wins | Exact-copy draws |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Tic-tac-toe | 24 | 51.69 ± 4.64 | 32.75 ± 6.72 | 15.56 ± 6.61 | 73.44 ± 2.13 | 19.79 ± 13.75 | 60.42 ± 27.50 |
+| Connect Four | 16 | 92.29 ± 3.22 | 0.49 ± 0.60 | 7.23 ± 2.86 | 31.13 ± 7.11 | 48.83 ± 2.23 | 2.34 ± 4.46 |
+| 4×4 Reversi | 16 | 75.83 ± 3.04 | 1.76 ± 1.10 | 22.41 ± 3.06 | 86.15 ± 1.10 | 49.78 ± 0.28 | 0.44 ± 0.57 |
+| Three games, equal weight | 24 / 16 / 16 | 73.27 ± 2.14 | 11.67 ± 2.28 | 15.07 ± 2.61 | 63.57 ± 2.50 | 39.47 ± 4.64 | 21.07 ± 9.29 |
+
+Values are percentages, mean ± sample standard deviation across original-player averages. The combined spread describes the average of one independently drawn original per game. **Agreement** counts choosing the original's move on the Phase V withheld population with its original weights. Tic-tac-toe enumerates the actual game probabilities from the empty opening. Each larger game contributes 4,096 external confirmation games per method, across 16 originals, four fits and 64 games per fit. Each also supplies 2,048 mirror opening instances per method, each counted from both seats. Half of the sampled openings are the ordinary start and half are varied legal prefixes of at most six turns. In Reversi the originals share the same optimal favorite at every position. Source initialization, board collections, partitions, fitting starts and external opponents vary within the stated design. The three named games are fixed.
+
+## Which choices mattered
+
+Discovery ranked 56 VNM formulations using eight separate originals per game. The selected family averaged **72.61 ± 2.17%** wins there with four random paths. The runner-up used conventional game points under the same continuation. Discovery-only tuning selected 16 paths, reaching **74.12 ± 1.96%**. The final rule tied its alternate tie convention in measured wins and was highest among the confirmation configurations. The confirmation equal-game mean was **73.27% [72.29, 74.24]**. [Discovery rankings](discovery.md) · [Budget and tie comparison](tuning.md) · [Frozen selection](standard.json)
+
+The following differences subtract the named alternative from the selected VNM rule on the identical confirmation fits, seats, opponents and starting positions. Intervals give individual paired 95% confidence intervals in percentage points. A two-sided p-value measures how extreme a difference would be under a zero-average-difference reference. Holm adjustment accounts for examining all confirmation win contrasts, across individual games and their equal-game mean.
+
+| Alternative | Equal-game wins (%) | Selected VNM gain ± spread in points [95% interval] | Adjusted p |
+|---|---:|---:|---:|
+| Q VNM counting the last frequency with direct copies, earlier primary reference | 43.12 ± 6.13 | +30.15 ± 6.04 [27.04, 33.26] | 7.37 × 10⁻¹³ |
+| Strongest visit-only utility from discovery, VNM scoring the final move with direct own moves against the mixture | 57.91 ± 5.15 | +15.36 ± 4.74 [12.94, 17.79] | 3.37 × 10⁻¹⁰ |
+| Same VNM continuation and budget, scoring only the final move | 57.80 ± 3.54 | +15.47 ± 3.30 [13.85, 17.08] | 5.76 × 10⁻¹⁹ |
+| Same hybrid utility, assuming a guarded copy as opponent | 64.58 ± 3.51 | +8.68 ± 3.21 [7.08, 10.29] | 7.12 × 10⁻¹¹ |
+| Same hybrid utility and opponent mixture, projecting direct own moves | 70.00 ± 2.70 | +3.27 ± 2.09 [2.19, 4.34] | 9.49 × 10⁻⁵ |
+| Same hybrid utility and continuing players, four uniform paths | 71.88 ± 2.53 | +1.38 ± 1.46 [0.63, 2.13] | 0.0247 |
+| Same VNM continuation and budget, supplied win/draw/loss scores only, draw worth 0.25 | 72.69 ± 2.13 | +0.58 ± 1.30 [−0.05, 1.21] | 1.00 |
+| Same VNM continuation and budget, supplied win/draw/loss scores only, draw worth 0.5 | 72.74 ± 2.09 | +0.53 ± 1.29 [−0.10, 1.15] | 1.00 |
+
+Changing the projected opponent and including actual game consequences account for sizable measured gains at fixed settings. The additional gain attributable to the explicit learned utility term, with fitted scores still used for continuations in both methods, is much smaller. Reversi had slightly higher observed wins with conventional game points, **76.37 ± 3.34%**, than with the common standard. That cross-game default retains the learned term. Evidence for playing strength applies to these opponents and the tested budgets and formulations. Connect Four's external tactical opponent looks for immediate wins and blocks. Its measured win rate against the planner cannot establish strength against perfect Connect Four play. Results here concern fixed-choice originals and fixed deployed choices. [Confirmation contrasts and all tested alternatives](confirmation.md) · [Unrounded differences by original](confirmation_contrasts.json.gz)
+
+## Fitting and reproduction
+
+The original networks were frozen before observation. Tic-tac-toe originals learned to play a move preserving the best guaranteed outcome, using personal cell preferences for ties. Connect Four originals learned tactical or personal column priorities, and Reversi originals learned the first row-order move preserving the best guaranteed outcome. Both V and Q were fitted to the observed count of each legal candidate divided by the total visits to its parent. Each eligible legal candidate has equal fitting weight. Tic-tac-toe minimized summed squared error plus a penalty on squared non-intercept readout weights. The two larger games optimized half the sum of squared errors. The measured mean squared fitting errors, in squared-frequency units, were **0.1266 ± 0.0043**, **0.1132 ± 0.0037** and **0.1233 ± 0.0097** for V in table order. For Q they were **0.1038 ± 0.0037**, **0.0540 ± 0.0069** and **0.0772 ± 0.0200**. These are the original ordinary fits on the confirmation subset. The supplied game outcome enters at selection. [Architectures, coverage, original losses and example counts](../../AGREEMENT_DIAGNOSIS.md) · [Original training protocol](../../PHASE_V_PROTOCOL.md)
+
+The planning assumptions, anticipated sampling precision and selection stages are recorded in the [design](DESIGN.md). From the repository root with the Phase V dependencies on Linux or Windows Subsystem for Linux, run the following in order. Set `PVI_WIN_SELECTION_OUTPUT` to an empty directory to regenerate an independent copy. Completed original records are otherwise reused. Each stage retains one compressed JSON file per original with four distinct fit records per method, external outcomes and withheld agreement. Confirmation also retains actual mirror outcomes. Larger-game files include opening states, opponent identifiers and simulation seeds. Tic-tac-toe stores exact seat-by-opponent outcome probabilities. Each stage's compressed estimates file includes external results by opponent and seat. The contrasts file contains paired effects per original and unadjusted and adjusted p-values.
+
+```sh
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+python scripts/compare_vnm_wins.py discovery
+python scripts/report_vnm_wins.py discovery
+python scripts/compare_vnm_wins.py tuning
+python scripts/report_vnm_wins.py tuning
+python scripts/compare_vnm_wins.py confirmation
+python scripts/report_vnm_wins.py confirmation
+```
+
+Use `FinitePlanner(board, fitted_frequencies).law()` for a complete tic-tac-toe policy. Use `board_game_player(engine, seed)` to return a callable move rule for a larger game with frozen V weights installed. For a comparison on Q, pass `standard_vnm("Q")` and its corresponding fit. [Default selector](../../src/policy_value_isomorph/win_selection.py) · [Larger-game implementation](../../src/policy_value_isomorph/win_vnm.hpp) · [Independent checks](../../tests/test_win_selection.py)

@@ -69,23 +69,32 @@ class MoveSampler:
             paths.append(step)
 
 
-def trajectory_scores(paths: list[np.ndarray], x_scores: np.ndarray) -> dict:
+def trajectory_scores(
+    paths: list[np.ndarray], x_scores: np.ndarray, *, x_local_best: np.ndarray | None = None
+) -> dict:
     """Average complete-path utilities. Inputs and returned scores are from X's perspective.
 
     Signed sums use every move. Terminal utility uses only the last transition.
-    Padding contributes zero.
+    Padding contributes zero. With x_local_best, also sum the chosen score minus
+    the mover's best available score, both signed in X's units at each edge.
     """
     total = np.zeros(paths[0].shape)
     discounted = np.zeros_like(total)
     terminal = np.zeros_like(total)
+    centered = np.zeros_like(total) if x_local_best is not None else None
     for t, edges in enumerate(paths):
         mask = edges >= 0
         value = np.where(mask, x_scores[edges], 0)
         total += value
         discounted += 0.9 ** t * value
         terminal = np.where(mask, value, terminal)
+        if centered is not None:
+            centered += np.where(mask, x_scores[edges] - x_local_best[edges], 0)
     result = {}
-    for name, samples in (("vnm_sum", total), ("vnm_decay", discounted), ("vnm_terminal", terminal)):
+    utilities = {"vnm_sum": total, "vnm_decay": discounted, "vnm_terminal": terminal}
+    if centered is not None:
+        utilities["vnm_centered"] = centered
+    for name, samples in utilities.items():
         mean = samples.mean(axis=1)
         # Deterministic sources have exactly one possible continuation per candidate.
         variance = samples.var(axis=1, ddof=1) / samples.shape[1] if samples.shape[1] > 1 else np.zeros(len(mean))

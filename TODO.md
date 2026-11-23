@@ -1,10 +1,12 @@
 # Policy–Value Isomorph Research Program — TODO
 
-Last updated 2026-11-20
+Last updated 2026-11-23
 
 ## Resume here
 
-**Next is Task 73**, the Connect Four baseline. [Checkpoint E findings and methods selected for both games](CHECKPOINT_E.md) · [Phase IV experiments](PHASE_IV.md)
+**Checkpoint F is complete. Task 83, the first task of Phase VI, is next and has not started.** Release the first empirical report and reproducible benchmark for tic-tac-toe, Connect Four and 4×4 Reversi before extending the study to other domains. The review measures games won, moves copied and choices predicted when the favorite is removed. [Checkpoint F review](CHECKPOINT_F.md) · [Three-game research report](PHASE_V.md) · [Diagnosis and perfect-fit controls](AGREEMENT_DIAGNOSIS.md)
+
+Von Neumann–Morgenstern (VNM) selection compares moves by the expected score of complete games. Its project standard combines game outcomes with learned move frequencies and considers four possible opponents. Keep direct selection (the highest immediate fitted frequency), the VNM comparison scoring games entirely from visits, and games against an exact copy of the tested player in reports. [Win-rate standard, matched comparisons and reproduction](experiments/win_selection/README.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
@@ -572,48 +574,59 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
 
 # Phase V — Interpretive leverage in larger neural game policies
 
-- [ ] **73. Establish PyTorch Connect Four policy/value baselines.**
+- [x] **73. Establish PyTorch Connect Four policy/value baselines.**
+  - Completed 2026-11-22. Froze the sampling plan, trained two Connect Four teacher families and saved each original's game outcomes by opponent and seat before recovery. [Design](PHASE_V_PROTOCOL.md) · [Originals](experiments/phase_v/sources.json)
   - Freeze source networks of different strengths and include both greedy and stochastic sources. Adapt the Task 60 opponent protocol to Connect Four, including uniform random legal play and independently seeded untrained neural opponents. Record each source's absolute W/D/L by seat with uncertainty before evaluating its reconstructions.
   - Set the Connect Four source, opening, opponent and repetition counts for the paired comparisons in Tasks 74 and 81b before evaluating the fits.
 
-- [ ] **74. Recover multiple value forms from each neural policy.**
+- [x] **74. Recover multiple value forms from each neural policy.**
+  - Completed 2026-11-22. Fitted board scores, board-and-move scores, imitators, revealed rankings and payoff controls. Saved curves, complete-play comparisons and finite-board bounds. [Methods and losses](PHASE_V.md#fitting-error-and-individual-mistakes) · [Bounds](experiments/phase_v/bounds.json)
   - Repeat the selected direct-score, revealed-value, and supplied or fitted expected-utility comparisons on common positions and against the Task 73 panel. Include achievable fidelity by access and compute budget, residual-error curves, and whole-game outcomes. Identify which tic-tac-toe exact bounds transfer and where only sampled estimates are available.
   - Run the common direct and VNM pairs from Task 81b for Connect Four and retain the paired board and game records, including pairs that ranked lower in tic-tac-toe.
 
-- [ ] **75. Measure run-to-run and architecture-to-architecture stability.**
+- [x] **75. Measure run-to-run and architecture-to-architecture stability.**
+  - Completed 2026-11-22. Measured changes to preferred moves, pairwise rankings and score differences across neighboring boards under fresh weights and two pattern layouts. [Stability measurements](experiments/phase_v/summary.jsonl.gz)
   - Use output-function metrics first; use hidden-representation metrics only as secondary evidence.
   - **Done when:** stable action rankings and local geometry are distinguished from parameter similarity.
 
-- [ ] **76. Test off-support and counterfactual state coverage.**
+- [x] **76. Test off-support and counterfactual state coverage.**
+  - Completed 2026-11-22. Evaluated unseen positions, difficult neighbors and visits in games played by the original and reconstruction. [Coverage and populations](PHASE_V.md#copying-winning-and-explaining-changed-moves)
   - Generate legal but rare states, adversarial neighborhoods, and trajectories induced by recovered policies.
   - **Done when:** value-atlas confidence reflects query/data coverage.
 
-- [ ] **77. Test active counterfactual probing.**
+- [x] **77. Test active counterfactual probing.**
+  - Completed 2026-11-22. Compared answers to 8 or 24 questions chosen by fit disagreement, visits and random selection on disjoint evaluation boards. Also compared selecting both the board and the offered pair of moves. [Pair questions](experiments/phase_v/pair_queries.jsonl.gz) · [Fresh answers and forecasts](experiments/phase_v/README.md)
   - Select states and candidate actions that maximally reduce ensemble disagreement or ordering uncertainty.
   - **Done when:** active probing is compared prospectively with random/query-frequency baselines.
 
-- [ ] **78. Test prospective interpretability tasks.**
+- [x] **78. Test prospective interpretability tasks.**
+  - Completed 2026-11-22. Recorded forecasts before fresh answers for move removal and priority edits, and scored sampled consequences under changed opposition. [Results by objective](PHASE_V.md#copying-winning-and-explaining-changed-moves) · [Changed choices](experiments/phase_v/rankings.json)
   - Freeze predictions of runner-up choices, responses to action removal or policy edits, and trajectory trade-offs before observing the source responses. Compare direct probabilities/logits, revealed rankings, and compact expected utilities at matched query budgets. Score held-out predictive accuracy, cross-seed stability, and explanation complexity.
   - Compare prediction errors and their differences for every formulation under each intervention, then name the most predictive formulation given those results, including ties and uncertainty. Use separate blinded human evaluation if claiming improved human understanding. Use the later intervention studies for claims about internal mechanism.
 
-- [ ] **79. Build interactive/static neural-policy value atlases.**
+- [x] **79. Build interactive/static neural-policy value atlases.**
+  - Completed 2026-11-22. Built the offline board explorer with actual counts, both fits, alternative moves and complete plays. [Explore Connect Four and Reversi](experiments/phase_v/atlas.html) · [Explore tic-tac-toe](experiments/phase_iv/atlas.html)
   - Provide state views, action profiles, gaps, uncertainty, counterfactual masks, and trajectory summaries.
   - **Done when:** reports remain usable without inspecting raw tensors.
 
-- [ ] **80. Test value-derived policy sampling in Connect Four.**
+- [x] **80. Test value-derived policy sampling in Connect Four.**
+  - Completed 2026-11-22. Compared fixed temperatures, validation selection and transfer from other originals for sampled direct and VNM moves, including diversity, seat outcomes and probability error. [Stochastic comparisons](experiments/phase_v/tables.md#randomized-originals) · [Individual records](experiments/phase_v/README.md)
   - Repeat Task 70's stochastic comparisons for direct scores and expected utilities. Compare diversity, distributional fidelity, win probability, expected game score, and cross-recovery stability over temperature on held-out sources and opponents.
 
-- [ ] **81. Compare value explanations with direct surrogate explanations.**
+- [x] **81. Compare value explanations with direct surrogate explanations.**
+  - Completed 2026-11-22. Compared predictors using observed choices alone with restricted-choice queries and privileged original scores. Published errors on changed menus, adjustable weights and rollout costs. [Methods and comparisons](PHASE_V.md#copying-winning-and-explaining-changed-moves)
   - Include behavior cloning, policy distillation/logits, and simple local surrogate baselines.
   - **Done when:** any claimed interpretive advantage is incremental rather than merely a consequence of fitting another network.
 
-- [ ] **81a. Measure how well the same methods recover a frozen player's choices in 4×4 Reversi.**
+- [x] **81a. Measure how well the same methods recover a frozen player's choices in 4×4 Reversi.**
+  - Completed 2026-11-22. Enumerated Reversi, trained 24 optimal originals, fitted the frozen design and reported the multiple-placement, one-placement and forced-pass groups. [Exact populations](experiments/phase_v/bounds.json) · [Report](PHASE_V.md)
   - Use the Othello rules on a four-by-four board. Start with White on the northwest and southeast squares of the central four, Black on the other two, and Black to move. A placement must bracket at least one uninterrupted line of opposing discs between the new disc and a friendly disc. Flip all discs bracketed horizontally, vertically or diagonally. A player with no placement must pass if the opponent can play. When neither can play, the player with more discs wins, and equal counts draw. Record the side to move so a pass is an observable transition. [World Othello Federation rules adapted for this board size](https://www.worldothello.org/about/about-othello/othello-rules/official-rules/english)
   - Enumerate positions reachable from that opening and compute the best outcome each side can guarantee against perfect replies. Train a neural player to choose the first placement in row order, left to right, that preserves that outcome. Freeze it and record its actual choices and any guaranteed outcome given up. Sample complete games from the opening and from varied reachable positions. Retain move counts and visits per position. Train both the network scoring the board after a move and the network scoring a board and candidate move on the fraction of visits taking each move.
   - Compare choosing the highest immediate score with **von Neumann–Morgenstern (VNM) selection**, which chooses the move with the highest average learned utility of a completed game. Use the same fitted scores for both rules. Carry forward the methods selected in Task 72 and specify how scores along a game determine its utility, how each side continues play, how later moves are weighted, how ties are resolved and how many continuations are sampled per move. Report exact-move agreement separately for positions with multiple legal placements, one placement, and a forced pass, with a count and denominator for each. Alongside agreement, report win, draw and loss rates for the original and reconstructed players against the same opponents as Black and as White. On positions with multiple moves, also measure how often each method predicts the frozen player's next choice when its favourite is removed. Report uncertainty for sampled quantities and variation across independent fits.
   - Run the same pairs for Reversi and retain the board, game and seat-pair records for Task 81b.
 
-- [ ] **81b. Measure how much and how often looking ahead changes move agreement and playing strength across all three games.**
+- [x] **81b. Measure how much and how often looking ahead changes move agreement and playing strength across all three games.**
+  - Completed 2026-11-22. Paired every common direct and VNM rule with its own fit, including both continuation rules, per-seat games, head-to-head play and equal-weight three-game effects. [Tables](experiments/phase_v/tables.md) · [All three-game differences](experiments/phase_v/three_games.jsonl.gz)
   - **Which rules are paired?** Direct selection takes the highest immediate fitted score. Von Neumann–Morgenstern (VNM) selection takes each legal move, averages one declared utility (a numerical score for the complete play) over continuations, and chooses the best average for the mover. Run both on each frozen fit of the network scoring the resulting board (V) and the network scoring the current board and move (Q). In each game, retain the same primary comparison using the final move's fitted frequency, positive for the first player's moves and negative for the second player's, with both players continuing by the fitted network's direct rule. Also report the same utility with copies of the original player continuing, and the whole-play sums with and without time discount from Checkpoint D. Fix the utility definitions, random sampling rules, tie rules, and budgets before each game's evaluation. Give source calls and simulated moves per decision. Keep every planned pair regardless of its tic-tac-toe ranking. [Pilot definitions and comparison](CHECKPOINT_D.md)
   - **How often does the selected move match?** For each fixed-choice source, count the withheld boards where both match, only direct matches, only VNM matches, or neither matches. Give the denominator, both rates and VNM minus direct in percentage points. Report forced moves and passes separately from positions with a choice. For sources that draw moves at random, compare the full move distributions using the average share of probability that must be reassigned to match the source. Also give the probability of matching an independent source draw, the sum over legal moves of source probability times selected-move probability. Compare like move rules, including direct and VNM scores each sampled at the specified temperature when studying randomized selection.
   - **How much more often does either rule win?** Play both against the same opponents from the same openings in both seats. Publish wins, draws, losses, and mean game points (win +1, draw 0, loss −1), with absolute rates and paired differences for each opponent, each seat and the weighted panel. Also play VNM directly against direct selection with the seats swapped. Give wins for each rule and draws, with counts or exact probabilities. Use matching random draws where the game permits and record which draws were shared. Keep the outcomes of games played during move selection separate from games against the evaluation opponents.
@@ -621,14 +634,16 @@ Tasks 60–61 run before the backend migration. Use their graph, manifests, and 
   - Run the budgeted random partitions and network initializations for each game. Publish the per-rule mean and spread and the paired intervals and p-values using the [common replication procedure](docs/evaluation_contract.md#replication-and-statistical-evidence).
   - **How precise is the comparison?** Specify the number of independently frozen sources, independent game collections and fits per source, openings, opponents, and games per seat before evaluation. Justify the budgets using the expected precision of the paired differences. For sampled quantities report 95% uncertainty intervals by repeatedly resampling the independent units together with both rules' records. Preserve shared sources, board symmetries, whole sampled games and swapped-seat pairs wherever applicable. Report exact results on fully enumerated populations and across-fit variation separately. Publish each game's own denominators, weights and estimates, then an average giving each of the three named games one third of the weight for each common comparison. State which variation each interval covers. Three named games support a comparison of those games. [Measurement and uncertainty definitions](docs/evaluation_contract.md)
 
-- [ ] **82. Write the neural-game empirical paper/report draft.**
+- [x] **82. Write the neural-game empirical paper/report draft.**
+  - Completed 2026-11-22. Wrote the three-game empirical report with objectives, finite constructions, losses, held-out examples, absolute outcomes and paired uncertainty. [Draft](PHASE_V.md) · [Data and reproduction](experiments/phase_v/README.md)
   - For tic-tac-toe, Connect Four and 4×4 Reversi, report how often each method predicts the original player's choices, how its win, draw and loss rates change, and how accurately it predicts responses to removing a move. Give within-game differences between the Task 72 methods, their denominators and the uncertainty on sampled results. Relate the differences to the original player's move rule, the opponent, and each method's access to the original player. Include how the learned scores vary across training runs and network designs. Link every figure and claim to its reproducible artifact.
   - Include the full Task 81b comparison, showing the size and frequency of gains and losses for imitation, win probability and mean game points side by side.
   - For every sampled row show the independent repeat count and spread in the table. Alongside each planned paired difference report its 95% interval, raw and adjusted p-values, and the variation covered across sources, randomized holdouts and network initializations. [Replication and statistical evidence](docs/evaluation_contract.md#replication-and-statistical-evidence)
 
 ## Checkpoint F — Minimum publishable program
 
-- [ ] Audit the three-game comparison in Task 82, including the Reversi measurements from Task 81a. Review Tasks 73–82 and decide whether to release a first paper/software benchmark before broader adapters. Record the scope and uncertainty of each empirical claim.
+- [x] Audit the three-game comparison in Task 82, including the Reversi measurements from Task 81a. Review Tasks 73–82 and decide whether to release a first paper/software benchmark before broader adapters. Record the scope and uncertainty of each empirical claim.
+  - Completed 2026-11-23. Release the board-game report, software, and measurements together. Replayed the win-selected rule and direct selection on the same fitted networks, positions and opponents, measured the original's wins on that panel, and checked the original's next choice after removing its favorite. [Decision and scope of each result](CHECKPOINT_F.md) · [Paired uncertainty and individual changes](experiments/checkpoint_f/summary.json) · [Archived observations](experiments/checkpoint_f/observations.jsonl.gz)
 
 ---
 

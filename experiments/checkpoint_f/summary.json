@@ -1,0 +1,4997 @@
+{
+  "methods": [
+    "original",
+    "V/copies/direct",
+    "Q/copies/direct",
+    "V/guarded_mixture/hybrid/paths16",
+    "Q/guarded_mixture/hybrid/paths16"
+  ],
+  "estimates": [
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "win",
+      "mean": 0.4445862354635141,
+      "sd": 0.04034395740168111,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.4275504763305564,
+        0.46162199459647185
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "draw",
+      "mean": 0.5554137645364859,
+      "sd": 0.040343957401681146,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.5383780054035282,
+        0.5724495236694437
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "loss",
+      "mean": 0.0,
+      "sd": 0.0,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "points",
+      "mean": 0.4445862354635141,
+      "sd": 0.04034395740168111,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.4275504763305564,
+        0.46162199459647185
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "choice_agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "original",
+      "metric": "competitive_replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.3904404520778218,
+      "sd": 0.03386210758170677,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.37614173807828194,
+        0.40473916607736166
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "draw",
+      "mean": 0.3651009372933201,
+      "sd": 0.06481749792854749,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.3377309083366241,
+        0.3924709662500161
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "loss",
+      "mean": 0.24445861062885801,
+      "sd": 0.06865196940584102,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.21546942637118388,
+        0.27344779488653215
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "points",
+      "mean": 0.1459818414489638,
+      "sd": 0.08670733780156077,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.10936854377118474,
+        0.18259513912674288
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "agreement",
+      "mean": 0.7387854382424441,
+      "sd": 0.020912726495594714,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7299547683147208,
+        0.7476161081701674
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.7250351110712234,
+      "sd": 0.021527387692427676,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7159448924831303,
+        0.7341253296593165
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "replacement",
+      "mean": 0.627048544611115,
+      "sd": 0.022370005448125105,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.617602519749872,
+        0.636494569472358
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.554123752001407,
+      "sd": 0.025365966577116008,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.5434126437063046,
+        0.5648348602965093
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.42795233617173717,
+      "sd": 0.025328814571214803,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.41725691579285823,
+        0.4386477565506161
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "draw",
+      "mean": 0.34497365261932317,
+      "sd": 0.08840044357193587,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.3076454190763399,
+        0.3823018861623064
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "loss",
+      "mean": 0.22707401120893958,
+      "sd": 0.08383070890358714,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.19167540738315092,
+        0.26247261503472824
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.2008783249627976,
+      "sd": 0.08673888852185554,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.16425170458427152,
+        0.23750494534132366
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": 0.7855856175418126,
+      "sd": 0.017849214778619612,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7780485551596199,
+        0.7931226799240052
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.7743125517392127,
+      "sd": 0.01891449501912794,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7663256609625045,
+        0.7822994425159208
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "replacement",
+      "mean": 0.7408405522409631,
+      "sd": 0.017649488793518273,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7333878267457273,
+        0.7482932777361989
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.6900083526983155,
+      "sd": 0.02097452401448198,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.6811515879669443,
+        0.6988651174296867
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.5168713335847938,
+      "sd": 0.046378057512873785,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.49728759743869977,
+        0.5364550697308877
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.32753711411141423,
+      "sd": 0.06717501677538379,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.2991715922528633,
+        0.35590263596996513
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.15559155230379187,
+      "sd": 0.06607824882409341,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.12768915493391972,
+        0.18349394967366403
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.36127978128100197,
+      "sd": 0.09231487146651599,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.3222986298030861,
+        0.40026093275891783
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.7343895908630566,
+      "sd": 0.021318634839811668,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7253875208737753,
+        0.7433916608523378
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.7204358653455593,
+      "sd": 0.021884998961876345,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7111946407619735,
+        0.729677089929145
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.5961143379783288,
+      "sd": 0.026894354072173193,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.5847578482455955,
+        0.6074708277110621
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.5171704360465316,
+      "sd": 0.02977417022818493,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.5045979066007736,
+        0.5297429654922895
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.5218006490609843,
+      "sd": 0.058387881624927036,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.4971456089581397,
+        0.546455689163829
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.319799503279321,
+      "sd": 0.07758622978216381,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.2870377117316188,
+        0.3525612948270232
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.15839984765969464,
+      "sd": 0.07551685233317085,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.12651187757242138,
+        0.1902878177469679
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.36340080140128955,
+      "sd": 0.11047287613754848,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.3167521970051842,
+        0.4100494057973949
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.7857979339663484,
+      "sd": 0.02390934732722642,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7757019020367717,
+        0.7958939658959252
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.7745104428063175,
+      "sd": 0.02511518242083211,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.7639052313729998,
+        0.7851156542396353
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.6324982332484429,
+      "sd": 0.02135807029650734,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.6234795111262319,
+        0.6415169553706539
+      ]
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.560604894617712,
+      "sd": 0.02402536978112124,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.5504598707025725,
+        0.5707499185328515
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "win",
+      "mean": 0.5947265625,
+      "sd": 0.11380089148880089,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5340863478879745,
+        0.6553667771120255
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "draw",
+      "mean": 0.00732421875,
+      "sd": 0.018091462776420954,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.002316041278328511,
+        0.01696447877832851
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "loss",
+      "mean": 0.39794921875,
+      "sd": 0.12527537213647497,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.3311946849974696,
+        0.4647037525025304
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "points",
+      "mean": 0.19677734375,
+      "sd": 0.23866676037891332,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.06960080426253532,
+        0.32395388323746466
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "choice_agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "original",
+      "metric": "competitive_replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.442138671875,
+      "sd": 0.20690699273288063,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.33188571796659044,
+        0.5523916257834096
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "draw",
+      "mean": 0.002685546875,
+      "sd": 0.007233597364162794,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.0011689650786517953,
+        0.006540058828651795
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "loss",
+      "mean": 0.55517578125,
+      "sd": 0.2095385467829025,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.4435205711705817,
+        0.6668309913294184
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "points",
+      "mean": -0.113037109375,
+      "sd": 0.416391027194971,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.33491622579747227,
+        0.10884200704747227
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "agreement",
+      "mean": 0.76630859375,
+      "sd": 0.04289328126261689,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.7434523775363069,
+        0.7891648099636932
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.7660616892688679,
+      "sd": 0.04298095816190907,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.7431587533333867,
+        0.7889646252043491
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "replacement",
+      "mean": 0.4350475383254717,
+      "sd": 0.09170860594858604,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.3861794717072131,
+        0.4839156049437303
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.4347588689072327,
+      "sd": 0.09147739136344413,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.386014007844581,
+        0.4835037299698844
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.582763671875,
+      "sd": 0.10157470629774254,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5286383314803272,
+        0.6368890122696728
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "draw",
+      "mean": 0.01123046875,
+      "sd": 0.021625953961978764,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.00029318868613906895,
+        0.02275412618613907
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "loss",
+      "mean": 0.406005859375,
+      "sd": 0.11651254191852654,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.34392070824393556,
+        0.46809101050606444
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.1767578125,
+      "sd": 0.21752587175509147,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.06084645737502904,
+        0.29266916762497097
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": 0.9296875,
+      "sd": 0.0631296409185099,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8960480888882225,
+        0.9633269111117775
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.929662932389937,
+      "sd": 0.0631388987285216,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.896018588139424,
+        0.96330727664045
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "replacement",
+      "mean": 0.6404911065251572,
+      "sd": 0.16351086593996675,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5533623162997003,
+        0.727619896750614
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.6403959070361636,
+      "sd": 0.16338071114598188,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5533364714048296,
+        0.7274553426674976
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.9228515625,
+      "sd": 0.03222754891167131,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.9056787138794282,
+        0.9400244111205718
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.0048828125,
+      "sd": 0.005966895436140417,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.001703278358558952,
+        0.008062346641441048
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.072265625,
+      "sd": 0.028598445652692386,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.05702658900246321,
+        0.08750466099753679
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.8505859375,
+      "sd": 0.06064130740726572,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8182724657211582,
+        0.8828994092788418
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.311328125,
+      "sd": 0.07105167023898876,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.2734673624394611,
+        0.3491888875605389
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.31061443592767296,
+      "sd": 0.071428071486028,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.27255310330039656,
+        0.34867576855494936
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.29195042256289305,
+      "sd": 0.07299207375740004,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.25305569195297406,
+        0.33084515317281205
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.2914854805424528,
+      "sd": 0.07352747132841383,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.252305456705176,
+        0.33066550437972964
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.908447265625,
+      "sd": 0.027620207726178302,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8937294958234426,
+        0.9231650354265574
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.0107421875,
+      "sd": 0.01118579770568465,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.004781696640873718,
+        0.016702678359126283
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.080810546875,
+      "sd": 0.028266381839300837,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.06574845519350078,
+        0.09587263855649922
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.82763671875,
+      "sd": 0.054759532174154774,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.7984574237580829,
+        0.8568160137419171
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.423828125,
+      "sd": 0.06071004558898524,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.39147802522961106,
+        0.45617822477038894
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.42323481721698114,
+      "sd": 0.06104565631942959,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.39070588311186955,
+        0.45576375132209274
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.2957688433569182,
+      "sd": 0.051633834596822255,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.26825511503519184,
+        0.3232825716786446
+      ]
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.29532355542452826,
+      "sd": 0.05205505032805962,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.2675853770830698,
+        0.32306173376598674
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "win",
+      "mean": 0.671630859375,
+      "sd": 0.024888617029673214,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.658368651510623,
+        0.684893067239377
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "draw",
+      "mean": 0.01708984375,
+      "sd": 0.009555020733831944,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.011998332599764915,
+        0.022181354900235085
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "loss",
+      "mean": 0.311279296875,
+      "sd": 0.024857943976594073,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.29803343352688455,
+        0.32452516022311545
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "points",
+      "mean": 0.3603515625,
+      "sd": 0.04882031187489998,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.3343370546100395,
+        0.3863660703899605
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "choice_agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "original",
+      "metric": "competitive_replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.45458984375,
+      "sd": 0.05152450857333778,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.4271343711540421,
+        0.4820453163459579
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "draw",
+      "mean": 0.06494140625,
+      "sd": 0.023989803267373655,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.052158142431922,
+        0.077724670068078
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "loss",
+      "mean": 0.48046875,
+      "sd": 0.0493899964040459,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.45415067865234937,
+        0.5067868213476506
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "points",
+      "mean": -0.02587890625,
+      "sd": 0.09804479994484133,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.0781232923217328,
+        0.026365479821732804
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "agreement",
+      "mean": 0.8372235923813882,
+      "sd": 0.01607148298736398,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.828659703603916,
+        0.8457874811588604
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.5899658203125,
+      "sd": 0.041287348629578426,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5679653451940293,
+        0.6119662954309707
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "replacement",
+      "mean": 0.84765625,
+      "sd": 0.021084102732173197,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8364213247032435,
+        0.8588911752967565
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.5764774330964928,
+      "sd": 0.054194607184554676,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5475991653826654,
+        0.6053557008103202
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.496826171875,
+      "sd": 0.04012154867158033,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.4754469077042014,
+        0.5182054360457986
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "draw",
+      "mean": 0.0498046875,
+      "sd": 0.014511074703911492,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.04207228160419097,
+        0.05753709339580903
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "loss",
+      "mean": 0.453369140625,
+      "sd": 0.04027970115775529,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.43190560294300473,
+        0.47483267830699527
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.04345703125,
+      "sd": 0.07908106408784359,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.001317706721895566,
+        0.08559635577810443
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": 0.8571331388182397,
+      "sd": 0.012731788055221604,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8503488478521234,
+        0.863917429784356
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.6402587890625,
+      "sd": 0.031583657805722844,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.6234290457932191,
+        0.6570885323317809
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "replacement",
+      "mean": 0.8701171875,
+      "sd": 0.017278994164097533,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8609098614353011,
+        0.8793245135646989
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.6408716659336571,
+      "sd": 0.029856345692047287,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.6249623423193096,
+        0.6567809895480046
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.75830078125,
+      "sd": 0.030387679270261685,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.7421083299571961,
+        0.7744932325428039
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.017578125,
+      "sd": 0.011048543456039806,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.011690771767881629,
+        0.02346547823211837
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.22412109375,
+      "sd": 0.030587874765702367,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.20782196580775109,
+        0.24042022169224891
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.5341796875,
+      "sd": 0.059966556977445074,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.50222576484541,
+        0.56613361015459
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.8614630874484681,
+      "sd": 0.010999746222222873,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8556017364268107,
+        0.8673244384701255
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.651123046875,
+      "sd": 0.02809491844703545,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.6361523215858819,
+        0.6660937721641181
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.821533203125,
+      "sd": 0.02122685387329156,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8102222111145272,
+        0.8328441951354728
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.5051810138752479,
+      "sd": 0.05014130730292169,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.47846259720910156,
+        0.5318994305413943
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.740234375,
+      "sd": 0.02813223286626333,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.7252437662604053,
+        0.7552249837395947
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.01806640625,
+      "sd": 0.009119232445256838,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.013207110287175836,
+        0.022925702212824164
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.24169921875,
+      "sd": 0.03134344752055776,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.22499747450650762,
+        0.25840096299349236
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.49853515625,
+      "sd": 0.05886007183686259,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.46717083790792585,
+        0.5298994745920741
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.8697500426973772,
+      "sd": 0.009079029828739236,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8649121691967298,
+        0.8745879161980247
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.671875,
+      "sd": 0.02401629085771781,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.6590776219413215,
+        0.6846723780586785
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.8211669921875,
+      "sd": 0.025435344732833088,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.8076134536945117,
+        0.8347205306804883
+      ]
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.5042926169132486,
+      "sd": 0.05539278197247774,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.4747758869226162,
+        0.5338093469038809
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "win",
+      "mean": 0.5703145524461714,
+      "sd": 0.04109301246376489,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5492054742333958,
+        0.5914236306589469
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "draw",
+      "mean": 0.1932759423454953,
+      "sd": 0.015078440626136252,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.18673641893936208,
+        0.19981546575162853
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "loss",
+      "mean": 0.23640950520833334,
+      "sd": 0.04257259974662339,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.21386734658422227,
+        0.25895166383244445
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "points",
+      "mean": 0.33390504723783804,
+      "sd": 0.08230895743083345,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.29065490410110345,
+        0.3771551903745726
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "choice_agreement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "original",
+      "metric": "competitive_replacement",
+      "mean": 1.0,
+      "sd": 0.0,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.42905632256760723,
+      "sd": 0.07196598035442654,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.39132302588924883,
+        0.4667896192459656
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "draw",
+      "mean": 0.14424263013944003,
+      "sd": 0.02316401334769894,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.134307491009528,
+        0.15417776926935206
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "loss",
+      "mean": 0.42670104729295266,
+      "sd": 0.0753206974918897,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.38789100304196505,
+        0.46551109154394027
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "points",
+      "mean": 0.0023552752746546037,
+      "sd": 0.14549243308057141,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        -0.07368974561458404,
+        0.07840029616389325
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "agreement",
+      "mean": 0.7807725414579441,
+      "sd": 0.016784477856925627,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.7723725530964447,
+        0.7891725298194434
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.6936875402175304,
+      "sd": 0.021122490231547077,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.6831760005131579,
+        0.704199079921903
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "replacement",
+      "mean": 0.6365841109788622,
+      "sd": 0.032241148547233534,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.6197906476257495,
+        0.653377574331975
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.5217866846683775,
+      "sd": 0.03643655191477108,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5032389472762077,
+        0.5403344220605474
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.5025140599739124,
+      "sd": 0.0373700838087569,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.4832498270090829,
+        0.5217782929387419
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "draw",
+      "mean": 0.1353362696231077,
+      "sd": 0.030718961928249428,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.12225713923523468,
+        0.14841540001098075
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "loss",
+      "mean": 0.36214967040297985,
+      "sd": 0.04969374486117995,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.3381337526265237,
+        0.386165588179436
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.14036438957093253,
+      "sd": 0.0823913118141342,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.09858049856459966,
+        0.1821482805772654
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": 0.8574687521200174,
+      "sd": 0.022276156804470898,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.8459034252814632,
+        0.8690340789585715
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "choice_agreement",
+      "mean": 0.7814114243972167,
+      "sd": 0.02436255344870283,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.768986792111155,
+        0.7938360566832784
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "replacement",
+      "mean": 0.7504829487553734,
+      "sd": 0.055121957083496244,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.7212596851139411,
+        0.7797062123968056
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": 0.657091975222712,
+      "sd": 0.055801820769063204,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.6276458224329013,
+        0.6865381280125227
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.7326745591115978,
+      "sd": 0.021377428852137708,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.7229335660833403,
+        0.7424155521398554
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.11666601720380475,
+      "sd": 0.02277951573092449,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.10701677286680722,
+        0.12631526154080228
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.15065942368459728,
+      "sd": 0.026076434964438025,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.1392043721487197,
+        0.16211447522047487
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.5820151354270007,
+      "sd": 0.04189323946211507,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.562990770627866,
+        0.6010395002261354
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.6357269344371749,
+      "sd": 0.024997374200184705,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.6227530561583563,
+        0.6487008127159934
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.560724449382744,
+      "sd": 0.02660460907921372,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5470921004629363,
+        0.5743567983025517
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.5698659878887407,
+      "sd": 0.026877765362063405,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5561314696461047,
+        0.5836005061313766
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.43794564348807746,
+      "sd": 0.03128176776543181,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.4222524985648543,
+        0.4536387884113006
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "win",
+      "mean": 0.7234940965619948,
+      "sd": 0.023483902575370405,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.7131287240528276,
+        0.7338594690711621
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "draw",
+      "mean": 0.11620269900977366,
+      "sd": 0.02630569334766789,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.10506045006194488,
+        0.12734494795760243
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "loss",
+      "mean": 0.16030320442823154,
+      "sd": 0.028837080741197407,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.1477405178809549,
+        0.17286589097550817
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "points",
+      "mean": 0.5631908921337632,
+      "sd": 0.04554286232974511,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5429650314764282,
+        0.5834167527910982
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "agreement",
+      "mean": 0.6931253672212417,
+      "sd": 0.021959040931449705,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.6818849813658328,
+        0.7043657530766507
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "choice_agreement",
+      "mean": 0.6232067533410995,
+      "sd": 0.023414446561576013,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.6113682537370432,
+        0.6350452529451559
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "replacement",
+      "mean": 0.5831446895976203,
+      "sd": 0.020464540616068914,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5728400741417405,
+        0.5934493050535001
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "metric": "competitive_replacement",
+      "mean": 0.4534070223184963,
+      "sd": 0.026573393026414992,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.4401092023650541,
+        0.4667048422719385
+      ]
+    }
+  ],
+  "contrasts": [
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.126430881506972,
+      "sd": 0.05503885787655046,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.10319001010701023,
+        0.14967175290693374
+      ],
+      "p": 7.874731782462026e-11,
+      "bootstrap_ci95": [
+        0.10469398619636658,
+        0.14730283195589794
+      ],
+      "holm_p": 1.6536936743170255e-09,
+      "block_differences": [
+        [
+          0.17975286251653433,
+          0.10972144717261911,
+          0.15686125578703713,
+          0.16191897114748682,
+          0.028555927579365148,
+          0.15981729497354502,
+          0.02018203331679902,
+          0.11885799024470889,
+          0.17750031001984123,
+          0.1376190992890211,
+          0.11153738839285715,
+          0.15403335813492053,
+          0.10633680555555558,
+          0.16928788442460319,
+          0.036541780340608454,
+          0.11748434399801583,
+          0.18725482597552912,
+          0.11430534887566135,
+          0.1698882895171958,
+          0.1630709532076719,
+          0.05157438409391535,
+          0.20330920345568781,
+          0.03558252728174616,
+          0.1633468708664021
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 24,
+          "share": 1.0,
+          "ci95": [
+            0.8575264022774186,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "agreement",
+      "mean": -0.004395847379387502,
+      "sd": 0.01538372335236893,
+      "n": [
+        24
+      ],
+      "ci95": [
+        -0.010891824038040562,
+        0.002100129279265558
+      ],
+      "p": 0.17489779158725582,
+      "bootstrap_ci95": [
+        -0.010315837040393645,
+        0.0014752259511649905
+      ],
+      "holm_p": 0.34979558317451165,
+      "block_differences": [
+        [
+          -0.01703549310382646,
+          0.012572191347934969,
+          -0.009873468021148857,
+          -0.0017634865338385097,
+          -0.03548274601850987,
+          0.004160892974929942,
+          -0.009837816705629554,
+          -0.004408155100165789,
+          0.004378748270029265,
+          -0.03482573175032333,
+          0.025333221715527876,
+          -0.018867667178673497,
+          -0.004210007234174751,
+          -0.002575423782928743,
+          -0.0021740620608644567,
+          -0.0032573072748751652,
+          0.006424447675802969,
+          -6.747662718076253e-05,
+          -0.010617823947512317,
+          -0.02207397415596346,
+          0.02110632301927806,
+          0.019164824167252514,
+          -0.012948456446385426,
+          -0.008621890334054694
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 7,
+          "share": 0.2916666666666667,
+          "ci95": [
+            0.12615208852368912,
+            0.5109478138578329
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 17,
+          "share": 0.7083333333333334,
+          "ci95": [
+            0.48905218614216706,
+            0.8738479114763109
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.03695331595487538,
+      "sd": 0.03213958160845079,
+      "n": [
+        24
+      ],
+      "ci95": [
+        -0.05052467102706744,
+        -0.023381960882683323
+      ],
+      "p": 9.84888128621451e-06,
+      "bootstrap_ci95": [
+        -0.049137335255662315,
+        -0.024643595064393262
+      ],
+      "holm_p": 6.894216900350156e-05,
+      "block_differences": [
+        [
+          -0.047119796228294986,
+          -0.022510729613733904,
+          -0.03345565131731654,
+          -0.10120309119010829,
+          0.02773104717074948,
+          -0.03746562279278609,
+          -0.03742760342291229,
+          -0.05482260683022294,
+          -0.06647727272727283,
+          -0.1043052173529217,
+          0.02216770714562022,
+          -0.07026444134009757,
+          -0.03702241383947957,
+          -0.055321540295098726,
+          -0.07379071018493194,
+          -0.034709110817715993,
+          -0.028639453581868257,
+          -0.0077806379729327135,
+          -0.015637615663165016,
+          -0.033860923463853054,
+          -0.0030148892708133923,
+          -0.02068526085428879,
+          -0.021592442645074095,
+          -0.02967130582849009
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 2,
+          "share": 0.08333333333333333,
+          "ci95": [
+            0.010256341281364737,
+            0.2699728015576036
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 22,
+          "share": 0.9166666666666666,
+          "ci95": [
+            0.7300271984423964,
+            0.9897436587186352
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "points",
+      "mean": 0.21529793983203815,
+      "sd": 0.11435146890364904,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.16701154934865703,
+        0.2635843303154193
+      ],
+      "p": 3.4333029298896543e-09,
+      "bootstrap_ci95": [
+        0.16931007344886742,
+        0.2603250776018415
+      ],
+      "holm_p": 6.179945273801378e-08,
+      "block_differences": [
+        [
+          0.12682239996693118,
+          0.16640134135251317,
+          0.3212663277116402,
+          0.11592778604497361,
+          0.13237149677579368,
+          0.2717577091600529,
+          0.05612005001653453,
+          0.2660771122685185,
+          0.24357923073743382,
+          0.3596454923115079,
+          0.15246853298611113,
+          0.18882921006944445,
+          0.260462394593254,
+          0.2958395337301587,
+          -0.0008287863756614167,
+          0.3189442791005291,
+          0.2178077980324074,
+          0.13847087880291004,
+          0.40458984375,
+          0.28153056795634923,
+          0.15874255952380945,
+          0.39910094246031746,
+          -0.006646567046957638,
+          0.29787042204034386
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 22,
+          "share": 0.9166666666666666,
+          "ci95": [
+            0.7300271984423964,
+            0.9897436587186352
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 2,
+          "share": 0.08333333333333333,
+          "ci95": [
+            0.010256341281364737,
+            0.2699728015576036
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.09384831288924711,
+      "sd": 0.05204662069576804,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.07187095243772705,
+        0.11582567334076717
+      ],
+      "p": 7.516157976864574e-09,
+      "bootstrap_ci95": [
+        0.07348679073273187,
+        0.11402252870051734
+      ],
+      "holm_p": 1.2025852762983318e-07,
+      "block_differences": [
+        [
+          0.08890542328042322,
+          0.1379143931878306,
+          0.1673301091269841,
+          0.1401186342592593,
+          -0.0035435267857141795,
+          0.16936693948412684,
+          0.03522316261574071,
+          0.007253430886243362,
+          0.07193028687169312,
+          0.1412313471395502,
+          0.03599537037037037,
+          0.09413054935515869,
+          0.14479011656746021,
+          0.10701006531084656,
+          0.03184911334325391,
+          0.08789579199735442,
+          0.09228386450066134,
+          0.048549365492724816,
+          0.05595393105158719,
+          0.1647373098544972,
+          0.13246036913029102,
+          0.11225947627314814,
+          0.05189112103174609,
+          0.13682286499669305
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 23,
+          "share": 0.9583333333333334,
+          "ci95": [
+            0.7887983165429797,
+            0.99894564755452
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 1,
+          "share": 0.041666666666666664,
+          "ci95": [
+            0.001054352445480038,
+            0.2112016834570203
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": 0.00021231642453585034,
+      "sd": 0.014337577384472994,
+      "n": [
+        24
+      ],
+      "ci95": [
+        -0.0058419115343169405,
+        0.006266544383388642
+      ],
+      "p": 0.9427945958557413,
+      "bootstrap_ci95": [
+        -0.00521144183770307,
+        0.006148360367593144
+      ],
+      "holm_p": 0.9427945958557413,
+      "block_differences": [
+        [
+          -0.018043740588194135,
+          0.020567723656968462,
+          -0.007549974428692874,
+          0.012539216884651538,
+          -0.004944691518165012,
+          -0.002256533432871133,
+          -0.009667682862618765,
+          -0.011596578261886648,
+          -0.0027535368291556894,
+          0.011731515222757838,
+          0.0067046356388086314,
+          -0.0037519200261879604,
+          0.005773215375753371,
+          0.013457656091127368,
+          0.012454963446260958,
+          -0.012435567182129126,
+          0.004192060087025218,
+          -0.01623987699974816,
+          -0.0195626025150355,
+          -0.01870760268214955,
+          0.037262973657772314,
+          0.013078066502058672,
+          -0.012414021081259108,
+          0.007257896033769695
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 11,
+          "share": 0.4583333333333333,
+          "ci95": [
+            0.2555302019951823,
+            0.6717919243052256
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 13,
+          "share": 0.5416666666666666,
+          "ci95": [
+            0.32820807569477434,
+            0.7444697980048177
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.1294034580806036,
+      "sd": 0.023230491584966453,
+      "n": [
+        24
+      ],
+      "ci95": [
+        -0.13921283437062515,
+        -0.11959408179058206
+      ],
+      "p": 5.041274047765138e-19,
+      "bootstrap_ci95": [
+        -0.138378883371365,
+        -0.12036279260316674
+      ],
+      "holm_p": 1.7644459167177984e-17,
+      "block_differences": [
+        [
+          -0.12990044434445136,
+          -0.12438483547925605,
+          -0.13128629201948283,
+          -0.16234374034003096,
+          -0.07207171743958629,
+          -0.1225474063852594,
+          -0.12174201941488283,
+          -0.13379075150244035,
+          -0.14801295369742207,
+          -0.17593530909064148,
+          -0.1020146270719634,
+          -0.1561995218711637,
+          -0.1252243113114383,
+          -0.12683139122848708,
+          -0.1664035698852664,
+          -0.122449565840404,
+          -0.10148598288357447,
+          -0.09700415902258175,
+          -0.1491792145854487,
+          -0.13364667891845328,
+          -0.13418716617768756,
+          -0.1259521970760349,
+          -0.11569191228929743,
+          -0.12739722605923187
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 24,
+          "share": 1.0,
+          "ci95": [
+            0.8575264022774186,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.16252247643849202,
+      "sd": 0.09789418941325571,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.12118538561331503,
+        0.203859567263669
+      ],
+      "p": 3.227130660800184e-08,
+      "bootstrap_ci95": [
+        0.1259186985883763,
+        0.2009318959607859
+      ],
+      "holm_p": 4.5179829251202576e-07,
+      "block_differences": [
+        [
+          0.07401930390211642,
+          0.0896009011243385,
+          0.1548326926256613,
+          0.08737134176587302,
+          0.1299982948908731,
+          0.23921337632275114,
+          -0.022748997602513255,
+          0.20490993923611112,
+          0.15185753554894182,
+          0.20264007729828037,
+          0.2942697999338624,
+          0.036529637896825395,
+          0.3523525338955026,
+          0.23950634507275126,
+          0.06029550057870364,
+          0.15811063574735446,
+          0.08018327339616399,
+          0.10516053860780417,
+          0.2975720279431217,
+          0.32208348834325384,
+          0.16424205315806878,
+          0.266906673693783,
+          0.10340918485449735,
+          0.10822327628968242
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 23,
+          "share": 0.9583333333333334,
+          "ci95": [
+            0.7887983165429797,
+            0.99894564755452
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 1,
+          "share": 0.041666666666666664,
+          "ci95": [
+            0.001054352445480038,
+            0.2112016834570203
+          ]
+        }
+      }
+    },
+    {
+      "game": "tictactoe",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "original",
+      "metric": "win",
+      "mean": 0.07228509812127976,
+      "sd": 0.06565079306490461,
+      "n": [
+        24
+      ],
+      "ci95": [
+        0.04456319948833201,
+        0.1000069967542275
+      ],
+      "p": 1.764563259476652e-05,
+      "bootstrap_ci95": [
+        0.044809792601032024,
+        0.09709264038731813
+      ],
+      "holm_p": 0.00010587379556859911,
+      "block_differences": [
+        [
+          0.18334082547949726,
+          0.10811709449404766,
+          0.13207413607804241,
+          0.10687184813161382,
+          0.009726872519841279,
+          0.11897889798280425,
+          0.025345930472883582,
+          0.09278997189153437,
+          0.08434890666335976,
+          0.09985222387566128,
+          0.06609416335978835,
+          0.09174959697420626,
+          0.04575634507275134,
+          0.09739247478505286,
+          -0.006891482721560815,
+          0.10791067294973544,
+          0.16589859250992067,
+          0.06409866898148142,
+          -0.01151542865410049,
+          0.12513718377976185,
+          -0.09788618138227512,
+          0.008491443452380953,
+          -0.01134827628968249,
+          0.12850787450396817
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 20,
+          "share": 0.8333333333333334,
+          "ci95": [
+            0.6261582865113247,
+            0.9526463733927428
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.14247359772258136
+          ]
+        },
+        "lower": {
+          "count": 4,
+          "share": 0.16666666666666666,
+          "ci95": [
+            0.04735362660725712,
+            0.37384171348867534
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.480712890625,
+      "sd": 0.19806636034773734,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.37517077718653413,
+        0.5862550040634659
+      ],
+      "p": 7.367892643401136e-08,
+      "bootstrap_ci95": [
+        0.448480224609375,
+        0.51025390625
+      ],
+      "holm_p": 9.578260436421476e-07,
+      "block_differences": [
+        [
+          0.2421875,
+          0.62890625,
+          0.265625,
+          0.671875,
+          0.32421875,
+          0.4921875,
+          0.2265625,
+          0.75390625,
+          0.29296875,
+          0.70703125,
+          0.38671875,
+          0.671875,
+          0.3515625,
+          0.6484375,
+          0.30859375,
+          0.71875
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "agreement",
+      "mean": -0.45498046875,
+      "sd": 0.06103016125394307,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.4875011461175392,
+        -0.42245979138246076
+      ],
+      "p": 9.087390319057258e-15,
+      "bootstrap_ci95": [
+        -0.47910400390625,
+        -0.42890380859375
+      ],
+      "holm_p": 2.9079649020983225e-13,
+      "block_differences": [
+        [
+          -0.4171875,
+          -0.3687499999999999,
+          -0.33281249999999996,
+          -0.5,
+          -0.43906250000000013,
+          -0.47656249999999994,
+          -0.4062499999999999,
+          -0.5125,
+          -0.42968750000000006,
+          -0.4421875,
+          -0.4453125,
+          -0.4953125,
+          -0.41093749999999996,
+          -0.5328124999999999,
+          -0.5234375000000001,
+          -0.546875
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.14327338836477987,
+      "sd": 0.15421614202040998,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.22544936982162606,
+        -0.06109740690793371
+      ],
+      "p": 0.0020694092954556148,
+      "bootstrap_ci95": [
+        -0.17599841231819968,
+        -0.11218330815153302
+      ],
+      "holm_p": 0.008040775026660868,
+      "block_differences": [
+        [
+          0.0390625,
+          -0.26249999999999996,
+          -0.07216981132075467,
+          -0.2640625,
+          0.0625,
+          -0.29531250000000003,
+          -0.04531250000000003,
+          -0.19811320754716977,
+          0.017187499999999967,
+          -0.18181014150943398,
+          0.06093750000000003,
+          -0.32453812893081757,
+          -0.07968750000000002,
+          -0.2751572327044025,
+          -0.04843750000000002,
+          -0.4249606918238994
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 4,
+          "share": 0.25,
+          "ci95": [
+            0.07266203825288221,
+            0.5237708198961276
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 12,
+          "share": 0.75,
+          "ci95": [
+            0.4762291801038724,
+            0.9273379617471178
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "points",
+      "mean": 0.963623046875,
+      "sd": 0.3986078035495774,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.7512199414419182,
+        1.1760261523080817
+      ],
+      "p": 7.757325206629615e-08,
+      "bootstrap_ci95": [
+        0.898431396484375,
+        1.023193359375
+      ],
+      "holm_p": 9.578260436421476e-07,
+      "block_differences": [
+        [
+          0.48046875,
+          1.2578125,
+          0.51953125,
+          1.34375,
+          0.65625,
+          0.984375,
+          0.4609375,
+          1.515625,
+          0.58984375,
+          1.421875,
+          0.7734375,
+          1.359375,
+          0.6796875,
+          1.296875,
+          0.63671875,
+          1.44140625
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.32568359375,
+      "sd": 0.09395458363383498,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.27561873010260113,
+        0.37574845739739887
+      ],
+      "p": 5.860185218867295e-10,
+      "bootstrap_ci95": [
+        0.30224609375,
+        0.35009765625
+      ],
+      "holm_p": 1.172037043773459e-08,
+      "block_differences": [
+        [
+          0.17578125,
+          0.3828125,
+          0.19140625,
+          0.44921875,
+          0.21484375,
+          0.3828125,
+          0.31640625,
+          0.3828125,
+          0.21484375,
+          0.38671875,
+          0.26171875,
+          0.45703125,
+          0.34765625,
+          0.44140625,
+          0.26953125,
+          0.3359375
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": -0.505859375,
+      "sd": 0.11160888391499128,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.5653315512252605,
+        -0.44638719877473954
+      ],
+      "p": 1.3021387162308393e-11,
+      "bootstrap_ci95": [
+        -0.52373046875,
+        -0.48613281249999996
+      ],
+      "holm_p": 3.2553467905770984e-10,
+      "block_differences": [
+        [
+          -0.4359375000000001,
+          -0.5203125,
+          -0.37968749999999996,
+          -0.6421875,
+          -0.359375,
+          -0.5609375000000001,
+          -0.4171875,
+          -0.640625,
+          -0.4375,
+          -0.578125,
+          -0.41406250000000006,
+          -0.628125,
+          -0.3609375,
+          -0.6515624999999999,
+          -0.434375,
+          -0.6328125
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.3450723516116352,
+      "sd": 0.16813325531573375,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.4346642392706868,
+        -0.25548046395258356
+      ],
+      "p": 6.254053079276275e-07,
+      "bootstrap_ci95": [
+        -0.4124482391165487,
+        -0.2711991450471699
+      ],
+      "holm_p": 6.254053079276275e-06,
+      "block_differences": [
+        [
+          -0.22968749999999993,
+          -0.24531249999999996,
+          -0.2947621855345912,
+          -0.5328124999999999,
+          -0.21718750000000003,
+          -0.528125,
+          -0.27968750000000003,
+          -0.23584905660377353,
+          -0.2203124999999999,
+          -0.08470911949685533,
+          -0.2640625,
+          -0.6629913522012578,
+          -0.38437499999999997,
+          -0.5676100628930818,
+          -0.22656249999999994,
+          -0.5471108490566039
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.65087890625,
+      "sd": 0.20444221845511498,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5419393378451531,
+        0.7598184746548469
+      ],
+      "p": 1.910882466244883e-09,
+      "bootstrap_ci95": [
+        0.599853515625,
+        0.7031311035156249
+      ],
+      "holm_p": 3.630676685865278e-08,
+      "block_differences": [
+        [
+          0.3203125,
+          0.76953125,
+          0.359375,
+          0.90234375,
+          0.3828125,
+          0.78515625,
+          0.6328125,
+          0.7734375,
+          0.3984375,
+          0.8125,
+          0.51953125,
+          0.921875,
+          0.6953125,
+          0.890625,
+          0.55859375,
+          0.69140625
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "connect4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "original",
+      "metric": "win",
+      "mean": 0.328125,
+      "sd": 0.1107521191717868,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.26910936148037823,
+        0.38714063851962177
+      ],
+      "p": 5.127949084811063e-09,
+      "bootstrap_ci95": [
+        0.2998046875,
+        0.3557189941406249
+      ],
+      "holm_p": 8.717513444178807e-08,
+      "block_differences": [
+        [
+          0.19921875,
+          0.45703125,
+          0.18359375,
+          0.4921875,
+          0.21875,
+          0.38671875,
+          0.2734375,
+          0.41796875,
+          0.23828125,
+          0.4140625,
+          0.33984375,
+          0.3828125,
+          0.328125,
+          0.44921875,
+          0.12109375,
+          0.34765625
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.3037109375,
+      "sd": 0.052996551209528404,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.27547106875205385,
+        0.33195080624794615
+      ],
+      "p": 4.33471980265827e-13,
+      "bootstrap_ci95": [
+        0.280029296875,
+        0.329345703125
+      ],
+      "holm_p": 1.300415940797481e-11,
+      "block_differences": [
+        [
+          0.24609375,
+          0.296875,
+          0.30078125,
+          0.3515625,
+          0.25390625,
+          0.26171875,
+          0.32421875,
+          0.3359375,
+          0.27734375,
+          0.37890625,
+          0.42578125,
+          0.3046875,
+          0.2265625,
+          0.3125,
+          0.31640625,
+          0.24609375
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "agreement",
+      "mean": 0.024239495067079876,
+      "sd": 0.018301034860719368,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.014487561957791398,
+        0.033991428176368355
+      ],
+      "p": 8.939661616748561e-05,
+      "bootstrap_ci95": [
+        0.0157893892343792,
+        0.03298218998608601
+      ],
+      "holm_p": 0.0004469830808374281,
+      "block_differences": [
+        [
+          0.005408305351053522,
+          0.02925179413759571,
+          0.03756975373543692,
+          0.006252999453068897,
+          0.05431173750624474,
+          0.0037009020853145946,
+          0.029177425441705096,
+          0.03635703291248282,
+          0.03196120253207935,
+          0.060103928843226795,
+          0.014925727214185724,
+          0.01928254813007768,
+          -7.798454521423803e-05,
+          0.009188337019781834,
+          0.03878523552043145,
+          0.011632975735807127
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 15,
+          "share": 0.9375,
+          "ci95": [
+            0.6976792615654389,
+            0.9984188882772308
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 1,
+          "share": 0.0625,
+          "ci95": [
+            0.0015811117227692005,
+            0.30232073843456103
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.07129641922124483,
+      "sd": 0.0371589882184881,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.0910970463591842,
+        -0.05149579208330545
+      ],
+      "p": 1.4302028360080993e-06,
+      "bootstrap_ci95": [
+        -0.08736484115508433,
+        -0.05343961185141664
+      ],
+      "holm_p": 1.2871825524072894e-05,
+      "block_differences": [
+        [
+          -0.06720572640509015,
+          -0.08755060728744946,
+          -0.06318560772268544,
+          -0.11722249875559976,
+          0.00520833333333337,
+          0.016521739130434754,
+          -0.07723577235772355,
+          -0.11661506707946334,
+          -0.09090909090909105,
+          -0.0656330749354006,
+          -0.0782558139534884,
+          -0.1038690476190477,
+          -0.0714572460859092,
+          -0.05223429951690828,
+          -0.07317927170868355,
+          -0.09791965566714489
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 2,
+          "share": 0.125,
+          "ci95": [
+            0.015513603815413817,
+            0.38347623684925625
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 14,
+          "share": 0.875,
+          "ci95": [
+            0.6165237631507436,
+            0.9844863961845862
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "points",
+      "mean": 0.56005859375,
+      "sd": 0.10572283245085846,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.5037228729543314,
+        0.6163943145456686
+      ],
+      "p": 1.363720438106734e-12,
+      "bootstrap_ci95": [
+        0.5126953125,
+        0.611328125
+      ],
+      "holm_p": 3.6820451828881817e-11,
+      "block_differences": [
+        [
+          0.44921875,
+          0.53125,
+          0.57421875,
+          0.62109375,
+          0.48046875,
+          0.48046875,
+          0.58984375,
+          0.65234375,
+          0.54296875,
+          0.7421875,
+          0.79296875,
+          0.53125,
+          0.40625,
+          0.578125,
+          0.5546875,
+          0.43359375
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.243408203125,
+      "sd": 0.054570536193170725,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.21432961698252825,
+        0.2724867892674718
+      ],
+      "p": 1.6391387022839937e-11,
+      "bootstrap_ci95": [
+        0.218017578125,
+        0.26953125
+      ],
+      "holm_p": 3.933932885481585e-10,
+      "block_differences": [
+        [
+          0.2421875,
+          0.24609375,
+          0.265625,
+          0.21875,
+          0.15625,
+          0.1796875,
+          0.17578125,
+          0.3359375,
+          0.2265625,
+          0.3046875,
+          0.34375,
+          0.2734375,
+          0.21484375,
+          0.203125,
+          0.27734375,
+          0.23046875
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": 0.012616903879137394,
+      "sd": 0.013528918864825368,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.005407851887550617,
+        0.01982595587072417
+      ],
+      "p": 0.002010193756665217,
+      "bootstrap_ci95": [
+        0.006327540066198071,
+        0.019015035696330455
+      ],
+      "holm_p": 0.008040775026660868,
+      "block_differences": [
+        [
+          0.0023238479700913306,
+          0.006126605227580462,
+          0.03525169358395608,
+          0.011720537944428955,
+          0.01615894450851607,
+          0.01082619572591581,
+          0.011031414565416453,
+          0.02065740250150716,
+          0.009468024294525312,
+          0.03939947482988637,
+          0.025115716144937905,
+          0.007818296462633767,
+          -0.005539293997386396,
+          -0.0038079297641744336,
+          0.022598187069520104,
+          -0.007278655001156653
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 13,
+          "share": 0.8125,
+          "ci95": [
+            0.5435434537683883,
+            0.9595262660940541
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 3,
+          "share": 0.1875,
+          "ci95": [
+            0.04047373390594589,
+            0.45645654623161164
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.13657904902040863,
+      "sd": 0.056522768947333116,
+      "n": [
+        16
+      ],
+      "ci95": [
+        -0.16669790656705197,
+        -0.10646019147376529
+      ],
+      "p": 7.804240030123966e-08,
+      "bootstrap_ci95": [
+        -0.16253285761295957,
+        -0.10932441852477907
+      ],
+      "holm_p": 9.578260436421476e-07,
+      "block_differences": [
+        [
+          -0.034066808059385,
+          -0.12525303643724695,
+          -0.07415533128565166,
+          -0.2130413140866103,
+          -0.14346590909090912,
+          -0.1399999999999999,
+          -0.19250871080139387,
+          -0.2149122807017545,
+          -0.05681818181818177,
+          -0.07700258397932824,
+          -0.19883720930232568,
+          -0.14077380952380952,
+          -0.11461260537936568,
+          -0.1953502415458937,
+          -0.1470588235294117,
+          -0.11740793878527028
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.455078125,
+      "sd": 0.10659602050987488,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.39827711513143665,
+        0.5118791348685633
+      ],
+      "p": 3.0724253933669645e-11,
+      "bootstrap_ci95": [
+        0.40576171875,
+        0.50732421875
+      ],
+      "holm_p": 7.066578404744018e-10,
+      "block_differences": [
+        [
+          0.45703125,
+          0.47265625,
+          0.5234375,
+          0.39453125,
+          0.2890625,
+          0.34375,
+          0.3359375,
+          0.62890625,
+          0.43359375,
+          0.57421875,
+          0.6640625,
+          0.50390625,
+          0.3828125,
+          0.36328125,
+          0.49609375,
+          0.41796875
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "reversi4",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "original",
+      "metric": "win",
+      "mean": 0.086669921875,
+      "sd": 0.03186947045328266,
+      "n": [
+        16
+      ],
+      "ci95": [
+        0.06968787979628,
+        0.10365196395372
+      ],
+      "p": 1.633180583369807e-08,
+      "bootstrap_ci95": [
+        0.071044921875,
+        0.1005859375
+      ],
+      "holm_p": 2.44977087505471e-07,
+      "block_differences": [
+        [
+          0.08984375,
+          0.10546875,
+          0.13671875,
+          0.05078125,
+          0.11328125,
+          0.09765625,
+          0.0703125,
+          0.09375,
+          0.12890625,
+          0.11328125,
+          0.09375,
+          0.046875,
+          0.05078125,
+          0.0859375,
+          0.08984375,
+          0.01953125
+        ]
+      ],
+      "original_counts": {
+        "higher": {
+          "count": 16,
+          "share": 1.0,
+          "ci95": [
+            0.7940927857921769,
+            1.0
+          ]
+        },
+        "equal": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        },
+        "lower": {
+          "count": 0,
+          "share": 0.0,
+          "ci95": [
+            0.0,
+            0.20590721420782312
+          ]
+        }
+      }
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "win",
+      "mean": 0.30361823654399067,
+      "sd": 0.07076423564505435,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.2669799443346866,
+        0.34025652875329476
+      ],
+      "p": 5.039655542116394e-13,
+      "bootstrap_ci95": [
+        0.28839509357360443,
+        0.31843314877823475
+      ],
+      "holm_p": 1.4615001072137542e-11,
+      "block_differences": [
+        [
+          0.17975286251653433,
+          0.10972144717261911,
+          0.15686125578703713,
+          0.16191897114748682,
+          0.028555927579365148,
+          0.15981729497354502,
+          0.02018203331679902,
+          0.11885799024470889,
+          0.17750031001984123,
+          0.1376190992890211,
+          0.11153738839285715,
+          0.15403335813492053,
+          0.10633680555555558,
+          0.16928788442460319,
+          0.036541780340608454,
+          0.11748434399801583,
+          0.18725482597552912,
+          0.11430534887566135,
+          0.1698882895171958,
+          0.1630709532076719,
+          0.05157438409391535,
+          0.20330920345568781,
+          0.03558252728174616,
+          0.1633468708664021
+        ],
+        [
+          0.2421875,
+          0.62890625,
+          0.265625,
+          0.671875,
+          0.32421875,
+          0.4921875,
+          0.2265625,
+          0.75390625,
+          0.29296875,
+          0.70703125,
+          0.38671875,
+          0.671875,
+          0.3515625,
+          0.6484375,
+          0.30859375,
+          0.71875
+        ],
+        [
+          0.24609375,
+          0.296875,
+          0.30078125,
+          0.3515625,
+          0.25390625,
+          0.26171875,
+          0.32421875,
+          0.3359375,
+          0.27734375,
+          0.37890625,
+          0.42578125,
+          0.3046875,
+          0.2265625,
+          0.3125,
+          0.31640625,
+          0.24609375
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "agreement",
+      "mean": -0.14504560702076918,
+      "sd": 0.021848639428368632,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        -0.15637040154131832,
+        -0.13372081250022005
+      ],
+      "p": 1.3644574256925487e-16,
+      "bootstrap_ci95": [
+        -0.15384603088150245,
+        -0.13595359586173508
+      ],
+      "holm_p": 4.50270950478541e-15,
+      "block_differences": [
+        [
+          -0.01703549310382646,
+          0.012572191347934969,
+          -0.009873468021148857,
+          -0.0017634865338385097,
+          -0.03548274601850987,
+          0.004160892974929942,
+          -0.009837816705629554,
+          -0.004408155100165789,
+          0.004378748270029265,
+          -0.03482573175032333,
+          0.025333221715527876,
+          -0.018867667178673497,
+          -0.004210007234174751,
+          -0.002575423782928743,
+          -0.0021740620608644567,
+          -0.0032573072748751652,
+          0.006424447675802969,
+          -6.747662718076253e-05,
+          -0.010617823947512317,
+          -0.02207397415596346,
+          0.02110632301927806,
+          0.019164824167252514,
+          -0.012948456446385426,
+          -0.008621890334054694
+        ],
+        [
+          -0.4171875,
+          -0.3687499999999999,
+          -0.33281249999999996,
+          -0.5,
+          -0.43906250000000013,
+          -0.47656249999999994,
+          -0.4062499999999999,
+          -0.5125,
+          -0.42968750000000006,
+          -0.4421875,
+          -0.4453125,
+          -0.4953125,
+          -0.41093749999999996,
+          -0.5328124999999999,
+          -0.5234375000000001,
+          -0.546875
+        ],
+        [
+          0.005408305351053522,
+          0.02925179413759571,
+          0.03756975373543692,
+          0.006252999453068897,
+          0.05431173750624474,
+          0.0037009020853145946,
+          0.029177425441705096,
+          0.03635703291248282,
+          0.03196120253207935,
+          0.060103928843226795,
+          0.014925727214185724,
+          0.01928254813007768,
+          -7.798454521423803e-05,
+          0.009188337019781834,
+          0.03878523552043145,
+          0.011632975735807127
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.08384104118030004,
+      "sd": 0.053950967009197104,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        -0.11203039530551467,
+        -0.055651687055085414
+      ],
+      "p": 7.299274391498586e-06,
+      "bootstrap_ci95": [
+        -0.09664899564107585,
+        -0.07089817387813184
+      ],
+      "holm_p": 5.839419513198869e-05,
+      "block_differences": [
+        [
+          -0.047119796228294986,
+          -0.022510729613733904,
+          -0.03345565131731654,
+          -0.10120309119010829,
+          0.02773104717074948,
+          -0.03746562279278609,
+          -0.03742760342291229,
+          -0.05482260683022294,
+          -0.06647727272727283,
+          -0.1043052173529217,
+          0.02216770714562022,
+          -0.07026444134009757,
+          -0.03702241383947957,
+          -0.055321540295098726,
+          -0.07379071018493194,
+          -0.034709110817715993,
+          -0.028639453581868257,
+          -0.0077806379729327135,
+          -0.015637615663165016,
+          -0.033860923463853054,
+          -0.0030148892708133923,
+          -0.02068526085428879,
+          -0.021592442645074095,
+          -0.02967130582849009
+        ],
+        [
+          0.0390625,
+          -0.26249999999999996,
+          -0.07216981132075467,
+          -0.2640625,
+          0.0625,
+          -0.29531250000000003,
+          -0.04531250000000003,
+          -0.19811320754716977,
+          0.017187499999999967,
+          -0.18181014150943398,
+          0.06093750000000003,
+          -0.32453812893081757,
+          -0.07968750000000002,
+          -0.2751572327044025,
+          -0.04843750000000002,
+          -0.4249606918238994
+        ],
+        [
+          -0.06720572640509015,
+          -0.08755060728744946,
+          -0.06318560772268544,
+          -0.11722249875559976,
+          0.00520833333333337,
+          0.016521739130434754,
+          -0.07723577235772355,
+          -0.11661506707946334,
+          -0.09090909090909105,
+          -0.0656330749354006,
+          -0.0782558139534884,
+          -0.1038690476190477,
+          -0.0714572460859092,
+          -0.05223429951690828,
+          -0.07317927170868355,
+          -0.09791965566714489
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "V/copies/direct",
+      "metric": "points",
+      "mean": 0.579659860152346,
+      "sd": 0.14265021587103385,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.5058741150567461,
+        0.653445605247946
+      ],
+      "p": 1.219611015190412e-12,
+      "bootstrap_ci95": [
+        0.5490775798279562,
+        0.6096918578599215
+      ],
+      "holm_p": 3.4149108425331536e-11,
+      "block_differences": [
+        [
+          0.12682239996693118,
+          0.16640134135251317,
+          0.3212663277116402,
+          0.11592778604497361,
+          0.13237149677579368,
+          0.2717577091600529,
+          0.05612005001653453,
+          0.2660771122685185,
+          0.24357923073743382,
+          0.3596454923115079,
+          0.15246853298611113,
+          0.18882921006944445,
+          0.260462394593254,
+          0.2958395337301587,
+          -0.0008287863756614167,
+          0.3189442791005291,
+          0.2178077980324074,
+          0.13847087880291004,
+          0.40458984375,
+          0.28153056795634923,
+          0.15874255952380945,
+          0.39910094246031746,
+          -0.006646567046957638,
+          0.29787042204034386
+        ],
+        [
+          0.48046875,
+          1.2578125,
+          0.51953125,
+          1.34375,
+          0.65625,
+          0.984375,
+          0.4609375,
+          1.515625,
+          0.58984375,
+          1.421875,
+          0.7734375,
+          1.359375,
+          0.6796875,
+          1.296875,
+          0.63671875,
+          1.44140625
+        ],
+        [
+          0.44921875,
+          0.53125,
+          0.57421875,
+          0.62109375,
+          0.48046875,
+          0.48046875,
+          0.58984375,
+          0.65234375,
+          0.54296875,
+          0.7421875,
+          0.79296875,
+          0.53125,
+          0.40625,
+          0.578125,
+          0.5546875,
+          0.43359375
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "win",
+      "mean": 0.22098003658808238,
+      "sd": 0.040158378027320495,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.2011578012979461,
+        0.24080227187821865
+      ],
+      "p": 5.331552518526522e-21,
+      "bootstrap_ci95": [
+        0.2075288656639534,
+        0.23471730352779613
+      ],
+      "holm_p": 1.919358906669548e-19,
+      "block_differences": [
+        [
+          0.08890542328042322,
+          0.1379143931878306,
+          0.1673301091269841,
+          0.1401186342592593,
+          -0.0035435267857141795,
+          0.16936693948412684,
+          0.03522316261574071,
+          0.007253430886243362,
+          0.07193028687169312,
+          0.1412313471395502,
+          0.03599537037037037,
+          0.09413054935515869,
+          0.14479011656746021,
+          0.10701006531084656,
+          0.03184911334325391,
+          0.08789579199735442,
+          0.09228386450066134,
+          0.048549365492724816,
+          0.05595393105158719,
+          0.1647373098544972,
+          0.13246036913029102,
+          0.11225947627314814,
+          0.05189112103174609,
+          0.13682286499669305
+        ],
+        [
+          0.17578125,
+          0.3828125,
+          0.19140625,
+          0.44921875,
+          0.21484375,
+          0.3828125,
+          0.31640625,
+          0.3828125,
+          0.21484375,
+          0.38671875,
+          0.26171875,
+          0.45703125,
+          0.34765625,
+          0.44140625,
+          0.26953125,
+          0.3359375
+        ],
+        [
+          0.2421875,
+          0.24609375,
+          0.265625,
+          0.21875,
+          0.15625,
+          0.1796875,
+          0.17578125,
+          0.3359375,
+          0.2265625,
+          0.3046875,
+          0.34375,
+          0.2734375,
+          0.21484375,
+          0.203125,
+          0.27734375,
+          0.23046875
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "agreement",
+      "mean": -0.16434338489877556,
+      "sd": 0.037778801727448484,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        -0.18433483680694385,
+        -0.14435193299060728
+      ],
+      "p": 9.839440944157045e-12,
+      "bootstrap_ci95": [
+        -0.1707583506873902,
+        -0.15729525859044943
+      ],
+      "holm_p": 2.558254645480832e-10,
+      "block_differences": [
+        [
+          -0.018043740588194135,
+          0.020567723656968462,
+          -0.007549974428692874,
+          0.012539216884651538,
+          -0.004944691518165012,
+          -0.002256533432871133,
+          -0.009667682862618765,
+          -0.011596578261886648,
+          -0.0027535368291556894,
+          0.011731515222757838,
+          0.0067046356388086314,
+          -0.0037519200261879604,
+          0.005773215375753371,
+          0.013457656091127368,
+          0.012454963446260958,
+          -0.012435567182129126,
+          0.004192060087025218,
+          -0.01623987699974816,
+          -0.0195626025150355,
+          -0.01870760268214955,
+          0.037262973657772314,
+          0.013078066502058672,
+          -0.012414021081259108,
+          0.007257896033769695
+        ],
+        [
+          -0.4359375000000001,
+          -0.5203125,
+          -0.37968749999999996,
+          -0.6421875,
+          -0.359375,
+          -0.5609375000000001,
+          -0.4171875,
+          -0.640625,
+          -0.4375,
+          -0.578125,
+          -0.41406250000000006,
+          -0.628125,
+          -0.3609375,
+          -0.6515624999999999,
+          -0.434375,
+          -0.6328125
+        ],
+        [
+          0.0023238479700913306,
+          0.006126605227580462,
+          0.03525169358395608,
+          0.011720537944428955,
+          0.01615894450851607,
+          0.01082619572591581,
+          0.011031414565416453,
+          0.02065740250150716,
+          0.009468024294525312,
+          0.03939947482988637,
+          0.025115716144937905,
+          0.007818296462633767,
+          -0.005539293997386396,
+          -0.0038079297641744336,
+          0.022598187069520104,
+          -0.007278655001156653
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "competitive_replacement",
+      "mean": -0.20368495290421582,
+      "sd": 0.05963152660931642,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        -0.23482577288619477,
+        -0.17254413292223686
+      ],
+      "p": 3.196942420951154e-11,
+      "bootstrap_ci95": [
+        -0.2275531049851589,
+        -0.17729431470106363
+      ],
+      "holm_p": 7.066578404744018e-10,
+      "block_differences": [
+        [
+          -0.12990044434445136,
+          -0.12438483547925605,
+          -0.13128629201948283,
+          -0.16234374034003096,
+          -0.07207171743958629,
+          -0.1225474063852594,
+          -0.12174201941488283,
+          -0.13379075150244035,
+          -0.14801295369742207,
+          -0.17593530909064148,
+          -0.1020146270719634,
+          -0.1561995218711637,
+          -0.1252243113114383,
+          -0.12683139122848708,
+          -0.1664035698852664,
+          -0.122449565840404,
+          -0.10148598288357447,
+          -0.09700415902258175,
+          -0.1491792145854487,
+          -0.13364667891845328,
+          -0.13418716617768756,
+          -0.1259521970760349,
+          -0.11569191228929743,
+          -0.12739722605923187
+        ],
+        [
+          -0.22968749999999993,
+          -0.24531249999999996,
+          -0.2947621855345912,
+          -0.5328124999999999,
+          -0.21718750000000003,
+          -0.528125,
+          -0.27968750000000003,
+          -0.23584905660377353,
+          -0.2203124999999999,
+          -0.08470911949685533,
+          -0.2640625,
+          -0.6629913522012578,
+          -0.38437499999999997,
+          -0.5676100628930818,
+          -0.22656249999999994,
+          -0.5471108490566039
+        ],
+        [
+          -0.034066808059385,
+          -0.12525303643724695,
+          -0.07415533128565166,
+          -0.2130413140866103,
+          -0.14346590909090912,
+          -0.1399999999999999,
+          -0.19250871080139387,
+          -0.2149122807017545,
+          -0.05681818181818177,
+          -0.07700258397932824,
+          -0.19883720930232568,
+          -0.14077380952380952,
+          -0.11461260537936568,
+          -0.1953502415458937,
+          -0.1470588235294117,
+          -0.11740793878527028
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "Q/guarded_mixture/hybrid/paths16",
+      "reference": "Q/copies/direct",
+      "metric": "points",
+      "mean": 0.42282650256283066,
+      "sd": 0.08349491308275347,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.38116828013980975,
+        0.4644847249858516
+      ],
+      "p": 1.5235753909664167e-18,
+      "bootstrap_ci95": [
+        0.3958995039108429,
+        0.44957445847714805
+      ],
+      "holm_p": 5.180156329285817e-17,
+      "block_differences": [
+        [
+          0.07401930390211642,
+          0.0896009011243385,
+          0.1548326926256613,
+          0.08737134176587302,
+          0.1299982948908731,
+          0.23921337632275114,
+          -0.022748997602513255,
+          0.20490993923611112,
+          0.15185753554894182,
+          0.20264007729828037,
+          0.2942697999338624,
+          0.036529637896825395,
+          0.3523525338955026,
+          0.23950634507275126,
+          0.06029550057870364,
+          0.15811063574735446,
+          0.08018327339616399,
+          0.10516053860780417,
+          0.2975720279431217,
+          0.32208348834325384,
+          0.16424205315806878,
+          0.266906673693783,
+          0.10340918485449735,
+          0.10822327628968242
+        ],
+        [
+          0.3203125,
+          0.76953125,
+          0.359375,
+          0.90234375,
+          0.3828125,
+          0.78515625,
+          0.6328125,
+          0.7734375,
+          0.3984375,
+          0.8125,
+          0.51953125,
+          0.921875,
+          0.6953125,
+          0.890625,
+          0.55859375,
+          0.69140625
+        ],
+        [
+          0.45703125,
+          0.47265625,
+          0.5234375,
+          0.39453125,
+          0.2890625,
+          0.34375,
+          0.3359375,
+          0.62890625,
+          0.43359375,
+          0.57421875,
+          0.6640625,
+          0.50390625,
+          0.3828125,
+          0.36328125,
+          0.49609375,
+          0.41796875
+        ]
+      ]
+    },
+    {
+      "game": "equal_games",
+      "method": "V/guarded_mixture/hybrid/paths16",
+      "reference": "original",
+      "metric": "win",
+      "mean": 0.16236000666542658,
+      "sd": 0.04421126261494066,
+      "n": [
+        24,
+        16,
+        16
+      ],
+      "ci95": [
+        0.14054365160456167,
+        0.18417636172629148
+      ],
+      "p": 3.318121041161071e-14,
+      "bootstrap_ci95": [
+        0.14827994210379467,
+        0.17571341557757844
+      ],
+      "holm_p": 1.028617522759932e-12,
+      "block_differences": [
+        [
+          0.18334082547949726,
+          0.10811709449404766,
+          0.13207413607804241,
+          0.10687184813161382,
+          0.009726872519841279,
+          0.11897889798280425,
+          0.025345930472883582,
+          0.09278997189153437,
+          0.08434890666335976,
+          0.09985222387566128,
+          0.06609416335978835,
+          0.09174959697420626,
+          0.04575634507275134,
+          0.09739247478505286,
+          -0.006891482721560815,
+          0.10791067294973544,
+          0.16589859250992067,
+          0.06409866898148142,
+          -0.01151542865410049,
+          0.12513718377976185,
+          -0.09788618138227512,
+          0.008491443452380953,
+          -0.01134827628968249,
+          0.12850787450396817
+        ],
+        [
+          0.19921875,
+          0.45703125,
+          0.18359375,
+          0.4921875,
+          0.21875,
+          0.38671875,
+          0.2734375,
+          0.41796875,
+          0.23828125,
+          0.4140625,
+          0.33984375,
+          0.3828125,
+          0.328125,
+          0.44921875,
+          0.12109375,
+          0.34765625
+        ],
+        [
+          0.08984375,
+          0.10546875,
+          0.13671875,
+          0.05078125,
+          0.11328125,
+          0.09765625,
+          0.0703125,
+          0.09375,
+          0.12890625,
+          0.11328125,
+          0.09375,
+          0.046875,
+          0.05078125,
+          0.0859375,
+          0.08984375,
+          0.01953125
+        ]
+      ]
+    }
+  ]
+}

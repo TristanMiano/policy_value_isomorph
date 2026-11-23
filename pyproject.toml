@@ -16,6 +16,7 @@ policy-value-cli = "policy_value_isomorph.cli:main"
 
 [project.optional-dependencies]
 phase-iv = ["numpy>=1.24", "scipy>=1.10", "matplotlib>=3.7"]
+phase-v = ["numpy>=1.24", "scipy>=1.10", "matplotlib>=3.7"]
 neural-control = ["numpy>=1.24"]
 muon = ["torch>=2.9"]
 dev = [
@@ -28,6 +29,9 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+policy_value_isomorph = ["phase_v_rules.hpp", "phase_v_native.cpp", "win_vnm.hpp"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
