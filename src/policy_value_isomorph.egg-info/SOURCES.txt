@@ -61,6 +61,8 @@ src/policy_value_isomorph/training_plots.py
 src/policy_value_isomorph/trajectory_utility.py
 src/policy_value_isomorph/value_atlas.py
 src/policy_value_isomorph/value_mlp.py
+src/policy_value_isomorph/visit_selection.py
+src/policy_value_isomorph/visit_vnm.hpp
 src/policy_value_isomorph/win_selection.py
 src/policy_value_isomorph/win_vnm.hpp
 src/policy_value_isomorph.egg-info/PKG-INFO
@@ -117,4 +119,5 @@ tests/test_training_plots.py
 tests/test_training_resume.py
 tests/test_value_atlas.py
 tests/test_value_mlp.py
+tests/test_visit_selection.py
 tests/test_win_selection.py

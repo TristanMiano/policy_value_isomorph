@@ -25,8 +25,8 @@ DEST = Path(
 GAMES = ("tictactoe", "connect4", "reversi4")
 
 
-def external_pairs(e, g, block, split, fit):
-    rng = np.random.default_rng(seed(g, block, 410, split, fit))
+def external_pairs(e, g, block, split, fit, stream=410):
+    rng = np.random.default_rng(seed(g, block, stream, split, fit))
     pairs = []
     for opponents in ((-1,), (9, 10), (-2,), (-3,)):
         varied = prefixes(e, 4, rng, 6)

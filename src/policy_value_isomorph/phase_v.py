@@ -27,7 +27,8 @@ def native():
     """Build the optional CPU simulation extension outside the checkout (Linux/WSL or macOS)."""
     folder = Path(__file__).resolve().parent
     src = folder / "phase_v_native.cpp"
-    files = src.read_bytes() + (folder / "phase_v_rules.hpp").read_bytes() + (folder / "win_vnm.hpp").read_bytes()
+    headers = ("phase_v_rules.hpp", "win_vnm.hpp", "visit_vnm.hpp")
+    files = src.read_bytes() + b"".join((folder / name).read_bytes() for name in headers)
     key = hashlib.sha256(files + (sys.version + torch.__version__).encode()).hexdigest()[:16]
     build = Path(tempfile.gettempdir()) / ("pvi-phase-v-" + key)
     build.mkdir(exist_ok=True)

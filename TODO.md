@@ -6,9 +6,11 @@ Last updated 2026-11-23
 
 **Checkpoint F is complete. Task 83, the first task of Phase VI, is next and has not started.** Release the first empirical report and reproducible benchmark for tic-tac-toe, Connect Four and 4×4 Reversi before extending the study to other domains. The review measures games won, moves copied and choices predicted when the favorite is removed. [Checkpoint F review](CHECKPOINT_F.md) · [Three-game research report](PHASE_V.md) · [Diagnosis and perfect-fit controls](AGREEMENT_DIAGNOSIS.md)
 
-Von Neumann–Morgenstern (VNM) selection compares moves by the expected score of complete games. Its project standard combines game outcomes with learned move frequencies and considers four possible opponents. Keep direct selection (the highest immediate fitted frequency), the VNM comparison scoring games entirely from visits, and games against an exact copy of the tested player in reports. [Win-rate standard, matched comparisons and reproduction](experiments/win_selection/README.md)
+Von Neumann–Morgenstern (VNM) selection compares moves by the expected score of complete games. The supplied-outcome standard combines game results with learned move frequencies and considers four possible opponents. Keep direct selection (the highest immediate fitted frequency), the VNM comparison scoring games entirely from visits, and games against an exact copy of the tested player in reports. [Win-rate standard, matched comparisons and reproduction](experiments/win_selection/README.md)
 
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
+
+The Phase V follow-up on the value network's own contribution uses only fitted move frequencies to score complete games. It repeats the comparison with board-occupancy inputs, measures scores on wins and losses, and checks the effect of substituting a constant for every fitted frequency. [Visit-only VNM results and reproduction](experiments/visit_utility/README.md)
 
 ## Main philosophical stance
 

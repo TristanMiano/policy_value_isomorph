@@ -4,6 +4,8 @@
 
 ## How the standard chooses a move
 
+This is the supplied-outcome VNM reference. The follow-up benchmark for the value network's own contribution uses a separately selected rule that scores complete games only from fitted move frequencies. [Visit-only comparison, duration and constant-score controls](../visit_utility/README.md)
+
 A frozen **original** is the trained player we observed before fitting a reconstruction. The **board-scoring network (V)** estimates the frequency of a candidate move from the resulting board. V is the default. The **board-and-move network (Q)** also receives the parent board and the move. Run the same selection rule on Q when comparing representations. The normalized label is the count of the move divided by all original visits to the parent. Clip each fitted score to [0,1].
 
 1. Try each legal move. Continue to the game's actual end, including mandatory passes. On the choosing player's later turns, take an immediate win if available, avoid a move that finishes in an immediate loss when possible, and minimize the number of immediate winning replies open to the opponent. In Reversi next prefer taking a corner, leaving fewer opponent corners, then leaving fewer opponent placements. Resolve the remaining choices by highest fitted score and then lowest move number. We call this the **guarded** player. The first move itself is free to be any legal candidate.

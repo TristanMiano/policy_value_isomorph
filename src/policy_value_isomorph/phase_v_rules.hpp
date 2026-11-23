@@ -194,6 +194,18 @@ struct Rules {
     using Codes = std::array<int, groups>;
     Codes codes(State s, State c, int a, bool q, int layout) const {
         Codes x{};
+        if (layout == 2) {
+            // Raw cell patterns and side to move only. No line, threat, mobility or disc-count feature.
+            for (int j = 0; j < groups; ++j) {
+                U mask = patterns[j / 8][j % 8];
+                State ref = q && j >= 8 ? s : c;
+                int cells = int(pack(ref[0], mask) | (pack(ref[1], mask) << 4));
+                x[j] = j * stride + cells + 256 * int(ref[2]);
+                if (q && j >= 8)
+                    x[j] = j * stride + (a * 2 + int(ref[2])) * 192 + cells % 192;
+            }
+            return x;
+        }
         for (int j = 0; j < 8; j++) {
             U m = patterns[layout][j];
             x[j] = j * stride + int(pack(c[0], m) | (pack(c[1], m) << 4) | (c[2] << 8));
