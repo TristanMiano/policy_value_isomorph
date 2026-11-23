@@ -27,7 +27,9 @@ struct Engine : Rules {
     bool mixed = false;
     U salt = 0;
     double draw_value = 0;
-    std::array<Model, 16> models;
+    std::array<Model, 20> models;
+    std::unordered_map<State, int, Hash> observed_choices;
+    std::unordered_map<State, double, Hash> observed_children;
     std::unordered_map<State, Action, Hash> corrections;
     explicit Engine(bool r) : Rules(r) {}
     void configure(bool random, U seed) {
@@ -55,6 +57,13 @@ struct Engine : Rules {
         }
         if (id >= 12 && id <= 14)
             models[15].best.clear();
+        if (id == 3) {
+            models[17].best.clear();
+            for (auto &tail : models[17].tails)
+                tail.clear();
+        }
+        if (id == 1 || id == 2)
+            reset_observed(id == 1 ? 19 : 18);
     }
     void correct(const std::vector<State> &states, const std::vector<int> &moves,
                  const std::vector<double> &delta) {
@@ -66,12 +75,42 @@ struct Engine : Rules {
         for (auto &m : models)
             m.tails[1].clear();
     }
-    double score(State s, State c, int a, int id) const {
+    // Consequences supplied by the game rules. The linear readout is fitted only to observed moves.
+    std::array<double, 2> consequences(State s, int a) {
+        State c = next(s, a);
+        if (rev)
+            return {double(-solve(c)), 0.};
+        State other = s;
+        other[2] ^= 1;
+        return {double(four(c[s[2]])), double(four(next(other, a)[other[2]]))};
+    }
+    double choice_logit(State s, int a) {
+        const auto &w = models[16].table;
+        auto x = consequences(s, a);
+        return w[a] + w[actions] * x[0] + w[actions + 1] * x[1];
+    }
+    double score(State s, State c, int a, int id, bool bounded = true) {
+        if (id == 18) {
+            auto it = observed_choices.find(s);
+            return it == observed_choices.end() ? score(s, c, a, 2) : double(it->second == a);
+        }
+        if (id == 19) {
+            auto it = observed_children.find(c);
+            return it == observed_children.end() ? score(s, c, a, 1) : it->second;
+        }
+        if (id == 16 || id == 17) {
+            auto logit = [&](int move) {
+                return id == 16 ? choice_logit(s, move) : score(s, next(s, move), move, 3);
+            };
+            double z = logit(a), total = 0;
+            for (unsigned m = legal(s); m; m &= m - 1)
+                total += std::exp(logit(first(m)) - z);
+            return 1. / total;
+        }
         if (id == 5)
             return models[5].table[a];
         if (id == 15) {
-            double w = std::clamp(score(s, c, a, 12), 0., 1.),
-                   d = std::clamp(score(s, c, a, 13), 0., 1.),
+            double w = std::clamp(score(s, c, a, 12), 0., 1.), d = std::clamp(score(s, c, a, 13), 0., 1.),
                    l = std::clamp(score(s, c, a, 14), 0., 1.);
             return w + d + l > 0 ? (w - l) / (w + d + l) : 0;
         }
@@ -85,7 +124,7 @@ struct Engine : Rules {
             if (i != corrections.end() && i->second.move == a)
                 v += i->second.value;
         }
-        if (id == 1 || id == 2 || id == 7 || id == 8)
+        if (bounded && (id == 1 || id == 2 || id == 7 || id == 8))
             return std::clamp(v, 0., 1.);
         return v;
     }
@@ -184,6 +223,25 @@ struct Engine : Rules {
             int n = (who && mixed) ? 4 : 1;
             for (int k = 0; k < n; k++) {
                 U key = Hash{}(s) ^ scramble(salt + 131 * a + 8191 * k);
+                if (rule == 8) {
+                    // Whole-play utility in first-seat units, with each move measured
+                    // relative to the best score available to its own mover.
+                    double utility = sign * (v - best(s, id).value);
+                    State h = c;
+                    ++steps;
+                    while (unsigned menu = legal(h)) {
+                        auto favorite = best(h, id);
+                        int act = who ? original(h, menu, noise(key)) : favorite.move;
+                        State child = next(h, act);
+                        utility += (h[2] ? -1. : 1.) * (score(h, child, act, id) - favorite.value);
+                        h = child;
+                        key += 0x9e3779b97f4a7c15ULL;
+                        ++steps;
+                        calls += who;
+                    }
+                    value += utility;
+                    continue;
+                }
                 auto t = prepend(sign * v, tail(c, id, who, key));
                 steps += t.length;
                 if (who)
@@ -327,6 +385,137 @@ struct Engine : Rules {
         std::sort(v.begin(), v.end());
         return v;
     }
+    py::array_t<double> raw_scores(const std::vector<State> &states, int id) {
+        py::array_t<double> out({int(states.size()), actions});
+        auto z = out.mutable_unchecked<2>();
+        for (size_t i = 0; i < states.size(); ++i)
+            for (int a = 0; a < actions; ++a)
+                z(i, a) = (legal(states[i]) & (1u << a))
+                              ? score(states[i], next(states[i], a), a, id, false)
+                              : -1e30;
+        return out;
+    }
+    void reset_observed(int id) {
+        models[id].best.clear();
+        for (auto &t : models[id].tails)
+            t.clear();
+    }
+    void fit_observed_choices(const std::vector<State> &s, const std::vector<int> &a) {
+        if (s.size() != a.size())
+            throw std::invalid_argument("choice counts");
+        observed_choices.clear();
+        for (size_t i = 0; i < s.size(); i++)
+            observed_choices[s[i]] = a[i];
+        reset_observed(18);
+    }
+    void fit_observed_children(const std::vector<State> &s, const std::vector<double> &v) {
+        if (s.size() != v.size())
+            throw std::invalid_argument("child values");
+        observed_children.clear();
+        for (size_t i = 0; i < s.size(); i++)
+            observed_children[s[i]] = v[i];
+        reset_observed(19);
+    }
+    // The forced alternative is an experimental intervention. Only subsequent moves
+    // actually selected by the original count as observations of its behavior.
+    py::array_t<U> continuation_visits(const std::vector<State> &roots) {
+        if (mixed)
+            throw std::invalid_argument("fixed source required");
+        std::unordered_map<State, U, Hash> visits;
+        for (State s : roots)
+            for (unsigned m = legal(s); m; m &= m - 1) {
+                State h = next(s, first(m));
+                while (legal(h)) {
+                    ++visits[h];
+                    h = next(h, best(h, 0).move);
+                }
+            }
+        std::vector<State> sorted;
+        sorted.reserve(visits.size());
+        for (auto &kv : visits)
+            sorted.push_back(kv.first);
+        std::sort(sorted.begin(), sorted.end());
+        py::array_t<U> out({int(sorted.size()), 5});
+        auto x = out.mutable_unchecked<2>();
+        for (size_t i = 0; i < sorted.size(); i++) {
+            State s = sorted[i];
+            for (int j = 0; j < 3; j++)
+                x(i, j) = s[j];
+            x(i, 3) = best(s, 0).move;
+            x(i, 4) = visits[s];
+        }
+        return out;
+    }
+    py::array_t<bool> fitted_paths(const std::vector<State> &roots, int id) {
+        if (id != 18 && id != 19)
+            throw std::invalid_argument("requires a fit with observed inputs");
+        py::array_t<bool> out({int(roots.size()), actions});
+        std::fill(out.mutable_data(), out.mutable_data() + out.size(), false);
+        auto x = out.mutable_unchecked<2>();
+        for (size_t i = 0; i < roots.size(); i++)
+            for (unsigned m = legal(roots[i]); m; m &= m - 1) {
+                State h = roots[i];
+                int a = first(m), initial = a;
+                while (true) {
+                    State c = next(h, a);
+                    if (id == 18 ? !observed_choices.count(h) : !observed_children.count(c))
+                        break;
+                    if (!legal(c)) {
+                        x(i, initial) = true;
+                        break;
+                    }
+                    h = c;
+                    if (id == 19) {
+                        bool menu_seen = true;
+                        for (unsigned options = legal(h); options; options &= options - 1)
+                            menu_seen &= observed_children.count(next(h, first(options))) != 0;
+                        if (!menu_seen)
+                            break;
+                    }
+                    a = best(h, id).move;
+                }
+            }
+        return out;
+    }
+    py::array_t<double> rule_inputs(const std::vector<State> &states) {
+        py::array_t<double> out({int(states.size()), actions, 2});
+        auto x = out.mutable_unchecked<3>();
+        std::fill(out.mutable_data(), out.mutable_data() + out.size(), 0.);
+        for (size_t i = 0; i < states.size(); ++i)
+            for (unsigned m = legal(states[i]); m; m &= m - 1) {
+                int a = first(m);
+                auto v = consequences(states[i], a);
+                x(i, a, 0) = v[0];
+                x(i, a, 1) = v[1];
+            }
+        return out;
+    }
+    // Force the candidate once, then follow the specified fixed player in both seats.
+    // Columns are path length, final mover relative to root, exact and fitted final frequencies.
+    py::array_t<double> terminal_probe(const std::vector<State> &states, int fitted, int continuation) {
+        if (mixed)
+            throw std::invalid_argument("terminal probe requires a fixed source");
+        py::array_t<double> out({int(states.size()), actions, 4});
+        std::fill(out.mutable_data(), out.mutable_data() + out.size(), 0.);
+        auto x = out.mutable_unchecked<3>();
+        for (size_t i = 0; i < states.size(); ++i)
+            for (unsigned m = legal(states[i]); m; m &= m - 1) {
+                State h = states[i];
+                int a = first(m), chosen = a, length = 1;
+                State c = next(h, chosen);
+                while (legal(c)) {
+                    h = c;
+                    chosen = best(h, continuation).move;
+                    c = next(h, chosen);
+                    ++length;
+                }
+                x(i, a, 0) = length;
+                x(i, a, 1) = states[i][2] == h[2] ? 1 : -1;
+                x(i, a, 2) = chosen == best(h, 0).move;
+                x(i, a, 3) = score(h, c, chosen, fitted);
+            }
+        return out;
+    }
 };
 PYBIND11_MODULE(_phase_v_native, m) {
     py::class_<Engine>(m, "Engine")
@@ -344,6 +533,13 @@ PYBIND11_MODULE(_phase_v_native, m) {
         .def("set", &Engine::set)
         .def("correct", &Engine::correct)
         .def("profiles", &Engine::profiles)
+        .def("raw_scores", &Engine::raw_scores)
+        .def("rule_inputs", &Engine::rule_inputs)
+        .def("terminal_probe", &Engine::terminal_probe)
+        .def("fit_observed_choices", &Engine::fit_observed_choices)
+        .def("fit_observed_children", &Engine::fit_observed_children)
+        .def("continuation_visits", &Engine::continuation_visits)
+        .def("fitted_paths", &Engine::fitted_paths)
         .def("match", &Engine::match)
         .def("trajectory", &Engine::trajectory)
         .def_readwrite("draw_value", &Engine::draw_value);

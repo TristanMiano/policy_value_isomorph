@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/policy_value_isomorph/__init__.py
+src/policy_value_isomorph/agreement_diagnosis.py
 src/policy_value_isomorph/candidate_sets.py
 src/policy_value_isomorph/checkpointing.py
 src/policy_value_isomorph/choice_training.py
@@ -67,6 +68,7 @@ src/policy_value_isomorph.egg-info/entry_points.txt
 src/policy_value_isomorph.egg-info/requires.txt
 src/policy_value_isomorph.egg-info/top_level.txt
 tests/test_adamw.py
+tests/test_agreement_diagnosis.py
 tests/test_candidate_sets.py
 tests/test_checkpoint_c.py
 tests/test_checkpoint_d_statistics.py

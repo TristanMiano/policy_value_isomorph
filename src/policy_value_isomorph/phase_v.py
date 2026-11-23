@@ -74,6 +74,11 @@ def spec(model, rule=0, who=0, temp=-1):
     return [model, rule, who, temp]
 
 
+def centered_vnm(model: int, original_continues: bool = False, temperature: float = -1) -> list:
+    """Evaluate the signed sum of each played score minus its mover's best legal score."""
+    return spec(model, 8, int(original_continues), temperature)
+
+
 def prefixes(e, n, rng, depth=None):
     result = []
     for _ in range(n):
