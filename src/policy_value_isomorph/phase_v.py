@@ -79,7 +79,7 @@ def split_of(e, s, salt):
     bucket=(x^(x>>31))%100
     return 0 if bucket<65 else 1 if bucket<80 else 2
 
-def fit_table(features, labels, train, valid, init, mode="squared", steps=(4,16,48)):
+def fit_table(features, labels, train, valid, init, mode="squared", steps=(4,16,48), snapshots=None):
     """One active rectified pattern unit per group; optimize its linear readout in PyTorch."""
     legal=features[:,:,0]>=0
     tr=legal & train
@@ -121,6 +121,8 @@ def fit_table(features, labels, train, valid, init, mode="squared", steps=(4,16,
             row=dict(step=step,training=error(tr),validation=error(val),candidates=int(tr.sum()),
                      boards=int(tr.any(1).sum()),parameters=len(ids))
             curves.append(row)
+            if snapshots is not None:
+                snapshots.append(table.copy())
             if selected is None or row["validation"]<selected[1]["validation"]:
                 selected=(table,row)
     return *selected,curves

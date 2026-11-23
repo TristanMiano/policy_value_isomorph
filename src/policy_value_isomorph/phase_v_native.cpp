@@ -24,6 +24,7 @@ struct Engine:Rules {
         if(data.size()!=groups*stride)throw std::invalid_argument("pattern table size");
         Model& m=models.at(id);m.q=q;m.layout=layout;m.table.assign(data.data(),data.data()+data.size());m.best.clear();for(auto& t:m.tails)t.clear();
         if(id==0){corrections.clear();for(auto& mod:models)mod.tails[1].clear();}
+        if(id>=12 && id<=14)models[15].best.clear();
     }
     void correct(const std::vector<State>& states,const std::vector<int>& moves,const std::vector<double>& delta){
         if(states.size()!=moves.size()||moves.size()!=delta.size())throw std::invalid_argument("correction sizes");
@@ -31,6 +32,9 @@ struct Engine:Rules {
         models[0].best.clear();for(auto& m:models)m.tails[1].clear();
     }
     double score(State s,State c,int a,int id) const {
+        if(id==5)return models[5].table[a];
+        if(id==15){double w=std::clamp(score(s,c,a,12),0.,1.),d=std::clamp(score(s,c,a,13),0.,1.),l=std::clamp(score(s,c,a,14),0.,1.);
+            return w+d+l>0?(w-l)/(w+d+l):0;}
         const auto& m=models.at(id);auto f=codes(s,c,a,m.q,m.layout);double v=0;
         for(int k:f)v+=m.table[k];
         if(id==0 && !corrections.empty()){auto i=corrections.find(s);if(i!=corrections.end() && i->second.move==a)v+=i->second.value;}
@@ -74,6 +78,10 @@ struct Engine:Rules {
         if(id==-4 || id==0){int fav=best(s,0).move;
             if(mixed){for(unsigned m=mask;m;m&=m-1)p[first(m)]=.25/bits(mask);p[fav]+=.75;}else p[fav]=1;return p;}
         if(id==-1){for(unsigned m=mask;m;m&=m-1)p[first(m)]=1./bits(mask);return p;}
+        if(spec[1]==6){double old=draw_value;spec[1]=5;draw_value=-1;auto low=law(s,spec,steps,calls);
+            draw_value=1;auto high=law(s,spec,steps,calls);draw_value=old;
+            for(int a=0;a<actions;a++)p[a]=(low[a]+high[a])/2;return p;}
+        if(spec[1]==7){spec[1]=5;p=law(s,spec,steps,calls);if(!mixed){p.fill(0);p[best(s,0).move]=1;}return p;}
         if(id>=0 && spec[1]==0 && spec[3]<0){p[best(s,id).move]=1;return p;}
         Scores z=profile(s,id,int(spec[1]),bool(spec[2]),steps,calls);
         int a=std::max_element(z.begin(),z.begin()+actions)-z.begin();
