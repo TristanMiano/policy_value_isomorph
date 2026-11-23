@@ -1,5 +1,6 @@
 *.npz binary
 *.gz binary
+*.png binary
 *.json text eol=lf
 *.html text eol=lf
 *.done text eol=lf
