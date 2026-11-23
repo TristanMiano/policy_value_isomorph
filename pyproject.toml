@@ -31,7 +31,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.package-data]
-policy_value_isomorph = ["phase_v_rules.hpp", "phase_v_native.cpp"]
+policy_value_isomorph = ["phase_v_rules.hpp", "phase_v_native.cpp", "win_vnm.hpp"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

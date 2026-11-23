@@ -6,6 +6,8 @@ Last updated 2026-11-23
 
 **Checkpoint F is on hold.** The requested Phase V diagnosis now includes selection on a perfect training fit, coverage of all alternative continuations, and repairs tested on withheld boards. [Causal diagnosis](AGREEMENT_DIAGNOSIS.md) · [Perfect-fit control](experiments/agreement_diagnosis/training_tables.md) Phase V is complete through Task 82. [Three-game research report](PHASE_V.md) · [Paired measurements and uncertainty](experiments/phase_v/tables.md) · [Results and reproduction](experiments/phase_v/README.md)
 
+Future unqualified VNM selection uses the complete-game rule selected for external wins across the three games. Keep direct selection, the purely visit-derived VNM comparison and explicitly labeled exact-copy self-play in reports. [Win-rate standard, matched comparisons and reproduction](experiments/win_selection/README.md)
+
 Complete exactly one numbered task or one checkpoint per focused work session unless Tristan explicitly requests a larger batch. Preserve completed history, record negative results, and treat checkpoint revisions as part of the research rather than as administrative cleanup.
 
 ## Main philosophical stance

@@ -517,6 +517,7 @@ struct Engine : Rules {
         return out;
     }
 };
+#include "win_vnm.hpp"
 PYBIND11_MODULE(_phase_v_native, m) {
     py::class_<Engine>(m, "Engine")
         .def(py::init<bool>())
@@ -543,4 +544,8 @@ PYBIND11_MODULE(_phase_v_native, m) {
         .def("match", &Engine::match)
         .def("trajectory", &Engine::trajectory)
         .def_readwrite("draw_value", &Engine::draw_value);
+    py::class_<WinPlanner>(m, "WinPlanner")
+        .def(py::init<Engine &, int, U, int>(), py::keep_alive<1, 2>())
+        .def("choose", &WinPlanner::choose)
+        .def("result", &WinPlanner::result);
 }

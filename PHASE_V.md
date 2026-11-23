@@ -8,6 +8,8 @@ How closely can scores learned from watching a player reproduce its choices? And
 
 The follow-up traced the two drops in agreement on the original boards. Fitting every opening and continuation score exactly isolated a change due to the final-move utility. Scoring every turn with a discount of 0.9 preserved every choice in the fully covered fixed-player control. Additional training coverage and fitting move probabilities jointly improved agreement on withheld boards in the larger games. [Diagnosis, corrections and controls](AGREEMENT_DIAGNOSIS.md)
 
+The later win-rate study compared 56 expected-utility formulations and froze a new standard on a separate set of originals. The Phase V tables below document the earlier final-move comparison. [Prospective VNM standard and self-play results](experiments/win_selection/README.md)
+
 ## What the players learned
 
 - **Tic-tac-toe.** Each of 32 sources learned to choose a move preserving the best result available against perfect replies. Each had an independently drawn preference order among equally good cells. Two layers of 128 units that retain positive inputs and set negative inputs to zero took the board and side to move as input. Training minimized the negative log probability of the prescribed move. Each source matched its own prescribed move on all 4,520 reachable decision boards and gave up zero guaranteed game points. Each recovery fit learned from observed moves, with all 4,520 boards visited in collection and 729–1,111 boards reserved per partition. [Source, fitting settings and counts](PHASE_IV.md#how-the-players-were-trained-and-what-the-scores-could-represent)
