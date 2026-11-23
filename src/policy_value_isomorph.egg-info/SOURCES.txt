@@ -29,6 +29,12 @@ src/policy_value_isomorph/phase_iv_source.py
 src/policy_value_isomorph/phase_iv_statistics.py
 src/policy_value_isomorph/phase_iv_utility.py
 src/policy_value_isomorph/phase_iv_visits.py
+src/policy_value_isomorph/phase_v.py
+src/policy_value_isomorph/phase_v_diagnostics.py
+src/policy_value_isomorph/phase_v_evaluate.py
+src/policy_value_isomorph/phase_v_native.cpp
+src/policy_value_isomorph/phase_v_rules.hpp
+src/policy_value_isomorph/phase_v_study.py
 src/policy_value_isomorph/pilot_exact.py
 src/policy_value_isomorph/pilot_metrics.py
 src/policy_value_isomorph/pilot_protocol.py
@@ -82,6 +88,7 @@ tests/test_monitoring_smoke_demo.py
 tests/test_neural_game_control.py
 tests/test_periodic_gameplay_eval.py
 tests/test_phase_iv.py
+tests/test_phase_v.py
 tests/test_pilot_exact.py
 tests/test_pilot_protocol.py
 tests/test_pilot_results.py

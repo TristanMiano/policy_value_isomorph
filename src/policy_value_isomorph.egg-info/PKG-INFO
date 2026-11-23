@@ -9,6 +9,10 @@ Provides-Extra: phase-iv
 Requires-Dist: numpy>=1.24; extra == "phase-iv"
 Requires-Dist: scipy>=1.10; extra == "phase-iv"
 Requires-Dist: matplotlib>=3.7; extra == "phase-iv"
+Provides-Extra: phase-v
+Requires-Dist: numpy>=1.24; extra == "phase-v"
+Requires-Dist: scipy>=1.10; extra == "phase-v"
+Requires-Dist: matplotlib>=3.7; extra == "phase-v"
 Provides-Extra: neural-control
 Requires-Dist: numpy>=1.24; extra == "neural-control"
 Provides-Extra: muon
@@ -27,7 +31,9 @@ This repo is meant to be a concrete, economical implementation of a claim inspir
 
 The first experiment uses tic-tac-toe. A **rollout** plays a game forward under a specified policy to obtain its outcome. A **decoder** is the rule that uses scores to choose a move. The pilot report defines all five source players and compares their recovered moves and game outcomes. [Tic-tac-toe results](TICTACTOE_PILOT.md)
 
-The repeated tic-tac-toe experiment trained 32 optimal players with different preferences among equally good moves. It measures how closely a move reconstructed from observed frequencies copies each player, how often it wins, and how its predictions change when a move is removed. [Phase IV results](PHASE_IV.md) · [Explore all 4,520 decision boards](experiments/phase_iv/atlas.html)
+The repeated tic-tac-toe experiment trained 32 optimal players with different preferences among equally good moves. It measures how closely a move reconstructed from observed frequencies copies each player, how often it wins, and how its predictions change when a move is removed. The checkpoint review shows why the choice of positions changes which method best copies a player and selects methods for Connect Four and 4×4 Reversi. [Phase IV results](PHASE_IV.md) · [Checkpoint E review](CHECKPOINT_E.md) · [Explore all 4,520 decision boards](experiments/phase_iv/atlas.html)
+
+The three-game study fits networks to observed moves, then compares choosing the highest immediate score with choosing the highest expected score of a completed game. It reports how often each rule copies the frozen player and how often it wins in tic-tac-toe, Connect Four and 4×4 Reversi. A separate exact construction reproduces all 56,621 decisions of the prescribed Reversi original with three possible scores for the board after a move. [Phase V research report](PHASE_V.md) · [Comparisons with uncertainty](experiments/phase_v/tables.md) · [Explore the new games](experiments/phase_v/atlas.html)
 
 The research protocols keep quantitative questions numerical, require definitions at first use, preserve plausible readings of the thesis and give constructive examples and limitations comparable scrutiny. [Research stance](RESEARCH_STANCE.md) · [Mandatory protocols](AGENTS.md#mandatory-research-protocols)
 
