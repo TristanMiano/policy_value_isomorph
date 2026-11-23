@@ -38,6 +38,19 @@ The Q version led the selection data and the board-only V version had 0.13 point
 
 **Exact-copy self-play** has both seats deploy and replan with the identical network and rule. For V, its seat-balanced win and draw rates respectively were **50.00 ± 0.00% and 0.00 ± 0.00%** in tic-tac-toe, **48.75 ± 1.92% and 2.49 ± 3.84%** in Connect Four, and **46.48 ± 3.26% and 7.03 ± 6.52%** in Reversi (24/16/16 originals). Against external opponents the corresponding draw rates were 25.94 ± 0.73%, 0.34 ± 0.53% and 7.50 ± 2.87%. The archive gives all external wins, draws and losses and the Q self-play results. [Outcomes by rule](cells/refinement/confirmation.md)
 
+## Comparing the previous and new VNM rules
+
+Using the same board-scoring network, the new rule won about **12 fewer games per 100** than the previous rule when each game received equal weight. The old rule explicitly rewarded wins and draws, added a small contribution from learned move frequencies and projected future play using tactical rules and several types of opponent. The new rule scored the final board using its learned frequency, the last mover and the time taken to reach it, with both sides playing random legal moves during planning. These differences were measured together. Isolating the cost of removing the explicit reward would require holding the simulated players and other settings fixed.
+
+Both rules faced the same external opponents and openings in both seats. Win rates are percentages, with sample standard deviations across the indicated independently trained originals. The last two columns give paired changes in percentage points, their spread, individual 95% confidence intervals, and p-values adjusted together for these eight comparisons. Agreement measures how often each rule copied the original player's move on withheld boards. [Per-original differences, intervals and raw and adjusted p-values](cells/refinement/standard_comparison.json.gz)
+
+| Game (originals) | Previous VNM wins | New VNM wins | Change in wins, new minus previous [95% interval], adjusted p | Change in agreement [95% interval], adjusted p |
+|---|---:|---:|---:|---:|
+| Tic-tac-toe (24) | 50.38 ± 4.34 | 46.75 ± 1.47 | −3.63 ± 4.56 [−5.56, −1.71], 0.00150 | −11.27 ± 2.28 [−12.23, −10.30], 5.82 × 10⁻¹⁷ |
+| Connect Four (16) | 91.36 ± 3.03 | 84.38 ± 8.85 | −6.98 ± 8.33 [−11.42, −2.54], 0.00437 | +6.82 ± 6.17 [3.53, 10.11], 0.00150 |
+| 4×4 Reversi (16) | 77.34 ± 2.08 | 51.10 ± 4.49 | −26.25 ± 5.01 [−28.91, −23.58], 9.54 × 10⁻¹² | −3.77 ± 1.18 [−4.40, −3.14], 9.01 × 10⁻⁹ |
+| Equal games (24/16/16) | 73.03 ± 1.89 | 60.74 ± 3.34 | −12.29 ± 3.58 [−14.06, −10.52], 2.18 × 10⁻¹⁴ | −2.74 ± 2.23 [−3.88, −1.60], 0.000310 |
+
 ## What scores did the board network give wins and losses?
 
 For the V player, the **raw terminal score** is the original fitted frequency for the final board, before the square root, the change of sign, or discounting. On the actual played paths, that raw score was higher on wins by **0.344** in Connect Four. In tic-tac-toe the difference was **0.023**, and in Reversi it was **−0.004**. Raw frequencies are on a scale from zero to one. A win or loss is always defined from the evaluated seat. Tic-tac-toe samples 64 separate paths per fit for this diagnostic. The larger games use the actual 64 external games per fit. [Board-network path measurements, fit counts and adjusted uncertainty](cells/refinement/state_scores_path_diagnostics.json.gz)

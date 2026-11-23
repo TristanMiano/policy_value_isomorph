@@ -7,7 +7,7 @@ import gzip
 import json
 import numpy as np
 
-from compare_visit_utilities import DEST, GAMES, REFINE, label, rules_for
+from compare_visit_utilities import DEST, GAMES, HYBRID, REFINE, label, rules_for
 from report_vnm_wins import estimate
 from policy_value_isomorph.phase_iv_statistics import holm
 from policy_value_isomorph.visit_selection import UTILITIES, VisitSelection, path_values
@@ -178,14 +178,19 @@ def report(stage):
         assert winner.continuation == "uniform_both"
         flat = replace(winner, flat_score=True).name
         architectures = []
+        standards = []
         for net in ("V", "Q"):
             selected = replace(winner, network=net).name
+            references = [f"reference/{net}/copies/direct", flat, "original"]
+            if net == "V":
+                references.append(label(HYBRID))
             for game in (*GAMES, "equal_games"):
                 group = GAMES if game == "equal_games" else (game,)
-                for ref in (f"reference/{net}/copies/direct", flat, "original"):
+                for ref in references:
+                    comparisons = standards if ref == label(HYBRID) else architectures
                     for metric in ("win", "agreement"):
                         delta = [blocks[g][selected][metric] - blocks[g][ref][metric] for g in group]
-                        architectures.append(
+                        comparisons.append(
                             dict(
                                 game=game,
                                 method=selected,
@@ -198,6 +203,8 @@ def report(stage):
                         )
         holm(architectures)
         dump("architecture_contrasts.json.gz", architectures)
+        holm(standards)
+        dump("standard_comparison.json.gz", standards)
     if diagnostics:
         results = []
         for g in GAMES:
