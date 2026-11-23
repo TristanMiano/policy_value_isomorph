@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 from policy_value_isomorph.phase_v import OUT, actions, install_source, moved, native, seed, spec
 from policy_value_isomorph.phase_v_study import scoring, setup_fit
+from policy_value_isomorph.phase_v_evaluate import methods
 
 
 def chars(s, rev):
@@ -31,7 +32,15 @@ def main():
                 np.load(folder / f"evaluation_0_{mix}_1.npz") as b,
             ):
                 names = [key[6:] for key in a.files if key.startswith(("score_Q_", "score_V_"))]
-                scores = {n: np.stack([a["score_" + n], b["score_" + n]]) for n in names}
+                rules = dict(methods())
+                scores = {n: [] for n in names}
+                for fit, saved in enumerate((a, b)):
+                    setup_fit(e, folder, 0, mix, fit)
+                    for n in names:
+                        z = scoring(e, boards, rules[n])
+                        assert np.array_equal(z.argmax(1), saved["p_" + n + "_max"].argmax(1))
+                        scores[n].append(z)
+                setup_fit(e, folder, 0, mix, 0)
                 choices = {
                     n: np.stack([a["p_" + n + "_max"].argmax(1), b["p_" + n + "_max"].argmax(1)])
                     for n in names
@@ -68,9 +77,13 @@ def main():
                             order=sorted(legal, key=lambda a: (-raw[j, a], a)),
                             moves=moves,
                             choices={n: v[:, j].tolist() for n, v in choices.items()},
+                            rankings={
+                                n: [sorted(legal, key=lambda a: (-z[j, a], a)) for z in fits]
+                                for n, fits in scores.items()
+                            },
                             scores={
-                                n: np.round(z[:, j, :][:, legal].astype(float), 5).tolist()
-                                for n, z in scores.items()
+                                n: [np.round(z[j, legal], 5).tolist() for z in fits]
+                                for n, fits in scores.items()
                             },
                         )
                     )

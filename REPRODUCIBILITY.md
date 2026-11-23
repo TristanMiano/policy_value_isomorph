@@ -14,12 +14,13 @@ An **extra** installs dependencies for an additional feature with `python -m pip
 | `neural-control` | Installs NumPy for the existing tic-tac-toe neural training and visit-count experiments. |
 | `muon` | Requests PyTorch 2.9 or later for the optional matrix-update benchmark. |
 | `phase-iv` | Installs NumPy for numerical arrays, SciPy for game enumeration and statistical inference, and Matplotlib for figures. [Independent tic-tac-toe runs and result files](experiments/phase_iv/README.md) |
+| `phase-v` | Installs NumPy, SciPy and Matplotlib for the repeated three-game study. Rerunning the new-game simulator also uses a C++17 compiler and Python development headers on Linux or Windows Subsystem for Linux. [Commands, operating conditions and files](experiments/phase_v/README.md) |
 | Control | Planned for continuous-state environments and numerical integration once an experiment specifies them. |
 | Sequence | Planned for datasets and tools for time-series or token-sequence models. |
 | Large language models | Planned for tokenizers and pretrained text-model loading. |
 | Visualization | Planned for optional interactive displays. Current training and gameplay plots write scalable vector graphics using the standard library. |
 
-The first four rows are installable extras. Record the code revision, Python and PyTorch versions, device, numerical precision and seed alongside an experiment. The cross-platform workflow was exercised on Windows with Python 3.13 and PyTorch 2.8.0 (CPU), and on Ubuntu with Python 3.12 and PyTorch 2.11.0 (CPU and NVIDIA GPU). For deterministic NVIDIA training set the CUDA matrix-library workspace before starting Python, e.g. `$env:CUBLAS_WORKSPACE_CONFIG = ":4096:8"` in PowerShell or `export CUBLAS_WORKSPACE_CONFIG=:4096:8` in a POSIX shell.
+The first five rows are installable extras. Record the code revision, Python and PyTorch versions, device, numerical precision and seed alongside an experiment. The cross-platform workflow was exercised on Windows with Python 3.13 and PyTorch 2.8.0 (CPU), and on Ubuntu with Python 3.12 and PyTorch 2.11.0 (CPU and NVIDIA GPU). For deterministic NVIDIA training set the CUDA matrix-library workspace before starting Python, e.g. `$env:CUBLAS_WORKSPACE_CONFIG = ":4096:8"` in PowerShell or `export CUBLAS_WORKSPACE_CONFIG=:4096:8` in a POSIX shell.
 
 ## Determinism and seeds
 

@@ -1,11 +1,134 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phase V · Decision atlas</title><style>
-body{font:16px/1.5 system-ui,sans-serif;max-width:68rem;margin:2rem auto;padding:0 1rem;color:#193631;background:#faf9f4}label,button,select{font:inherit}select,input,button{padding:.35rem;margin:.2rem}table{border-collapse:collapse;width:100%}td,th{padding:.4rem .7rem;text-align:left;border-bottom:1px solid #c9d6cf}.board{display:inline-grid;background:#226557;padding:4px;gap:2px;margin:.4rem 1.5rem .4rem 0}.cell{background:#e7eee9;text-align:center;min-width:1.55rem;min-height:1.55rem;font-weight:bold}pre{white-space:pre-wrap}small{display:block}</style>
-<h1>Decision atlas</h1>
-<p>Explore the withheld boards for the first original player and first partition in each game. X plays first and O second. The fixed original takes its favorite legal move. The randomized original takes that move with probability ¾ and otherwise draws uniformly.</p>
-<label>Game and original <select id="game"></select></label><label>Board <input id="index" type="number" value="1" min="1"></label><button id="next">Next disagreement</button>
-<p id="original"></p><div id="board" class="board"></div>
-<label>Move selection <select id="method"></select></label>
-<p>V scores the resulting board. Q scores the board and move. Direct takes the highest fitted frequency. Von Neumann–Morgenstern (VNM) selection compares average scores of complete games. Terminal uses the final signed frequency, sum counts all signed frequencies, and decay weights successive turns by 0.9. An X move contributes positively and an O move negatively. Copies finish with the fitted direct rule; source continuations use the original player. Ties use the lowest legal move number. Cell 16 is a forced pass in Reversi.</p>
-<p id="gap"></p><table><thead><tr><th>Move</th><th>Original count / visits</th><th>Score, fit 1</th><th>Score, fit 2</th><th>Result</th></tr></thead><tbody id="rows"></tbody></table>
-<h2>After the selected move</h2><div id="child" class="board"></div><pre id="path"></pre>
-<script>const data=/*DATA*/;const el=id=>document.getElementById(id);const keys=Object.keys(data);keys.forEach(g=>el("game").add(new Option(g.replaceAll("_"," "),g)));function draw(id,s){const v=el(id);v.replaceChildren();v.style.gridTemplateColumns="repeat("+(s.length==16?4:7)+",1fr)";for(const c of s){const d=document.createElement("span");d.className="cell";d.textContent=c=="."?"·":c;v.append(d)}}function show(reset=false){const set=data[el("game").value];el("index").max=set.length;if(reset)el("index").value=1;const j=Math.min(set.length,Math.max(1,+el("index").value||1))-1;const r=set[j];if(reset){el("method").replaceChildren();Object.keys(r.scores).forEach(k=>el("method").add(new Option(k.replaceAll("_"," "),k)))}const name=el("method").value,z=r.scores[name];draw("board",r.board);el("original").textContent="Board "+(j+1)+" of "+set.length+". "+(r.side?"O":"X")+" to move. Original favorite "+r.order[0]+(r.order.length>1?", next choice if removed "+r.order[1]:", sole legal move")+".";let top=r.choices[name].map(a=>r.legal.indexOf(a));let gaps=z.map(v=>{let a=[...v].sort((a,b)=>b-a);return a.length>1?(a[0]-a[1]).toFixed(4):"one move"});el("gap").textContent="Chosen moves in the two independently initialized fits: "+top.map(i=>r.legal[i]).join(", ")+". Highest minus next-highest scores: "+gaps.join(", ")+".";function child(i){const m=r.moves[i];draw("child",m.board);el("path").textContent=(m.next===null?"Game ended.":"Q direct next move "+m.next+", score "+m.score+".")+"\n"+Object.entries(m.rollouts).map(([k,a])=>k+" · moves "+a.moves.join(" ")+" · game points for the original mover "+a.points).join("\n")}const body=el("rows");body.replaceChildren();r.legal.forEach((a,i)=>{let tr=body.insertRow();for(const x of [a,r.counts[i]+" / "+r.counts.reduce((a,b)=>a+b),...z.map(v=>v[i].toFixed(4))])tr.insertCell().textContent=x;let b=document.createElement("button");b.textContent="Inspect move "+a;b.onclick=()=>child(i);tr.insertCell().append(b)});child(top[0])}el("game").onchange=()=>show(true);el("index").onchange=()=>show();el("method").onchange=()=>show();el("next").onclick=()=>{let set=data[el("game").value],j=+el("index").value;for(let i=0;i<set.length;i++){let k=(j+i)%set.length,r=set[k],choice=r.choices[el("method").value][0];if(choice!==r.order[0]){el("index").value=k+1;show();break}}};show(true);</script></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Phase V · Decision atlas</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 68rem; margin: 2rem auto; padding: 0 1rem; color: #193631; background: #faf9f4; }
+    label, button, select, input { font: inherit; }
+    select, input, button { padding: .35rem; margin: .2rem; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { padding: .4rem; text-align: left; border-bottom: 1px solid #c9d6cf; }
+    .board { display: inline-grid; background: #226557; padding: 4px; gap: 2px; margin: .4rem 1.5rem .4rem 0; }
+    .cell { background: #e7eee9; text-align: center; min-width: 1.55rem; min-height: 1.55rem; font-weight: bold; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Decision atlas</h1>
+  <p>Explore the first original player and first withheld board set in each game. X plays first and O second. The fixed original takes its favorite legal move. The randomized original takes that move with probability ¾ and otherwise draws uniformly. Connect Four columns start at 0 on the left. Reversi cells start at 0 in the upper left and run across the rows. Move 16 is a forced pass.</p>
+  <label>Game and original <select id="game"></select></label>
+  <label>Board <input id="index" type="number" value="1" min="1"></label>
+  <button id="next">Next disagreement</button>
+  <p id="original"></p>
+  <div id="board" class="board"></div>
+  <p>V scores the resulting board. Q scores the board and candidate move. Direct takes the highest fitted move frequency. Von Neumann–Morgenstern (VNM) selection compares expected scores of complete games. Terminal uses the final signed frequency, sum counts every signed frequency, and decay weights each successive turn by another factor of 0.9. X moves contribute positively and O moves negatively. Each player chooses from its own perspective. Copies finish with the fitted direct rule. Source continuations use the original. Ties use the lowest eligible move number.</p>
+  <label>Move selection <select id="method"></select></label>
+  <label>Remove one move this turn <select id="exclude"></select></label>
+  <p id="gap"></p>
+  <table>
+    <thead><tr><th>Move</th><th>Original count / visits</th><th>Score, fit 1</th><th>Score, fit 2</th><th>Result</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <h2>After the selected move</h2>
+  <div id="child" class="board"></div>
+  <pre id="path"></pre>
+  <script>
+    const data = /*DATA*/;
+    const get = id => document.getElementById(id);
+    const game = get("game"), index = get("index"), method = get("method"), exclude = get("exclude");
+    for (const name of Object.keys(data)) {
+      game.add(new Option(name.replace("connect4", "Connect Four").replace("reversi4", "4×4 Reversi").replace("_", " · "), name));
+    }
+    function draw(id, board) {
+      const view = get(id);
+      view.replaceChildren();
+      view.style.gridTemplateColumns = "repeat(" + (board.length === 16 ? 4 : 7) + ", 1fr)";
+      for (const symbol of board) {
+        const cell = document.createElement("span");
+        cell.className = "cell";
+        cell.textContent = symbol === "." ? "·" : symbol;
+        view.append(cell);
+      }
+    }
+    function showChild(move) {
+      draw("child", move.board);
+      const summary = move.next === null ? "Game ended." : "Q direct next move " + move.next + ", score " + move.score + ".";
+      const paths = Object.entries(move.rollouts).map(([rule, path]) =>
+        rule + " · moves " + path.moves.join(" ") + " · game points for the player choosing now " + path.points);
+      get("path").textContent = [summary, ...paths].join("\n");
+    }
+    function show(resetMenu = false) {
+      const boards = data[game.value];
+      const number = Math.max(1, Math.min(boards.length, Math.trunc(+index.value) || 1));
+      index.max = boards.length;
+      index.value = number;
+      const board = boards[number - 1];
+      if (resetMenu) {
+        exclude.replaceChildren(new Option("None", ""));
+        if (board.legal.length > 1) {
+          for (const move of board.legal) exclude.add(new Option(String(move), String(move)));
+        }
+      }
+      const allowed = move => String(move) !== exclude.value;
+      const favorite = board.order.find(allowed);
+      draw("board", board.board);
+      get("original").textContent = "Board " + number + " of " + boards.length + ". " +
+        (board.side ? "O" : "X") + " to move. Original favorite " + board.order[0] +
+        (board.order.length > 1 ? ", next choice if removed " + board.order[1] : ", sole legal move") + ".";
+      const name = method.value;
+      const scores = board.scores[name];
+      const rankings = board.rankings[name].map(order => order.filter(allowed));
+      const choices = rankings.map(order => order[0]);
+      const gap = rankings.map((order, fit) => {
+        if (order.length < 2) return "one move";
+        const score = move => scores[fit][board.legal.indexOf(move)];
+        return (score(order[0]) - score(order[1])).toFixed(4);
+      });
+      get("gap").textContent = "On the offered moves the original favors " + favorite +
+        ". The two independently initialized fits choose " + choices.join(" and ") +
+        ". Highest minus next-highest scores are " + gap.join(" and ") + ".";
+      const body = get("rows");
+      body.replaceChildren();
+      const visits = board.counts.reduce((a, b) => a + b, 0);
+      board.legal.forEach((move, i) => {
+        const row = body.insertRow();
+        const values = [move, board.counts[i] + " / " + visits, ...scores.map(v => v[i].toFixed(4))];
+        for (const value of values) row.insertCell().textContent = value;
+        const inspect = document.createElement("button");
+        inspect.textContent = allowed(move) ? "Inspect move " + move : "Removed";
+        inspect.disabled = !allowed(move);
+        inspect.onclick = () => showChild(board.moves[i]);
+        row.insertCell().append(inspect);
+      });
+      showChild(board.moves[board.legal.indexOf(choices[0])]);
+    }
+    function selectGame() {
+      index.value = 1;
+      method.replaceChildren();
+      for (const name of Object.keys(data[game.value][0].scores)) {
+        method.add(new Option(name.replaceAll("_", " "), name));
+      }
+      show(true);
+    }
+    game.onchange = selectGame;
+    index.onchange = () => show(true);
+    method.onchange = () => show();
+    exclude.onchange = () => show();
+    get("next").onclick = () => {
+      const boards = data[game.value];
+      for (let offset = 0; offset < boards.length; offset++) {
+        const j = (+index.value + offset) % boards.length;
+        const board = boards[j];
+        if (board.choices[method.value][0] !== board.order[0]) {
+          index.value = j + 1;
+          show(true);
+          break;
+        }
+      }
+    };
+    selectGame();
+  </script>
+</body>
+</html>
