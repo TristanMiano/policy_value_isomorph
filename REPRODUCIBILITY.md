@@ -86,6 +86,8 @@ Use the Linux or Windows Subsystem for Linux environment and C++17 compiler desc
 
 The compressed observations contain one JSON record per original. Each partition retains the board identifiers, weights, legal move counts, original favorite and next choice. Each fit retains unrestricted and restricted predictions for every method and the original's external outcomes. Look up reconstructed external outcomes in the confirmation files by game, original, partition, fit and method. The summary gives original-level spread, paired differences, individual 95% intervals, and raw and multiplicity-adjusted p-values. [Observations](experiments/checkpoint_f/observations.jsonl.gz) · [Checkpoint summary](experiments/checkpoint_f/summary.json) · [Original confirmation files](experiments/win_selection/confirmation)
 
+The follow-up asking how often fitted move frequencies can win on their own uses the same Phase V environment and archived observations. It refits the networks from board occupancy, holds out original players when choosing the rule, and records how its scores vary with outcomes and duration. [Reproduction commands and results](experiments/visit_utility/README.md#reproduction)
+
 ## Reporting template
 
 Use the two mandatory project protocols in experiments, reports, progress updates, and chat summaries. Define a new term before using it. Express each measurable question and answer numerically. [Project instructions](AGENTS.md#mandatory-research-protocols)

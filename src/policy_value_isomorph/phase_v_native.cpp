@@ -518,7 +518,12 @@ struct Engine : Rules {
     }
 };
 #include "win_vnm.hpp"
+#include "visit_vnm.hpp"
 PYBIND11_MODULE(_phase_v_native, m) {
+    py::class_<VisitPlanner>(m, "VisitPlanner")
+        .def(py::init<Engine &, int, U, int, bool>(), py::keep_alive<1, 2>())
+        .def("choose", &VisitPlanner::choose);
+    m.def("visit_match", &visit_match);
     py::class_<Engine>(m, "Engine")
         .def(py::init<bool>())
         .def("start", &Engine::start)
